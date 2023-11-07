@@ -1,0 +1,42 @@
+import axios from "axios";
+import { Redirect } from "react-router-dom";
+// https://winshop-server.onrender.com/
+const axiosClient = axios.create({
+  baseURL: "https://booking-4t.onrender.com/",
+  headers: {
+    "Content-Type": "application/json"
+  }
+});
+
+axiosClient.interceptors.request.use(
+  (config) => {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+
+    if (userInfo) {
+      const { accessToken } = userInfo;
+      config.headers.token = `Bearer ${accessToken}`;
+    }
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
+axiosClient.interceptors.response.use(
+  (response) => {
+    // Xử lý kết quả trả về từ server
+    return response;
+  },
+  // Xử lý nếu kết quả trả về bị lỗi
+  (error) => {
+    if (error.status === 401) {
+      // Xử lý log out: clear Storage, đẩy người dùng vào trang login
+      localStorage.clear();
+      <Redirect to="/" />;
+    }
+    return Promise.reject(error);
+  }
+);
+export default axiosClient;

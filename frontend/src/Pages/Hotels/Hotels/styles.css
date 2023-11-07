@@ -1,0 +1,17 @@
+.hotel-content {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+  .hotel-content .spinner {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 50px;
+  }
+  @media (max-width: 960px) {
+    .hotel-content .spinner {
+      margin-top: 100px;
+    }
+  }

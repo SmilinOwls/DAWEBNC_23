@@ -1,0 +1,126 @@
+.trigger {
+  padding: 0 24px;
+  font-size: 18px;
+  line-height: 64px;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.trigger:hover {
+  color: #1890ff;
+}
+
+.logo-admin {
+  height: 64px;
+  background: #ffd333;
+}
+
+.ant-layout {
+  min-height: 120vh;
+}
+
+header {
+  height: auto !important;
+}
+
+main {
+  overflow-y: scroll !important;
+}
+.ql-editor {
+  min-height: 10rem;
+}
+
+.editable-cell {
+  position: relative;
+}
+
+.editable-cell-value-wrap {
+  padding: 5px 12px;
+  cursor: pointer;
+}
+
+.editable-row:hover .editable-cell-value-wrap {
+  padding: 4px 11px;
+  border: 1px solid #d9d9d9;
+  border-radius: 2px;
+}
+
+.dynamic-delete-button {
+  position: relative;
+  margin: 0 8px;
+  color: #999;
+  font-size: 24px;
+  cursor: pointer;
+  transition: all 0.3s;
+}
+
+.dynamic-delete-button:hover {
+  color: #777;
+}
+
+.dynamic-delete-button[disabled] {
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+:root {
+  --color-212529: #212529;
+  --color-ffd333: #ffd333;
+  --color-47ad24: #47ad24;
+  --color-e52e2e: #e52e2e;
+  --color-828599: #828599;
+  --color-3d464d: #ed464d;
+  --color-c3d4da: #ced4da;
+}
+
+.previous {
+  background-color: #fff !important;
+  color: #ffd333;
+  border: 1px solid #ffd333;
+  min-width: 85px !important;
+}
+
+.next,
+.add {
+  background-color: #ffd333 !important;
+  color: #fff;
+  min-width: 85px !important;
+}
+
+.title {
+  font: 28px;
+  font-family: Roboto !important;
+  color: var(--color-212529);
+}
+
+.sub-title {
+  font: 24px;
+  font-family: Roboto !important;
+  color: var(--color-212529);
+}
+
+.desc {
+  font: 14px;
+  font-family: Roboto !important;
+  color: var(--color-828599);
+  margin-top: 20px;
+}
+
+img,
+svg {
+  display: inline;
+}
+
+.ant-btn-primary {
+  background-color: #1677ff;
+}
+
+.ant-form-input .ant-form-item-control-input-content {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ant-table-body {
+  max-height: 10% !important;
+}
