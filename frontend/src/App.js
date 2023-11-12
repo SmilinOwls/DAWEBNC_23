@@ -12,15 +12,18 @@ import PrevFilterContext from "./context/PrevFilterContext";
 // import DetailRoom from "./Pages/DetailRoom";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
+import AccountBooking from "./Pages/AccountSetting/AccountBooking";
+import AccountMemory from "./Pages/AccountSetting/AccountMemory";
+import AccountSetting from "./Pages/AccountSetting";
 
 import LogOut from "./Pages/Logout";
 // import Payment from "./Pages/Payment";
 // import ThankYou from "./Pages/Thankyou";
 import PageNotFound from "./Pages/PageNotFound";
 
-import Dashboard from './Pages/Admin/Dashboard';
-import MainLayout from './Components/Admin/MainLayout';
-import User from './Pages/Admin/UserAdmin/User';
+import Dashboard from "./Pages/Admin/Dashboard";
+import MainLayout from "./Components/Admin/MainLayout";
+import User from "./Pages/Admin/UserAdmin/User";
 
 function App() {
   return (
@@ -78,7 +81,7 @@ function App() {
                 <AppLayout>
                   <DetailSite />
                 </AppLayout>
-              </Route>
+              </Route> */}
               <Route path="/account/bookings" exact>
                 <AppLayout>
                   <AccountBooking />
