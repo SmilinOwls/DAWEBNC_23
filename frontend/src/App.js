@@ -1,25 +1,22 @@
 import { BrowserRouter, Route, Switch } from "react-router-dom";
 import AppLayout from "./Layouts/AppLayout";
 import "./App.css";
-import AdminRoute from './Route/AdminRoute';
+import AdminRoute from "./Route/AdminRoute";
 import Home from "./Pages/Home/Home";
-import Hotels from "./Pages/Hotels/Hotels";
-import News from "./Pages/News/News";
+// import Hotels from "./Pages/Hotels/Hotels";
+// import News from "./Pages/News/News";
 import PrevFilterContext from "./context/PrevFilterContext";
-import DetailSite from "./Pages/DetailSite";
-import DetailNews from "./Pages/DetailNews";
-import DetailHotel from "./Pages/DetailHotel";
-import DetailRoom from "./Pages/DetailRoom";
-import Signin from './Pages/Signin';
-import Signup from './Pages/Signup'
+// import DetailSite from "./Pages/DetailSite";
+// import DetailNews from "./Pages/DetailNews";
+// import DetailHotel from "./Pages/DetailHotel";
+// import DetailRoom from "./Pages/DetailRoom";
+import Signin from "./Pages/Signin";
+import Signup from "./Pages/Signup";
+
 import LogOut from "./Pages/Logout";
-import Payment from "./Pages/Payment";
-import ThankYou from "./Pages/Thankyou";
-import AccountSetting from "./Pages/AccountSetting";
-import AccountBooking from "./Pages/AccountSetting/AccountBooking";
-import AccountMemory from "./Pages/AccountSetting/AccountMemory";
-import SearchResult from "./Pages/SearchResult";
-import PageNotFound from './Pages/PageNotFound';
+// import Payment from "./Pages/Payment";
+// import ThankYou from "./Pages/Thankyou";
+import PageNotFound from "./Pages/PageNotFound";
 
 import Dashboard from './Pages/Admin/Dashboard';
 import MainLayout from './Components/Admin/MainLayout';
@@ -37,10 +34,10 @@ function App() {
                   <Home />
                 </AppLayout>
               </Route>
-              <Route path="/search" exact>
-                <AppLayout>
-                  <SearchResult />
-                </AppLayout>
+              {/* <Route path="/search" exact>
+                  <AppLayout>
+                     <SearchResult />
+                  </AppLayout>
               </Route>
               <Route path="/hotels" exact>
                 <AppLayout>
@@ -48,11 +45,11 @@ function App() {
                 </AppLayout>
               </Route>
               <Route path="/hotel/:hotelId" exact>
-                <AppLayout>
-                  <DetailHotel />
-                </AppLayout>
-              </Route>
-              <Route path="/news" exact>
+                 <AppLayout>
+                   <DetailHotel />
+                 </AppLayout>
+              </Route> */}
+              {/* <Route path="/news" exact>
                 <AppLayout>
                   <News />
                 </AppLayout>
