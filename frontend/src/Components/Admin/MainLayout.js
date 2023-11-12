@@ -5,11 +5,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { AiOutlineDashboard, AiOutlineBackward } from 'react-icons/ai';
-import { FaBloggerB, FaHotel } from 'react-icons/fa';
-import { MdBedroomParent } from 'react-icons/md';
-import { LuClipboardList } from 'react-icons/lu';
-import { BiCategory } from 'react-icons/bi';
+import { AiOutlineDashboard } from 'react-icons/ai';
 import { IoIosNotifications } from 'react-icons/io';
 import './style.css';
 import { user } from '../../utils/customUser';
@@ -55,38 +51,6 @@ function MainLayout({children}) {
               icon: <UserOutlined className="fs-4" />,
               label: 'User',
             },
-            {
-              key: '/admin/catalog/',
-              icon: <BiCategory className="fs-4" />,
-              label: 'Catalog',
-              children: [
-                {
-                  key: '/admin/place/',
-                  icon: <FaHotel className="fs-4" />,
-                  label: 'Place'
-                },
-                {
-                  key: '/admin/room/',
-                  icon: <MdBedroomParent className="fs-4" />,
-                  label: 'Room'
-                },
-              ]
-            },
-            {
-              key: '/admin/blog/',
-              icon: <FaBloggerB className="fs-4" />,
-              label: 'Blog',
-            },
-            {
-              key: '/admin/book',
-              icon: <LuClipboardList className="fs-4" />,
-              label: 'Order',
-            },
-            {
-              key: '/',
-              icon: <AiOutlineBackward className='fs-4'/>,
-              label: 'Back'
-            }
           ]}
         />
       </Sider>
