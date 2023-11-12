@@ -2,10 +2,10 @@ import axios from "axios";
 import { Redirect } from "react-router-dom";
 // https://winshop-server.onrender.com/
 const axiosClient = axios.create({
-  baseURL: "https://booking-4t.onrender.com/",
+  baseURL: "http://localhost:5000/",
   headers: {
-    "Content-Type": "application/json"
-  }
+    "Content-Type": "application/json",
+  },
 });
 
 axiosClient.interceptors.request.use(

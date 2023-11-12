@@ -5,8 +5,8 @@ const cookieParser = require("cookie-parser");
 const cors = require("cors");
 const mongoose = require("mongoose");
 const path = require("path");
-const fs = require("fs")
-const multer = require("multer")
+const fs = require("fs");
+const multer = require("multer");
 
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
@@ -16,65 +16,72 @@ const siteRouter = require("./routes/site");
 const blogRouter = require("./routes/blog");
 const bookingRouter = require("./routes/booking");
 
-
 const app = express();
 dotenv.config();
-app.use(cors({
+app.use(
+  cors({
     credentials: true,
-    origin: "https://booking4t.vercel.app"
-}));
+    origin: "http://localhost:3000",
+  })
+);
 app.use(cookieParser());
 app.use(express.json());
 const publicPath = path.join(__dirname, "./public");
 app.use("/public", express.static(publicPath));
 
 const storage = multer.diskStorage({
-    destination: function(req, file, cb){
-        cb(null, "./public/images/uploads")
-    }
+  destination: function (req, file, cb) {
+    cb(null, "./public/images/uploads");
+  },
 });
 
 const photoMiddleware = multer({
-    storage: storage,
-    fileFilter: function(req, file, cb){
-        const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
-        const extension = file.originalname.slice(-4);
-        const check = extensionImageList.includes(extension);
-        if(check){
-            cb(null, true);
-        }else{
-            cb(new Error("extention không hợp lệ"))
-        }
+  storage: storage,
+  fileFilter: function (req, file, cb) {
+    const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
+    const extension = file.originalname.slice(-4);
+    const check = extensionImageList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
     }
-})
-
-app.post("/api/upload-photo", photoMiddleware.array("photos", 100), (req, res) => {
-    const uploadedFiles = [];
-    for(let i = 0; i < req.files.length; i++){
-        const {path, originalname} = req.files[i];
-        const parts= originalname.split(".");
-        const ext = parts[parts.length - 1];
-        const newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
-        uploadedFiles.push(newPath)
-    }
-    res.status(200).json(uploadedFiles)
+  },
 });
 
-app.post("/api/upload-room", photoMiddleware.array("photoRooms", 100), (req, res) => {
+app.post(
+  "/api/upload-photo",
+  photoMiddleware.array("photos", 100),
+  (req, res) => {
     const uploadedFiles = [];
-    for(let i = 0; i < req.files.length; i++){
-        const {path, originalname} = req.files[i];
-        const parts= originalname.split(".");
-        const ext = parts[parts.length - 1];
-        const newPath = path + '.' + ext;
-        fs.renameSync(path, newPath);
-        uploadedFiles.push(newPath)
+    for (let i = 0; i < req.files.length; i++) {
+      const { path, originalname } = req.files[i];
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      uploadedFiles.push(newPath);
     }
-    res.status(200).json(uploadedFiles)
-})
+    res.status(200).json(uploadedFiles);
+  }
+);
 
-
+app.post(
+  "/api/upload-room",
+  photoMiddleware.array("photoRooms", 100),
+  (req, res) => {
+    const uploadedFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+      const { path, originalname } = req.files[i];
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      uploadedFiles.push(newPath);
+    }
+    res.status(200).json(uploadedFiles);
+  }
+);
 
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
@@ -82,18 +89,20 @@ app.use("/api/place", placeRouter);
 app.use("/api/room", roomRouter);
 app.use("/api/site", siteRouter);
 app.use("/api/blog", blogRouter);
-app.use("/api/book", bookingRouter)
+app.use("/api/book", bookingRouter);
 
 const PORT = process.env.PORT || 5000;
 const URI = process.env.DB_URL;
 
-mongoose.set('strictQuery', false);
-mongoose.connect(URI, {useNewUrlParser: true, useUnifiedTopology: true}).then(() => {
-    console.log('Connected to DB');
+mongoose.set("strictQuery", false);
+mongoose
+  .connect(URI, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => {
+    console.log("Connected to DB");
     app.listen(PORT, () => {
-        console.log(`Server is running at ${PORT}`);
-    })
-}).catch(err=> {
-    console.log('Error: ', err)
-});
-
+      console.log(`Server is running at ${PORT}`);
+    });
+  })
+  .catch((err) => {
+    console.log("Error: ", err);
+  });
