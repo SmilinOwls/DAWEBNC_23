@@ -12,19 +12,15 @@ import PrevFilterContext from "./context/PrevFilterContext";
 // import DetailRoom from "./Pages/DetailRoom";
 import Signin from "./Pages/Signin";
 import Signup from "./Pages/Signup";
+
 import LogOut from "./Pages/Logout";
 // import Payment from "./Pages/Payment";
 // import ThankYou from "./Pages/Thankyou";
 import PageNotFound from "./Pages/PageNotFound";
 
-import Dashboard from "./Pages/Admin/Dashboard";
-import MainLayout from "./Components/Admin/MainLayout";
-import Room from "./Pages/Admin/RoomAdmin/Room";
-import Hotel from "./Pages/Admin/HotelAdmin/Hotel";
-import Blog from "./Pages/Admin/BlogAdmin/Blog";
-import User from "./Pages/Admin/UserAdmin/User";
-import Order from "./Pages/Admin/OrderAdmin/Order";
-import OrderDetail from "./Pages/Admin/OrderAdmin/OrderDetail";
+import Dashboard from './Pages/Admin/Dashboard';
+import MainLayout from './Components/Admin/MainLayout';
+import User from './Pages/Admin/UserAdmin/User';
 
 function App() {
   return (
@@ -49,9 +45,9 @@ function App() {
                 </AppLayout>
               </Route>
               <Route path="/hotel/:hotelId" exact>
-                  <AppLayout>
-                    <DetailHotel />
-                  </AppLayout>
+                 <AppLayout>
+                   <DetailHotel />
+                 </AppLayout>
               </Route> */}
               {/* <Route path="/news" exact>
                 <AppLayout>
@@ -60,77 +56,52 @@ function App() {
               </Route>
               <Route path="/new/:newId" exact>
                 <AppLayout>
-                   <DetailNews />
+                  <DetailNews />
                 </AppLayout>
               </Route>
               <Route path="/room/:roomId" exact>
-                  <AppLayout>
-                    <DetailRoom />
-                  </AppLayout>
+                <AppLayout>
+                  <DetailRoom />
+                </AppLayout>
               </Route>
               <Route path="/payment" exact>
-                  <AppLayout>
-                    <Payment />
-                  </AppLayout>
+                <AppLayout>
+                  <Payment />
+                </AppLayout>
               </Route>
               <Route path="/thank-you" exact>
-                  <AppLayout>
-                    <ThankYou />
-                  </AppLayout>
+                <AppLayout>
+                  <ThankYou />
+                </AppLayout>
               </Route>
               <Route path="/site/:id" exact>
-                  <AppLayout>
-                    <DetailSite />
-                  </AppLayout>
+                <AppLayout>
+                  <DetailSite />
+                </AppLayout>
               </Route>
               <Route path="/account/bookings" exact>
-                  <AppLayout>
-                     <AccountBooking />
-                  </AppLayout>
+                <AppLayout>
+                  <AccountBooking />
+                </AppLayout>
               </Route>
               <Route path="/account/memory" exact>
-                  <AppLayout>
-                     <AccountMemory />
-                  </AppLayout>
+                <AppLayout>
+                  <AccountMemory />
+                </AppLayout>
               </Route>
               <Route path="/account" exact>
-                  <AppLayout>
-                    <AccountSetting />
-                  </AppLayout>
-              </Route> */}
+                <AppLayout>
+                  <AccountSetting />
+                </AppLayout>
+              </Route>
               <AdminRoute path="/dashboard" exact>
                 <MainLayout>
                   <Dashboard />
                 </MainLayout>
               </AdminRoute>
-              <AdminRoute path="/admin/place" exact>
-                <MainLayout>
-                  <Hotel />
-                </MainLayout>
-              </AdminRoute>
-              <AdminRoute path="/admin/room" exact>
-                <MainLayout>
-                  <Room />
-                </MainLayout>
-              </AdminRoute>
-              <AdminRoute path="/admin/blog" exact>
-                <MainLayout>
-                  <Blog />
-                </MainLayout>
-              </AdminRoute>
               <AdminRoute path="/admin/user" exact>
                 <MainLayout>
                   <User />
-                </MainLayout>
-              </AdminRoute>
-              <AdminRoute path="/admin/book" exact>
-                <MainLayout>
-                  <Order />
-                </MainLayout>
-              </AdminRoute>
-              <AdminRoute path="/book/:id" exact>
-                <MainLayout>
-                  <OrderDetail />
                 </MainLayout>
               </AdminRoute>
               <Route path="/sign-up">
