@@ -20,9 +20,9 @@ import LogOut from "./Pages/Logout";
 // import ThankYou from "./Pages/Thankyou";
 import PageNotFound from "./Pages/PageNotFound";
 
-import Dashboard from './Pages/Admin/Dashboard';
-import MainLayout from './Components/Admin/MainLayout';
-import User from './Pages/Admin/UserAdmin/User';
+import Dashboard from "./Pages/Admin/Dashboard";
+import MainLayout from "./Components/Admin/MainLayout";
+import User from "./Pages/Admin/UserAdmin/User";
 
 function App() {
   return (
