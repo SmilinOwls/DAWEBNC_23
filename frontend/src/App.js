@@ -15,7 +15,6 @@ import Signup from "./Pages/Signup";
 import AccountBooking from "./Pages/AccountSetting/AccountBooking";
 import AccountMemory from "./Pages/AccountSetting/AccountMemory";
 import AccountSetting from "./Pages/AccountSetting";
-
 import LogOut from "./Pages/Logout";
 // import Payment from "./Pages/Payment";
 // import ThankYou from "./Pages/Thankyou";
@@ -76,12 +75,12 @@ function App() {
                 <AppLayout>
                   <ThankYou />
                 </AppLayout>
-              </Route>
+              </Route> 
               <Route path="/site/:id" exact>
                 <AppLayout>
                   <DetailSite />
                 </AppLayout>
-              </Route> */}
+              </Route>*/}
               <Route path="/account/bookings" exact>
                 <AppLayout>
                   <AccountBooking />

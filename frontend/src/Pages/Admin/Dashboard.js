@@ -9,7 +9,8 @@ import { Column } from '@ant-design/plots';
 
 function Dashboard() {
   const dispatch = useDispatch();
-
+  const { users } = useSelector(state => state.userAdmin);
+  
   useEffect(() => {
     dispatch(getUser());
   }, []);
