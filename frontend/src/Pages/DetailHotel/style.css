@@ -1,8 +1,0 @@
-.detail__container {
-  margin-top: 100px;
-}
-@media (max-width: 960px) {
-  .detail__container {
-    margin-top: 80px;
-  }
-}
