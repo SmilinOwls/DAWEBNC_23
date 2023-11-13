@@ -9,7 +9,6 @@ import Signup from "./Pages/Signup";
 import AccountBooking from "./Pages/AccountSetting/AccountBooking";
 import AccountMemory from "./Pages/AccountSetting/AccountMemory";
 import AccountSetting from "./Pages/AccountSetting";
-
 import LogOut from "./Pages/Logout";
 import PageNotFound from "./Pages/PageNotFound";
 
@@ -29,6 +28,51 @@ function App() {
                   <Home />
                 </AppLayout>
               </Route>
+              {/* <Route path="/search" exact>
+                  <AppLayout>
+                     <SearchResult />
+                  </AppLayout>
+              </Route>
+              <Route path="/hotels" exact>
+                <AppLayout>
+                  <Hotels />
+                </AppLayout>
+              </Route>
+              <Route path="/hotel/:hotelId" exact>
+                 <AppLayout>
+                   <DetailHotel />
+                 </AppLayout>
+              </Route> */}
+              {/* <Route path="/news" exact>
+                <AppLayout>
+                  <News />
+                </AppLayout>
+              </Route>
+              <Route path="/new/:newId" exact>
+                <AppLayout>
+                  <DetailNews />
+                </AppLayout>
+              </Route>
+              <Route path="/room/:roomId" exact>
+                <AppLayout>
+                  <DetailRoom />
+                </AppLayout>
+              </Route>
+              <Route path="/payment" exact>
+                <AppLayout>
+                  <Payment />
+                </AppLayout>
+              </Route>
+              <Route path="/thank-you" exact>
+                <AppLayout>
+                  <ThankYou />
+                </AppLayout>
+              </Route> 
+              <Route path="/site/:id" exact>
+                <AppLayout>
+                  <DetailSite />
+                </AppLayout>
+              </Route>*/}
               <Route path="/account/bookings" exact>
                 <AppLayout>
                   <AccountBooking />
