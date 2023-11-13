@@ -96,7 +96,7 @@ function Footer() {
         </div>
         <div className={`mb-2 ${style.Row}`}>
           <span className={`${style.Copyright}  ${style.ExtraPadding}`}>
-            Copyright © {new Date().getFullYear()} Booking4T | All Rights
+            Copyright © {new Date().getFullYear()} TravelGo | All Rights
             Reserved
           </span>
         </div>
