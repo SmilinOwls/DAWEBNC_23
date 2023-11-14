@@ -75,7 +75,7 @@ const userControllers = {
   updateStatusUser: async (req, res) => {
     const user = await User.findById(req.user.id);
     if (user) {
-      user.isOnline = req.body.isOnline || user.isOnline;
+      user.isOnline = !user.isOnline;
       const updatedUser = await user.save();
       res.status(200).json({
         username: updatedUser.username,

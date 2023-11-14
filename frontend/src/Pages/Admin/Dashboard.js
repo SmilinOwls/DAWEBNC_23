@@ -10,9 +10,74 @@ import { Column } from "@ant-design/plots";
 function Dashboard() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.userAdmin);
+  console.log(users);
+
+  const columns = [
+    {
+      title: "SNo",
+      dataIndex: "_id",
+    },
+    {
+      title: "Email",
+      dataIndex: "email",
+      sorter: (a, b) => a.email - b.email,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Phone",
+      dataIndex: "phone",
+      sorter: (a, b) => a.phone - b.phone,
+      sortDirections: ['descend', 'ascend'],
+    },
+    {
+      title: "Role",
+      dataIndex: "isAdmin",
+      filters: [
+        {
+          text: 'Admin',
+          value: true,
+        },
+        {
+          text: 'User',
+          value: false,
+        }
+      ],
+      onFilter: (value, record) => record.isAdmin === value,
+      filterMode: 'tree',
+      filterSearch: true,
+      render: (isAdmin, _) => (
+        <Tag color={isAdmin === true ? "red" : "blue"}>
+          {isAdmin === true ? "Admin" : "User"}
+        </Tag>
+      )
+    },
+    {
+      title: "Status",
+      dataIndex: "isOnline",
+      filters: [
+        {
+          text: 'Online',
+          value: true,
+        },
+        {
+          text: 'Offline',
+          value: false,
+        }
+      ],
+      onFilter: (value, record) => record.isOnline === value,
+      filterMode: 'tree',
+      filterSearch: true,
+      render: (isOnline, _) => (
+        <Tag color={isOnline === true ? "green" : "grey"}>
+          {isOnline === true ? "Online" : "Offline"}
+        </Tag>
+      )
+    },
+  ];
 
   useEffect(() => {
     dispatch(getUser());
+    console.log(users);
   }, []);
 
   return (
@@ -33,6 +98,10 @@ function Dashboard() {
             </div>
           </div>
         </div>
+      </div>
+      <div className='mt-3'>
+        <h3 className='my-2 title'>Users List</h3>
+        <Table columns={columns} dataSource={users} rowKey={(record) => record._id} />
       </div>
     </div>
   );

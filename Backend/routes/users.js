@@ -67,4 +67,11 @@ router.put(
   userControllers.updateProfile
 );
 
+// Update status
+router.put(
+  "/me/status",
+  authMiddleware.verifyToken,
+  userControllers.updateStatusUser
+);
+
 module.exports = router;
