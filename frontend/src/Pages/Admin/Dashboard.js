@@ -10,6 +10,7 @@ import { Column } from "@ant-design/plots";
 function Dashboard() {
   const dispatch = useDispatch();
   const users = useSelector((state) => state.userAdmin);
+  console.log(users);
 
   const columns = [
     {
@@ -52,7 +53,7 @@ function Dashboard() {
     },
     {
       title: "Status",
-      dataIndex: "userStatus",
+      dataIndex: "isOnline",
       filters: [
         {
           text: 'Online',
@@ -76,6 +77,7 @@ function Dashboard() {
 
   useEffect(() => {
     dispatch(getUser());
+    console.log(users);
   }, []);
 
   return (
