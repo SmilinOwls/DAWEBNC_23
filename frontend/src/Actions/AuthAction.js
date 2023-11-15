@@ -86,7 +86,7 @@ export const verifyResetToken = async (value) => {
     console.log(error);
   }
   return null;
-}
+};
 
 export const resetPassword = (value) => {
   return async (dispatch) => {
@@ -107,5 +107,4 @@ export const resetPassword = (value) => {
       dispatch({ type: RESET_PASSWORD_FAILURE, payload: error })
     }
   }
-
-}
+};
