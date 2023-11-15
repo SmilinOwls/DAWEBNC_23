@@ -1,7 +1,9 @@
 const User = require("../models/User");
+const Token = require("../models/Token");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
+const mailer = require('../utils/mailer');
 
 let refreshTokens = [];
 const authControllers = {
@@ -118,6 +120,104 @@ const authControllers = {
       (token) => token !== req.cookies.refreshToken
     );
     res.status(200).json("Logged out successfully!");
+  },
+  forgotPassword: async (req, res) => {
+    const subject = "Booking4T - Confirm new password";
+
+    try {
+      const { email } = req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(401).json({ error: 'User not Found!' });
+
+      let token = await Token.findOne({ userId: user._id });
+      if (!token) {
+        token = await new Token({
+          userId: user._id,
+          token: crypto.randomBytes(32).toString("hex")
+        }).save();
+      }
+
+      const resetToken = jwt.sign({
+        userId: token.userId,
+        token: token.token
+      },
+        process.env.MY_SECRETKEY,
+        {
+          expiresIn: "3600s"
+        }
+      );
+
+      const link = `${process.env.BASE_URL}:3000/activenewpass?resetToken=${resetToken}`;
+      const htmlContent =
+        `<p>
+                Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Travelgo <br/>
+
+                Xin hãy kích vào đường dẫn dưới đây để xác nhận và lấy lại tên tài khoản cùng mật khẩu mới: <br/>
+                
+                <a href="${link}">XÁC NHẬN LẤY LẠI THÔNG TIN TÀI KHOẢN</a> <br/>
+                
+                Travelgo <br/>
+                
+                Hỗ trợ: <br/>
+                
+                Tel: 097.421.5002 - Email: <a href="mailto:tridung3210@gmail.com">tridung3210@gmail.com</a>
+            </p>`;
+      await mailer.sendMail(email, subject, htmlContent);
+
+      res.status(200).json({ message: "Send mail successfully!" });
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({ error: error.message });
+    }
+
+  },
+  verifyResetToken: async (req, res) => {
+    const { resetToken } = req.body;
+
+    jwt.verify(resetToken, process.env.MY_SECRETKEY, async (err, userToken) => {
+      if (err) {
+        console.log(err);
+        return;
+      }
+      const user = await User.findById(userToken.userId);
+      if (!user) return res.status(401).json({ error: 'Invalid or expired link!' });
+
+      const token = await Token.findOne({
+        userId: userToken.userId,
+        token: userToken.token
+      });
+      if (!token) return res.status(401).json({ error: 'Invalid or expired link!' });
+
+      res.status(200).json({ email: user.email, token: userToken.token })
+    });
+
+  },
+
+  resetPassword: async (req, res) => {
+    try {
+      const { email, password, token } = req.body;
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(401).json({ error: 'Invalid or expired link!' });
+
+      const userToken = await Token.findOne({
+        userId: user._id,
+        token: token
+      });
+
+      if (!userToken) return res.status(401).json({ error: 'Invalid or expired link!' });
+
+      const salt = await bcrypt.genSalt(10);
+      const hashedPass = await bcrypt.hash(password, salt);
+
+      user.password = hashedPass;
+      await user.save();
+      await userToken.delete();
+
+      res.status(200).json({ message: "Reset password successfully!" });
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({ error: error.message });
+    }
   },
 };
 
