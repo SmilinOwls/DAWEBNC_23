@@ -8,7 +8,7 @@ const authApi = {
         return axiosClient.post("/api/auth/register", value)
     },
     forgotPassword: (value) => {
-        return axiosClient.post("/api/auth/password/forgot", value)
+        return axiosClient.post("/api/auth/forgot-password", value)
     }
 };
 

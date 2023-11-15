@@ -1,13 +1,13 @@
-import {combineReducers} from 'redux';
+import { combineReducers } from 'redux';
 import hotelsReducer from './HotelsReducer';
-import {placeSiteReducer, sitesReducer} from './SitesReducer';
+import { placeSiteReducer, sitesReducer } from './SitesReducer';
 import { hotelsFilterReducer } from './HotelsFilterReducer';
 import blogsReducer from './BlogsReducer';
 import detailSiteReducer from './DetailSiteReducer';
 import detailBlogReducer from './DetailBlog';
-import {detailHotelReducer, getRoomByHotelReducer} from './DetailHotelReducer';
+import { detailHotelReducer, getRoomByHotelReducer } from './DetailHotelReducer';
 import detailRoomReducer from './DetailRoomReducer';
-import {loginReducer, registerReducer, logoutReducer} from './AuthReducer'
+import { loginReducer, registerReducer, logoutReducer, forgotReducer } from './AuthReducer'
 import reviewReducer from './ReviewReducer';
 import cartReducer from './CartReducer';
 import { myOrderList, orderReducer } from './BookingReducer';
@@ -28,15 +28,16 @@ const rootReducer = combineReducers({
     roomAtHotel: getRoomByHotelReducer,
     detailRoom: detailRoomReducer,
     register: registerReducer,
-   login: loginReducer,
-   logout: logoutReducer,
-   review: reviewReducer,
-   cart: cartReducer,
-   wishlist: wishlistReducer,
-   sidebar: addSidebarReducer,
-   order: orderReducer,
-   myOrder: myOrderList,
-   userAdmin: UserAdminReducer,
+    login: loginReducer,
+    logout: logoutReducer,
+    forgot: forgotReducer,
+    review: reviewReducer,
+    cart: cartReducer,
+    wishlist: wishlistReducer,
+    sidebar: addSidebarReducer,
+    order: orderReducer,
+    myOrder: myOrderList,
+    userAdmin: UserAdminReducer,
 });
 
 export default rootReducer;
