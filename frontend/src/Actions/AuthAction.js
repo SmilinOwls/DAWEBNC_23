@@ -3,7 +3,6 @@ import {
   FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_REQUEST, RESET_PASSWORD_FAILURE, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_REQUEST
 } from '../Constants/AuthContstant';
 import authApi from '../Services/authApi';
-import axios from '../Services/axios'
 import Swal from "sweetalert2";
 
 
@@ -76,16 +75,6 @@ export const forgetPassword = (value) => {
       dispatch({ type: FORGOT_PASSWORD_FAILURE, payload: error })
     }
   }
-};
-
-export const verifyResetToken = async (value) => {
-  try {
-    const response = await authApi.verifyResetToken(value);
-    return response.data;
-  } catch (error) {
-    console.log(error);
-  }
-  return null;
 };
 
 export const resetPassword = (value) => {
