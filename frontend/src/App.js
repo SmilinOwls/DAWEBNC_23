@@ -11,10 +11,13 @@ import AccountMemory from "./Pages/AccountSetting/AccountMemory";
 import AccountSetting from "./Pages/AccountSetting";
 import LogOut from "./Pages/Logout";
 import PageNotFound from "./Pages/PageNotFound";
+import ForgotPassword from "./Pages/ForgotPassword";
+import ResetPassword from "./Pages/ResetPassword";
 
 import Dashboard from "./Pages/Admin/Dashboard";
 import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
+
 
 function App() {
   return (
@@ -99,7 +102,7 @@ function App() {
                 </MainLayout>
               </AdminRoute>
               <Route path="/sign-up">
-                <AppLayout>
+                <AppLayout >
                   <Signup />
                 </AppLayout>
               </Route>
@@ -111,6 +114,16 @@ function App() {
               <Route path="/logout">
                 <AppLayout>
                   <LogOut />
+                </AppLayout>
+              </Route>
+              <Route path="/forgot-password">
+                <AppLayout>
+                  <ForgotPassword />
+                </AppLayout>
+              </Route>
+              <Route path="/activenewpass">
+                <AppLayout>
+                  <ResetPassword/>
                 </AppLayout>
               </Route>
               <Route path="*">
