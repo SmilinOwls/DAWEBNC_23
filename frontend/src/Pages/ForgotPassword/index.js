@@ -3,7 +3,7 @@ import "./styles.css";
 import { useHistory, Link } from 'react-router-dom'
 import bgSignin from '../../Assets/images/bgsignin.jpg';
 import * as Yup from 'yup';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, FastField } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgetPassword } from '../../Actions/AuthAction';
 
@@ -12,10 +12,13 @@ function ForgotPassword(props) {
     email: '',
   };
 
-  const [initial, setInitial] = useState(true);
+  const [forgotState, setForgotState] = useState({
+    initial: false,
+    userCheck: true,
+    confirm: false,
+  });
+
   const [email, setEmail] = useState('');
-  const [userCheck, setUserCheck] = useState(true);
-  const [confirm, setConfirm] = useState(false);
   const history = useHistory();
   const forgot = useSelector((state) => state.forgot);
   const dispatch = useDispatch();
@@ -39,18 +42,34 @@ function ForgotPassword(props) {
   };
 
   useEffect(() => {
-    if(initial) return () => {
-      setInitial(false);
-    };
-   
-    if (forgot.error) {
-      setUserCheck(false);
-    } else {
-      setUserCheck(true);
-      setConfirm(true);
+    if (!forgotState.initial) {
+      setForgotState({ ...forgotState, initial: true });
     }
-  },
-    [forgot])
+    
+  }, [email]);
+
+  useEffect(() => {
+    if (forgotState.initial) {
+      if (!forgot.isLoading && forgot.message !== '' && !forgot.error) {
+        setForgotState({
+          ...forgotState,
+          initial: false,
+          userCheck: true,
+          confirm: true,
+        });
+      }
+      else {
+        setForgotState({
+          ...forgotState,
+          initial: false,
+          userCheck: false,
+          confirm: false,
+        })
+      }
+    }
+
+  }, [forgot]);
+
 
   return (
     <div className="ForgotPass my-5 py-3">
@@ -66,52 +85,51 @@ function ForgotPassword(props) {
         </div>
       </div>
 
-      {
-        confirm ?
-          <div className='text-center w-100 text-[#A20300]'>
-            <p>
-              Confirmation link has been sent to mail: <b>{email} </b> <br />
-              Open your email to activate the latest link and continue to log in then.
-            </p>
-          </div>
-          :
-          <Formik
-            initialValues={initialValues}
-            validationSchema={validationSchema}
-            onSubmit={handleSubmit}
-          >
-            {({ errors, touched }) => (
+      {forgotState.confirm ?
+        <div className='text-center w-100 text-[#A20300]'>
+          <p>
+            Confirmation link has been sent to mail: <b>{email} </b> <br />
+            Open your email to activate the latest link and continue to log in then.
+          </p>
+        </div>
+        :
+        <Formik
+          initialValues={initialValues}
+          validationSchema={validationSchema}
+          onSubmit={handleSubmit}
+        >
+          {({ errors, touched }) => (
 
-              <Form>
-                <h3 style={{ textAlign: "center", marginBottom: "15px" }}>Forgot Password</h3>
-                <div className="form-holder forgot-pass-form">
-                  <div className={userCheck ? 'd-none' : 'd-block text-danger mb-2'}>Email: <b>{email}</b> is yet to be registered!</div>
-                  <Field
-                    name="email"
-                    type="text"
-                    className={
-                      'forgot-form-control' +
-                      (errors.email && touched.email ? ' is-invalid' : '')
-                    }
-                    placeholder="Input email"
-                  />
-                  <ErrorMessage
-                    name="email"
-                    component="div"
-                    className="invalid-feedback"
-                  />
-                </div>
+            <Form>
+              <h3 style={{ textAlign: "center", marginBottom: "15px" }}>Forgot Password</h3>
+              <div className="form-holder forgot-pass-form">
+                {!forgotState.initial && <div className={forgotState.userCheck ? 'd-none' : 'd-block text-danger mb-2'}>Email: <b>{email}</b> is yet to be registered!</div>}
+                <Field
+                  name="email"
+                  type="text"
+                  className={
+                    'forgot-form-control' +
+                    (errors.email && touched.email ? ' is-invalid' : '')
+                  }
+                  placeholder="Input email"
+                />
+                <ErrorMessage
+                  name="email"
+                  component="div"
+                  className="invalid-feedback"
+                />
+              </div>
 
-                <div className="form-button">
-                  <button
-                    className='forgot-pass-btn'
-                    type="submit">
-                    Confirm
-                  </button>
-                </div>
-              </Form>
-            )}
-          </Formik>
+              <div className="form-button">
+                <button
+                  className='forgot-pass-btn'
+                  type="submit">
+                  Confirm
+                </button>
+              </div>
+            </Form>
+          )}
+        </Formik>
       }
 
     </div>

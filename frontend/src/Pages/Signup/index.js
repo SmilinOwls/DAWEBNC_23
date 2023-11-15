@@ -8,7 +8,7 @@ import { Formik, Field, Form, ErrorMessage } from 'formik';
 import SignupImage from '../../Assets/images/registration-form.jpg';
 import {registerUser} from '../../Actions/AuthAction'
 
-const PasswordStr = props => {
+export const PasswordStr = props => {
     var strColor;
     var strWidth;
   

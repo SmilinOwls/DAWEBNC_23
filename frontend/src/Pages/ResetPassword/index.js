@@ -9,6 +9,7 @@ import zxcvbn from 'zxcvbn';
 import { PasswordStr } from '../Signup';
 import { resetPassword, verifyResetToken } from '../../Actions/AuthAction';
 import { useLocation } from 'react-router-dom/cjs/react-router-dom.min';
+import authApi from '../../Services/authApi';
 
 function ResetPassword(props) {
   let [initialValues, setInitialValues] = useState({
@@ -34,11 +35,15 @@ function ResetPassword(props) {
   useEffect(() => {
     if (!resetToken) return () => { };
     async function verify() {
-      const data = await verifyResetToken({ resetToken: resetToken });
-      console.log(data);
-      if (data) {
-        setToken(data.token)
-        setEmail(data.email);
+      try {
+        const response = await authApi.verifyResetToken({ resetToken });
+        const data = response.data;
+        if (data) {
+          setToken(data.token)
+          setEmail(data.email);
+        }
+      } catch (error) {
+        console.log(error);
       }
     };
     verify();
@@ -75,7 +80,7 @@ function ResetPassword(props) {
 
 
   const handleSubmit = (value) => {
-    dispatch(resetPassword({...value, email: email, token: token}));
+    dispatch(resetPassword({ ...value, email: email, token: token }));
   };
 
   return (
