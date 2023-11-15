@@ -91,7 +91,7 @@ function Signin(props) {
     <div className="SignIn mt-5">
       <div className="signin-label">
         <div className="label_img">
-          <img className="label_img" src={bgSignin} alt="WinShop" />
+          <img className="label_img" src={bgSignin} alt="Travelgo" />
         </div>
       </div>
 
@@ -151,7 +151,7 @@ function Signin(props) {
               </button>
             </div>
             <Link
-              to="/forgot"
+              to="/forgot-password"
               style={{ textDecoration: "none", marginTop: "20px" }}
             >
               Forget Password ?
