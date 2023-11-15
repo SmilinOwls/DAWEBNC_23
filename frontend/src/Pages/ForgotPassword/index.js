@@ -3,7 +3,7 @@ import "./styles.css";
 import { useHistory, Link } from 'react-router-dom'
 import bgSignin from '../../Assets/images/bgsignin.jpg';
 import * as Yup from 'yup';
-import { Formik, Field, Form, ErrorMessage } from 'formik';
+import { Formik, Field, Form, ErrorMessage, FastField } from 'formik';
 import { useDispatch, useSelector } from 'react-redux';
 import { forgetPassword } from '../../Actions/AuthAction';
 
@@ -12,10 +12,13 @@ function ForgotPassword(props) {
     email: '',
   };
 
-  const [initial, setInitial] = useState(false);
+  const [forgotState, setForgotState] = useState({
+    initial: false,
+    userCheck: true,
+    confirm: false,
+  });
+
   const [email, setEmail] = useState('');
-  const [userCheck, setUserCheck] = useState(true);
-  const [confirm, setConfirm] = useState(false);
   const history = useHistory();
   const forgot = useSelector((state) => state.forgot);
   const dispatch = useDispatch();
@@ -39,23 +42,34 @@ function ForgotPassword(props) {
   };
 
   useEffect(() => {
-    setInitial(true);
+    if (!forgotState.initial) {
+      setForgotState({ ...forgotState, initial: true });
+    }
+    
   }, [email]);
 
   useEffect(() => {
-    if (!initial) {
-      if (forgot.loading && !forgot.error) {
-        setConfirm(true);
-        setUserCheck(true);
+    if (forgotState.initial) {
+      if (!forgot.isLoading && forgot.message !== '' && !forgot.error) {
+        setForgotState({
+          ...forgotState,
+          initial: false,
+          userCheck: true,
+          confirm: true,
+        });
       }
-    } else {
-      setInitial(false);
+      else {
+        setForgotState({
+          ...forgotState,
+          initial: false,
+          userCheck: false,
+          confirm: false,
+        })
+      }
     }
-    return () => { 
-      setUserCheck(false);
-    };
 
   }, [forgot]);
+
 
   return (
     <div className="ForgotPass my-5 py-3">
@@ -71,7 +85,7 @@ function ForgotPassword(props) {
         </div>
       </div>
 
-      {confirm ?
+      {forgotState.confirm ?
         <div className='text-center w-100 text-[#A20300]'>
           <p>
             Confirmation link has been sent to mail: <b>{email} </b> <br />
@@ -89,7 +103,7 @@ function ForgotPassword(props) {
             <Form>
               <h3 style={{ textAlign: "center", marginBottom: "15px" }}>Forgot Password</h3>
               <div className="form-holder forgot-pass-form">
-                <div className={userCheck ? 'd-none' : 'd-block text-danger mb-2'}>Email: <b>{email}</b> is yet to be registered!</div>
+                {!forgotState.initial && <div className={forgotState.userCheck ? 'd-none' : 'd-block text-danger mb-2'}>Email: <b>{email}</b> is yet to be registered!</div>}
                 <Field
                   name="email"
                   type="text"

@@ -150,12 +150,12 @@ function Signin(props) {
                 Sign in
               </button>
             </div>
-            <Link
-              to="/forgot-password"
+            <a
+              href="/forgot-password"
               style={{ textDecoration: "none", marginTop: "20px" }}
             >
               Forget Password ?
-            </Link>
+            </a>
             <div>
               <p>
                 Don't have account ?{" "}
