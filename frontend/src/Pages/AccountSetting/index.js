@@ -39,7 +39,7 @@ const AccountSetting = () => {
         let url = `/user/upload-avatar`;
 
         const headers = {
-          "Content-Type": "multipart/form-data",
+          "Content-type": "multipart/form-data",
         };
 
         const { data } = await axios.post(url, formData, headers);
