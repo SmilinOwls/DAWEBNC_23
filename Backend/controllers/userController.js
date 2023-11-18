@@ -115,17 +115,6 @@ const userControllers = {
       res.status(404).json("User not found !!!");
     }
   },
-  uploadAvatar: async (req, res) => {
-    const { file } = req;
-    const urlImage = `${file.path}`;
-    try {
-      res.status(200).json({
-        profilePic: urlImage,
-      });
-    } catch (error) {
-      res.status(500).json(error);
-    }
-  },
 };
 
 module.exports = userControllers;

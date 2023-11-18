@@ -35,10 +35,33 @@ const storage = multer.diskStorage({
   },
 });
 
+const avatarStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images/avatars");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname); // dặt lại tên cho file
+  },
+});
+
 const photoMiddleware = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
     const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
+    const extension = file.originalname.slice(-4);
+    const check = extensionImageList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
+    }
+  },
+});
+
+const avatarMiddlewware = multer({
+  storage: avatarStorage,
+  fileFilter: function (req, file, cb) {
+    const extensionImageList = [".png", ".jpg", ".jpeg", "svg"];
     const extension = file.originalname.slice(-4);
     const check = extensionImageList.includes(extension);
     if (check) {
@@ -63,6 +86,22 @@ app.post(
       uploadedFiles.push(newPath);
     }
     res.status(200).json(uploadedFiles);
+  }
+);
+
+app.post(
+  "/api/user/upload-avatar",
+  avatarMiddlewware.single("avatar"),
+  (req, res) => {
+    const { file } = req;
+    const urlImage = `${file.path}`;
+    try {
+      res.status(200).json({
+        profilePic: urlImage,
+      });
+    } catch (error) {
+      res.status(500).json(error);
+    }
   }
 );
 
