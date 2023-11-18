@@ -21,7 +21,7 @@ dotenv.config();
 app.use(
   cors({
     credentials: true,
-    origin: "https://travelgo-5437.vercel.app/",
+    origin: "https://travelgo-5437.vercel.app",
   })
 );
 app.use(cookieParser());
