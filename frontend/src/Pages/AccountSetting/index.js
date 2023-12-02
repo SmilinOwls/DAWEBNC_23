@@ -43,9 +43,9 @@ const AccountSetting = () => {
         };
 
         const { data } = await axios.post(url, formData, headers);
-        setFile("https://travelgo-a9qu.onrender.com/" + data.profilePic);
+        setFile("http://localhost:5000/" + data.profilePic);
         updatedUser.profilePic =
-          "https://travelgo-a9qu.onrender.com/" + data.profilePic ||
+          "http://localhost:5000/" + data.profilePic ||
           userInfo.profilePic;
       } catch (err) {
         console.log(err.response.data);
