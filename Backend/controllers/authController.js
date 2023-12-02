@@ -122,7 +122,7 @@ const authControllers = {
     res.status(200).json("Logged out successfully!");
   },
   forgotPassword: async (req, res) => {
-    const subject = "Booking4T - Confirm new password";
+    const subject = "Travelgo - Confirm new password";
 
     try {
       const { email } = req.body;
