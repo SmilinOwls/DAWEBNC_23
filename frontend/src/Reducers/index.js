@@ -7,7 +7,7 @@ import detailSiteReducer from './DetailSiteReducer';
 import detailBlogReducer from './DetailBlog';
 import { detailHotelReducer, getRoomByHotelReducer } from './DetailHotelReducer';
 import detailRoomReducer from './DetailRoomReducer';
-import { loginReducer, registerReducer, logoutReducer, forgotReducer } from './AuthReducer'
+import { loginReducer, registerReducer, logoutReducer, forgotReducer, resetReducer, activateReducer } from './AuthReducer'
 import reviewReducer from './ReviewReducer';
 import cartReducer from './CartReducer';
 import { myOrderList, orderReducer } from './BookingReducer';
@@ -31,6 +31,8 @@ const rootReducer = combineReducers({
     login: loginReducer,
     logout: logoutReducer,
     forgot: forgotReducer,
+    reset: resetReducer,
+    activate: activateReducer,
     review: reviewReducer,
     cart: cartReducer,
     wishlist: wishlistReducer,

@@ -15,6 +15,9 @@ const authApi = {
     },
     resetPassword: (value) => {
         return axiosClient.put("/api/auth/password/reset", value);
+    },
+    sendActiveAccountMail: (value) => {
+        return axiosClient.post("/api/auth/accout-activate", value);
     }
 };
 

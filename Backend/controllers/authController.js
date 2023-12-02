@@ -7,7 +7,7 @@ const mailer = require('../utils/mailer');
 
 let refreshTokens = [];
 const authControllers = {
-  registerUser: async (req, res) => {
+  registerUser: async (req, res, next) => {
     try {
       const salt = await bcrypt.genSalt(10);
       const hashedPass = await bcrypt.hash(req.body.password, salt);
@@ -17,10 +17,14 @@ const authControllers = {
         password: hashedPass,
         phone: req.body.phone,
       });
+
       const user = await newUser.save();
-      res.status(200).json(user);
+      req.user = newUser;
+      next();
+
     } catch (error) {
-      res.status(500).json(error);
+      next(error);
+      
     }
   },
   //Generate Token
@@ -219,6 +223,64 @@ const authControllers = {
       res.status(401).json({ error: error.message });
     }
   },
+
+  sendActiveAccountMail: async (req, res) => {
+    
+    const subject = "Travelgo - Account Activation";
+    try {
+      const { email } = req.user;
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(401).json({ error: 'User not Found!' });
+
+      const randomSixDigitsCode = Math.floor(100000 + Math.random() * 900000);
+    
+      user.activatedToken = crypto.createHash('sha256').update(randomSixDigitsCode.toString()).digest('hex');
+      await user.save();
+
+      const htmlContent =
+        `<p>
+                Bạn đã tiến hành kích hoạt thông tin tài khoản trên website của Travelgo <br/>
+
+                Dưới đây là mã kích hoạt gồm 6 số (có hiệu trong 1h) <br/>
+                
+                <b>${randomSixDigitsCode}</b> <br/>
+                
+                Travelgo <br/>
+                
+                Hỗ trợ: <br/>
+                
+                Tel: 097.421.5002 - Email: <a href="mailto:tridung3210@gmail.com">tridung3210@gmail.com</a>
+            </p>`;
+      await mailer.sendMail(email, subject, htmlContent);
+
+      res.status(200).json(user);
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({ error: error.message });
+    }
+  },
+
+  verifyActiveAccount: async (req, res) => {
+    const { email, activatedNumber } = req.body;
+
+    try {
+      const user = await User.findOne({ email: email });
+      if (!user) return res.status(401).json({ error: 'User not Found!' });
+
+      const activatedToken = crypto.createHash('sha256').update(activatedNumber.toString()).digest('hex');
+
+      if (user.activatedToken !== activatedToken) return res.status(401).json({ error: 'Invalid or expired link!' });
+
+      user.activatedToken = null;
+      user.isActivated = true;
+      await user.save();
+
+      res.status(200).json({ message: "Active account successfully!" });
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({ error: error.message });
+    }
+  }
 };
 
 module.exports = authControllers;

@@ -1,10 +1,23 @@
 import {
-  REGISTER_FAILURE, REGISTER_SUCCESS, REGISTER_REQUEST, LOGIN_FAILURE, LOGIN_SUCCESS, LOGIN_REQUEST, LOG_OUT,
-  FORGOT_PASSWORD_FAILURE, FORGOT_PASSWORD_SUCCESS, FORGOT_PASSWORD_REQUEST, RESET_PASSWORD_FAILURE, RESET_PASSWORD_SUCCESS, RESET_PASSWORD_REQUEST
-} from '../Constants/AuthContstant';
-import authApi from '../Services/authApi';
+  REGISTER_FAILURE,
+  REGISTER_SUCCESS,
+  REGISTER_REQUEST,
+  LOGIN_FAILURE,
+  LOGIN_SUCCESS,
+  LOGIN_REQUEST,
+  LOG_OUT,
+  FORGOT_PASSWORD_FAILURE,
+  FORGOT_PASSWORD_SUCCESS,
+  FORGOT_PASSWORD_REQUEST,
+  RESET_PASSWORD_FAILURE,
+  RESET_PASSWORD_SUCCESS,
+  RESET_PASSWORD_REQUEST,
+  ACTIVATE_FAILURE,
+  ACTIVATE_SUCCESS,
+  ACTIVATE_REQUEST,
+} from "../Constants/AuthContstant";
+import authApi from "../Services/authApi";
 import Swal from "sweetalert2";
-
 
 export const registerUser = (value) => {
   return async (dispatch) => {
@@ -12,6 +25,27 @@ export const registerUser = (value) => {
     try {
       const { data } = await authApi.registerUser(value);
       dispatch({ type: REGISTER_SUCCESS, payload: data });
+      // Swal.fire(
+      //   "Sign up successfully!",
+      //   "Return back to signin page!",
+      //   "Success"
+      // ).then((result) => {
+      //   if (result.isConfirmed) {
+      //     window.location.href = "/sign-in";
+      //   }
+      // });
+    } catch (error) {
+      dispatch({ type: REGISTER_FAILURE, payload: error });
+    }
+  };
+};
+
+export const activateUser = (value) => {
+  return async (dispatch) => {
+    dispatch({ type: ACTIVATE_REQUEST });
+    try {
+      const { data } = await authApi.sendActiveAccountMail(value);
+      dispatch({ type: ACTIVATE_SUCCESS, payload: data });
       Swal.fire(
         "Sign up successfully!",
         "Return back to signin page!",
@@ -22,9 +56,9 @@ export const registerUser = (value) => {
         }
       });
     } catch (error) {
-      dispatch({ type: REGISTER_FAILURE, payload: error })
+      dispatch({ type: ACTIVATE_FAILURE, payload: error });
     }
-  }
+  };
 };
 
 export const loginUser = (value) => {
@@ -44,24 +78,21 @@ export const loginUser = (value) => {
         }
       });
     } catch (error) {
-      dispatch({ type: LOGIN_FAILURE, payload: error })
+      dispatch({ type: LOGIN_FAILURE, payload: error });
     }
-  }
+  };
 };
 
 export const logout = () => {
   return (dispatch) => {
     localStorage.removeItem("user");
-    dispatch({ type: LOG_OUT })
-    Swal.fire(
-      "Log out successfully!",
-      "Success"
-    ).then((result) => {
+    dispatch({ type: LOG_OUT });
+    Swal.fire("Log out successfully!", "Success").then((result) => {
       if (result.isConfirmed) {
         window.location.href = "/";
       }
     });
-  }
+  };
 };
 
 export const forgetPassword = (value) => {
@@ -72,9 +103,9 @@ export const forgetPassword = (value) => {
       dispatch({ type: FORGOT_PASSWORD_SUCCESS, payload: data.message });
     } catch (error) {
       console.log(error);
-      dispatch({ type: FORGOT_PASSWORD_FAILURE, payload: error })
+      dispatch({ type: FORGOT_PASSWORD_FAILURE, payload: error });
     }
-  }
+  };
 };
 
 export const resetPassword = (value) => {
@@ -93,7 +124,7 @@ export const resetPassword = (value) => {
         }
       });
     } catch (error) {
-      dispatch({ type: RESET_PASSWORD_FAILURE, payload: error })
+      dispatch({ type: RESET_PASSWORD_FAILURE, payload: error });
     }
-  }
+  };
 };
