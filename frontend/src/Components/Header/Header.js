@@ -6,15 +6,15 @@ import { useSelector, useDispatch } from "react-redux";
 import { getShowCart } from "../../Actions/SidebarAction";
 import Wishlist from "../Wishlist";
 import { BiBook } from "react-icons/bi";
-import logo from "../../Assets/images/Logo.jpeg";
+import logo from "../../Assets/images/Logo.jpg";
 const nav_links = [
   {
     path: "/",
     display: "Home",
   },
   {
-    path: "/hotels",
-    display: "Classrooms",
+    path: "/courses",
+    display: "Courses",
   },
   {
     path: "/news",
@@ -69,7 +69,11 @@ const Header = () => {
           <div className="nav__wrapper d-flex align-items-center justify-content-between">
             <div className="logo">
               <Link to="/">
-                <img src={logo} alt="Logo" />
+                <img
+                  src={logo}
+                  alt="Logo"
+                  style={{ width: "50px", height: "50px" }}
+                />
               </Link>
             </div>
             <div className="navigation" ref={menuRef} onClick={toggleMenu}>

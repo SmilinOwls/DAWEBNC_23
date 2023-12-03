@@ -26,14 +26,13 @@ const userControllers = {
   updateUser: async (req, res) => {
     const user = await User.findById(req.params.id);
     if (user) {
-      (user.username = req.body.username || user.username),
+      (user.name = req.body.name || user.name),
         (user.email = req.body.email || user.email);
       user.phone = req.body.phone || user.phone;
-      user.isAdmin = req.body.isAdmin ?? user.isAdmin;
-      user.profilePic = req.body.profilePic || user.profilePic
+      user.isAdmin = req.body.isAdmin || user.isAdmin;
       const updatedUser = await user.save();
       res.status(200).json({
-        username: updatedUser.name,
+        name: updatedUser.name,
         email: updatedUser.email,
         phone: updatedUser.phone,
         isAdmin: updatedUser.isAdmin,
