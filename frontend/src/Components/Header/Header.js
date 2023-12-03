@@ -13,8 +13,8 @@ const nav_links = [
     display: "Home",
   },
   {
-    path: "/hotels",
-    display: "Hotels",
+    path: "/courses",
+    display: "Courses",
   },
   {
     path: "/news",

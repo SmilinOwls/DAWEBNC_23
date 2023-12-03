@@ -1,10 +1,9 @@
 import React from "react";
 import "./Home.css";
 import { Col, Container, Row } from "reactstrap";
-import hero01 from "../../Assets/images/hero-img01.jpg";
-import hero02 from "../../Assets/images/hero-img02.png";
-import world from "../../Assets/images/world.png";
-import heroVideo from "../../Assets/videos/hero-video.mp4";
+import hero01 from "../../Assets/images/Course.png";
+import hero02 from "../../Assets/images/what-is-ui.jpg";
+import heroVideo from "../../Assets/images/Mern.png";
 import experience from "../../Assets/images/experience.jpg";
 import Searchbar from "./Components/SearchBar/Searchbar";
 import Process from "./Components/Process/Process";
@@ -17,20 +16,22 @@ import FeatureSites from "./Components/FeatureSites/FeatureSites";
 const Home = () => {
   return (
     <>
-      <section >
+      <section>
         <Container>
           <Row>
             <Col lg="6">
               <div className="hero__content">
                 <div className="hero__subtitle d-flex align-items-center">
-                  <h3 className="section__subtitle">Know Before you go</h3>
-                  <img src={world} alt="" />
+                  <h3 className="section__subtitle">Know Before you started</h3>
                 </div>
                 <h1>
-                  Traveling opens the door to creating
-                  <span className="highlight">memories</span>
+                  Learn HTML5 , CSS3 , Web Apps &
+                  <span className="highlight">More</span>
                 </h1>
-                <p>Are you dreaming of a place to stay? We are here!</p>
+                <p>
+                  Learn How To Build Websites & Apps Write A Code Or Start A
+                  Business
+                </p>
               </div>
             </Col>
             <Col lg="2">
@@ -40,7 +41,7 @@ const Home = () => {
             </Col>
             <Col lg="2">
               <div className="hero__img-box hero__video-box mt-4">
-                <video src={heroVideo} alt="" controls />
+                <img src={heroVideo} alt="" />
               </div>
             </Col>
             <Col lg="2">
@@ -56,11 +57,13 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='12'>
-            <h3 className="section__subtitle">Sites</h3>
-              <h2 className="testimonial__title">Top destinations in Vietnam</h2>
+            <Col lg="12">
+              <h3 className="section__subtitle">Sites</h3>
+              <h2 className="testimonial__title">
+                Top destinations in Vietnam
+              </h2>
             </Col>
-            <Col lg='12'>
+            <Col lg="12">
               <FeatureSites />
             </Col>
           </Row>
@@ -69,9 +72,9 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='3'>
+            <Col lg="3">
               <h5 className="services__subtitle">What we serve</h5>
-              <h2 className='services__ttle'>We offer our best services</h2>
+              <h2 className="services__ttle">We offer our best services</h2>
             </Col>
             <ServiceList />
           </Row>
@@ -80,9 +83,11 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='12'>
+            <Col lg="12">
               <h3 className="section__subtitle">Hotels</h3>
-              <h2 className="testimonial__title">Featured homes recommended for you</h2>
+              <h2 className="testimonial__title">
+                Featured homes recommended for you
+              </h2>
             </Col>
             <FeatureHotels />
           </Row>
@@ -91,13 +96,15 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='6'>
+            <Col lg="6">
               <div className="experience__content">
-              <h3 className="section__subtitle">Experience</h3>
+                <h3 className="section__subtitle">Experience</h3>
 
-                <h2>With our all experience <br /> we will serve you</h2>
+                <h2>
+                  With our all experience <br /> we will serve you
+                </h2>
                 <p>
-                    Stay in our world of comfort and style
+                  Stay in our world of comfort and style
                   <br />
                   Experience the difference services
                 </p>
@@ -121,7 +128,7 @@ const Home = () => {
               </div>
             </Col>
 
-            <Col lg='6'>
+            <Col lg="6">
               <div className="experience__img">
                 <img src={experience} alt="" />
               </div>
@@ -132,11 +139,11 @@ const Home = () => {
       <section>
         <Container>
           <Row>
-            <Col lg='12'>
-            <h3 className="section__subtitle">Reviews</h3>
+            <Col lg="12">
+              <h3 className="section__subtitle">Reviews</h3>
               <h2 className="testimonial__title">What our fans say about us</h2>
             </Col>
-            <Col lg='12'>
+            <Col lg="12">
               <Reviews />
             </Col>
           </Row>
