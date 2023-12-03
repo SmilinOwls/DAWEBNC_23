@@ -315,7 +315,8 @@ const authControllers = {
           path: "/",
           sameSite: "strict",
         });
-        res.status(200).json({ user: userExist, accessToken: accessToken });
+        const { password, ...others } = userExist._doc;
+        res.status(200).json({ ...others, accessToken });
       });
     } catch (error) {
       console.log(error);
