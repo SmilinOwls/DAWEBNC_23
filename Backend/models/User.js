@@ -32,6 +32,13 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    isActivated: {
+      type: Boolean,
+      default: false,
+    },
+    activatedToken: {
+      type: String,
+    },
     resetPasswordToken: {
       type: String,
     },

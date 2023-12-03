@@ -29,6 +29,12 @@ const resetState = {
     error: null
 }
 
+const activatedState = {
+    loading: false,
+    message: "",
+    error: null
+};
+
 export function registerReducer(state = registerState, action){
     switch(action.type){
         case REGISTER_REQUEST: {
@@ -101,3 +107,19 @@ export function loginReducer(state = loginState, action){
         return state;
     }
  }
+
+ export function activateReducer(state = forgotState, action){
+    switch(action.type){
+        case FORGOT_PASSWORD_REQUEST: {
+            return {...state, loading: true, error: null}
+        }
+        case FORGOT_PASSWORD_SUCCESS: {
+            return {...state, message: action.payload, loading: false}
+        }
+        case FORGOT_PASSWORD_FAILURE: {
+            return {...state, loading: false, error: action.payload}
+        }
+        default:
+            return state;
+    }
+ };

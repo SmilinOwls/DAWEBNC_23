@@ -100,6 +100,28 @@
     margin-bottom: 25px; 
 }
 
+.confirm-btn {
+  letter-spacing: 2px;
+  border: none;
+  width: 133px;
+  height: 47px;
+  margin-right: 19px;
+  border-radius: 23.5px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 0;
+  background: #1fa9f9;
+  font-size: 15px;
+  color: #fff;
+  text-transform: uppercase;
+  font-family: "Montserrat-SemiBold";
+  -webkit-transform: perspective(1px) translateZ(0);
+  transform: perspective(1px) translateZ(0);
+  box-shadow: 0 0 1px rgba(0, 0, 0, 0);
+}
+
 @-webkit-keyframes hvr-wobble-horizontal {
     16.65% {
       -webkit-transform: translateX(8px);
@@ -139,7 +161,7 @@
       -webkit-transform: translateX(0);
       transform: translateX(0); } }
 
-.signup-submit, .signup-forgot {
+.signup-submit, .signup-forgot, .confirm-submit {
         letter-spacing: 2px;
         border: none;
         width: 133px;
@@ -159,6 +181,27 @@
         -webkit-transform: perspective(1px) translateZ(0);
         transform: perspective(1px) translateZ(0);
         box-shadow: 0 0 1px rgba(0, 0, 0, 0); }
+.confirm-back {
+          letter-spacing: 2px;
+          border: none;
+          width: 133px;
+          height: 47px;
+          margin-right: 19px;
+          border-radius: 23.5px;
+          cursor: pointer;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          padding: 0;
+          background: #fff;
+          font-size: 15px;
+          color: #1fa9f9;
+          border: 1px solid #1fa9f9;
+          text-transform: uppercase;
+          font-family: "Montserrat-SemiBold";
+          -webkit-transform: perspective(1px) translateZ(0);
+          transform: perspective(1px) translateZ(0);
+          box-shadow: 0 0 1px rgba(0, 0, 0, 0); }
 .signup-submit:hover, .signup-forgot:hover {
           -webkit-animation-name: hvr-wobble-horizontal;
           animation-name: hvr-wobble-horizontal;
