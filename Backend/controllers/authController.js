@@ -294,7 +294,13 @@ const authControllers = {
     res.redirect(`${process.env.BASE_URL}:3000/sign-in?gg_login=true&code=${accessToken}`);
   },
 
-  loginUserViaGoogle: async (req, res) => {
+  handleFacebookCallback: async (req, res) => {
+    const user = req.user;
+    const accessToken = authControllers.generateAccessToken(user);
+    res.redirect(`${process.env.BASE_URL}:3000/sign-in?fb_login=true&code=${accessToken}`);
+  },
+
+  loginUserVia3rdParty: async (req, res) => {
     const { code } = req.body;
     try {
       jwt.verify(code, process.env.MY_SECRETKEY, async (err, user) => {

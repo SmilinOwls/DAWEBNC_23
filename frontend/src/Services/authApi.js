@@ -22,6 +22,9 @@ const authApi = {
     logInUserViaGoogle: (value) => {
         return axiosClient.post("/api/auth/login/google", value);
     },
+    logInUserViaFacebook: (value) => {
+        return axiosClient.post("/api/auth/login/facebook", value);
+    },
 };
 
 export default authApi;

@@ -18,6 +18,7 @@ router.post("/forgot-password", authControllers.forgotPassword);
 router.post("/verify", authControllers.verifyResetToken);
 router.put("/password/reset/", authControllers.resetPassword);
 router.post("/accout-activate", authControllers.verifyActiveAccount);
+
 router.get(
   "/google",
   passport.authenticate("google", {
@@ -29,6 +30,20 @@ router.get(
   passport.authenticate("google"),
   authControllers.handleGoogleCallback
 );
-router.post("/login/google", authControllers.loginUserViaGoogle);
+router.post("/login/google", authControllers.loginUserVia3rdParty);
+
+router.get(
+  "/facebook",
+  passport.authenticate("facebook", {
+    scope: ["public_profile", "email"],
+  })
+);
+
+router.get(
+  "/facebook/callback",
+  passport.authenticate("facebook"),
+  authControllers.handleFacebookCallback
+);
+router.post("/login/facebook", authControllers.loginUserVia3rdParty);
 
 module.exports = router;
