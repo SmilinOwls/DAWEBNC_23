@@ -3,7 +3,7 @@ const Token = require("../models/Token");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const mailer = require("../utils/mailer");
+const mailer = require("../services/mailer");
 
 let refreshTokens = [];
 const authControllers = {
@@ -134,7 +134,7 @@ const authControllers = {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email: email });
-      if (!user) return res.status(401).json( "User not Found!" );
+      if (!user) return res.status(401).json("User not Found!");
 
       let token = await Token.findOne({ userId: user._id });
       if (!token) {
@@ -282,6 +282,42 @@ const authControllers = {
       await user.save();
 
       res.status(200).json({ message: "Active account successfully!" });
+    } catch (error) {
+      console.log(error);
+      res.status(401).json({ error: error.message });
+    }
+  },
+
+  handleGoogleCallback: async (req, res) => {
+    const user = req.user;
+    const accessToken = authControllers.generateAccessToken(user);
+    res.redirect(`${process.env.BASE_URL}:3000/sign-in?gg_login=true&code=${accessToken}`);
+  },
+
+  loginUserViaGoogle: async (req, res) => {
+    const { code } = req.body;
+    try {
+      jwt.verify(code, process.env.MY_SECRETKEY, async (err, user) => {
+        if(err) {
+          console.log(err);
+          return;
+        }
+        const { id } = user;
+        const userExist = await User.findById(id);
+        if (!userExist) {
+          return res.status(401).json("User not found!");
+        }
+        const accessToken = authControllers.generateAccessToken(userExist);
+        const refreshToken = authControllers.generateRefreshToken(userExist);
+        res.cookie("refreshToken", refreshToken, {
+          httpOnly: true,
+          secure: false,
+          path: "/",
+          sameSite: "strict",
+        });
+        const { password, ...others } = userExist._doc;
+        res.status(200).json({ ...others, accessToken });
+      });
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: error.message });

@@ -18,7 +18,10 @@ const authApi = {
     },
     sendActiveAccountMail: (value) => {
         return axiosClient.post("/api/auth/accout-activate", value);
-    }
+    },
+    logInUserViaGoogle: (value) => {
+        return axiosClient.post("/api/auth/login/google", value);
+    },
 };
 
 export default authApi;
