@@ -71,6 +71,7 @@ function Signup(props) {
   const [pwBtn, setPwBtn] = useState(props.pwBtn || "show");
   const [type, setType] = useState(props.type || "password");
   const [submitted, setSubmitted] = useState(false);
+  const { error } = useSelector((state) => state.register);
 
   const dispatch = useDispatch();
 
@@ -95,7 +96,6 @@ function Signup(props) {
         .required("Confirm Password is required")
         .oneOf([Yup.ref("password"), null], "Confirm Password does not match"),
       acceptTerms: Yup.bool().oneOf([true], "Accept Terms is required"),
-      
     });
   };
 
@@ -306,6 +306,12 @@ function Signup(props) {
                     </label>
                   </div>
 
+                  {error ? (
+                    <p style={{ color: "#DC0000" }}>{error.response.data}</p>
+                  ) : (
+                    <></>
+                  )}
+
                   <div className="form-login">
                     <button className="signup-submit" type="submit">
                       Sign up
@@ -384,6 +390,13 @@ function Signup(props) {
                     className="invalid-feedback"
                   />
                 </div>
+
+                {error ? (
+                  <p style={{ color: "#DC0000" }}>{error.response.data}</p>
+                ) : (
+                  <></>
+                )}
+                
                 <div className="flex justify-center mb-10">
                   <div className="form-button">
                     <button

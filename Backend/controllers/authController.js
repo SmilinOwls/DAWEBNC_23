@@ -3,7 +3,7 @@ const Token = require("../models/Token");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const mailer = require('../utils/mailer');
+const mailer = require("../utils/mailer");
 
 let refreshTokens = [];
 const authControllers = {
@@ -18,13 +18,11 @@ const authControllers = {
         phone: req.body.phone,
       });
 
-      const user = await newUser.save();
+      await newUser.save();
       req.user = newUser;
       next();
-
     } catch (error) {
       next(error);
-      
     }
   },
   //Generate Token
@@ -67,6 +65,10 @@ const authControllers = {
       if (!user) {
         return res.status(404).json("Wrong email !!!");
       }
+      if (!user.isActivated) {
+        return res.status(404).json("Please activate your account !!!");
+      }
+
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
@@ -75,6 +77,7 @@ const authControllers = {
       if (!validPassword) {
         return res.status(404).json("Wrong password !!!");
       }
+
       if (user && validPassword) {
         const accessToken = authControllers.generateAccessToken(user);
         const refreshToken = authControllers.generateRefreshToken(user);
@@ -131,29 +134,29 @@ const authControllers = {
     try {
       const { email } = req.body;
       const user = await User.findOne({ email: email });
-      if (!user) return res.status(401).json({ error: 'User not Found!' });
+      if (!user) return res.status(401).json( "User not Found!" );
 
       let token = await Token.findOne({ userId: user._id });
       if (!token) {
         token = await new Token({
           userId: user._id,
-          token: crypto.randomBytes(32).toString("hex")
+          token: crypto.randomBytes(32).toString("hex"),
         }).save();
       }
 
-      const resetToken = jwt.sign({
-        userId: token.userId,
-        token: token.token
-      },
+      const resetToken = jwt.sign(
+        {
+          userId: token.userId,
+          token: token.token,
+        },
         process.env.MY_SECRETKEY,
         {
-          expiresIn: "3600s"
+          expiresIn: "3600s",
         }
       );
 
       const link = `${process.env.BASE_URL}:3000/activenewpass?resetToken=${resetToken}`;
-      const htmlContent =
-        `<p>
+      const htmlContent = `<p>
                 Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Travelgo <br/>
 
                 Xin hãy kích vào đường dẫn dưới đây để xác nhận và lấy lại tên tài khoản cùng mật khẩu mới: <br/>
@@ -168,12 +171,11 @@ const authControllers = {
             </p>`;
       await mailer.sendMail(email, subject, htmlContent);
 
-      res.status(200).json({ message: "Send mail successfully!" });
+      res.status(200).json("Send mail successfully!");
     } catch (error) {
       console.log(error);
       res.status(401).json({ error: error.message });
     }
-
   },
   verifyResetToken: async (req, res) => {
     const { resetToken } = req.body;
@@ -184,31 +186,30 @@ const authControllers = {
         return;
       }
       const user = await User.findById(userToken.userId);
-      if (!user) return res.status(401).json({ error: 'Invalid or expired link!' });
+      if (!user) return res.status(401).json("Invalid or expired link!");
 
       const token = await Token.findOne({
         userId: userToken.userId,
-        token: userToken.token
+        token: userToken.token,
       });
-      if (!token) return res.status(401).json({ error: 'Invalid or expired link!' });
+      if (!token) return res.status(401).json("Invalid or expired link!");
 
-      res.status(200).json({ email: user.email, token: userToken.token })
+      res.status(200).json({ email: user.email, token: userToken.token });
     });
-
   },
 
   resetPassword: async (req, res) => {
     try {
       const { email, password, token } = req.body;
       const user = await User.findOne({ email: email });
-      if (!user) return res.status(401).json({ error: 'Invalid or expired link!' });
+      if (!user) return res.status(401).json("Invalid or expired link!");
 
       const userToken = await Token.findOne({
         userId: user._id,
-        token: token
+        token: token,
       });
 
-      if (!userToken) return res.status(401).json({ error: 'Invalid or expired link!' });
+      if (!userToken) return res.status(401).json("Invalid or expired link!");
 
       const salt = await bcrypt.genSalt(10);
       const hashedPass = await bcrypt.hash(password, salt);
@@ -225,20 +226,21 @@ const authControllers = {
   },
 
   sendActiveAccountMail: async (req, res) => {
-    
     const subject = "Travelgo - Account Activation";
     try {
       const { email } = req.user;
       const user = await User.findOne({ email: email });
-      if (!user) return res.status(401).json({ error: 'User not Found!' });
+      if (!user) return res.status(401).json("User not Found!");
 
       const randomSixDigitsCode = Math.floor(100000 + Math.random() * 900000);
-    
-      user.activatedToken = crypto.createHash('sha256').update(randomSixDigitsCode.toString()).digest('hex');
+
+      user.activatedToken = crypto
+        .createHash("sha256")
+        .update(randomSixDigitsCode.toString())
+        .digest("hex");
       await user.save();
 
-      const htmlContent =
-        `<p>
+      const htmlContent = `<p>
                 Bạn đã tiến hành kích hoạt thông tin tài khoản trên website của Travelgo <br/>
 
                 Dưới đây là mã kích hoạt gồm 6 số (có hiệu trong 1h) <br/>
@@ -265,11 +267,15 @@ const authControllers = {
 
     try {
       const user = await User.findOne({ email: email });
-      if (!user) return res.status(401).json({ error: 'User not Found!' });
+      if (!user) return res.status(401).json("User not Found!");
 
-      const activatedToken = crypto.createHash('sha256').update(activatedNumber.toString()).digest('hex');
+      const activatedToken = crypto
+        .createHash("sha256")
+        .update(activatedNumber.toString())
+        .digest("hex");
 
-      if (user.activatedToken !== activatedToken) return res.status(401).json({ error: 'Invalid or expired link!' });
+      if (user.activatedToken !== activatedToken)
+        return res.status(401).json("Invalid or expired link!");
 
       user.activatedToken = null;
       user.isActivated = true;
@@ -280,7 +286,7 @@ const authControllers = {
       console.log(error);
       res.status(401).json({ error: error.message });
     }
-  }
+  },
 };
 
 module.exports = authControllers;
