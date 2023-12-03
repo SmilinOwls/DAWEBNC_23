@@ -6,7 +6,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { getShowCart } from "../../Actions/SidebarAction";
 import Wishlist from "../Wishlist";
 import { BiBook } from "react-icons/bi";
-import logo from "../../Assets/images/Logo.jpg";
+import logo from "../../Assets/images/Logo.jpeg";
 const nav_links = [
   {
     path: "/",
