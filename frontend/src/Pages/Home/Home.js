@@ -84,9 +84,9 @@ const Home = () => {
         <Container>
           <Row>
             <Col lg="12">
-              <h3 className="section__subtitle">Hotels</h3>
+              <h3 className="section__subtitle">Courses</h3>
               <h2 className="testimonial__title">
-                Featured homes recommended for you
+                Featured courses recommended for you
               </h2>
             </Col>
             <FeatureHotels />
@@ -104,25 +104,24 @@ const Home = () => {
                   With our all experience <br /> we will serve you
                 </h2>
                 <p>
-                  Stay in our world of comfort and style
-                  <br />
-                  Experience the difference services
+                  E-learing is collect on many resourses. People who study at
+                  the Course Hub can archive knowledge by join suitable topic.
                 </p>
               </div>
 
               <div className="counter__wrapper d-flex align-items-center gap-5">
                 <div className="counter__box">
-                  <span>60+</span>
-                  <h6>Hotels</h6>
+                  <span>200+</span>
+                  <h6>Courses</h6>
                 </div>
 
                 <div className="counter__box">
-                  <span>100+</span>
+                  <span>50+</span>
                   <h6>Special Services</h6>
                 </div>
 
                 <div className="counter__box">
-                  <span>4</span>
+                  <span>2</span>
                   <h6>Years experiecne</h6>
                 </div>
               </div>

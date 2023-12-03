@@ -7,7 +7,7 @@ import {
   ArrowTwo,
   ArrowThree,
   guideImg,
-  weatherImg,
+  videosImg,
   customizationImg,
   // ReviewOne,
   // ReviewTwo,
@@ -42,19 +42,19 @@ const WorkData = [
 
 const servicesData = [
   {
-    imgUrl: weatherImg,
-    title: "Calculate Weather",
-    desc: "Welcome to heaven on earth",
+    imgUrl: videosImg,
+    title: "Find video courses",
+    desc: "Build your library for your career",
   },
   {
     imgUrl: guideImg,
-    title: "Best Tour Guide",
-    desc: "Arrive as guests, leave as friends",
+    title: "Learn from industry experts",
+    desc: "Select from top instructors",
   },
   {
     imgUrl: customizationImg,
-    title: "Customization",
-    desc: "Whisper your dreams to us.",
+    title: "Go at your own pace",
+    desc: "Enjoy lifetime access to courses",
   },
 ];
 

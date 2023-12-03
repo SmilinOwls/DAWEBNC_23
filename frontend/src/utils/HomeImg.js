@@ -8,6 +8,7 @@ import ArrowTwo from "../Assets/images/arrow-2.png";
 import ArrowThree from "../Assets/images/arrow-3.png";
 
 import weatherImg from "../Assets/images/weather.png";
+import videosImg from "../Assets/images/videos.jpg";
 import guideImg from "../Assets/images/guide.png";
 import customizationImg from "../Assets/images/customization.png";
 
@@ -22,4 +23,5 @@ export {
   weatherImg,
   guideImg,
   customizationImg,
+  videosImg,
 };
