@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
 import { useHistory, Link } from "react-router-dom";
-import bgSignin from "../../Assets/images/bgsignin.jpg";
+import bgSignin from "../../Assets/images/bgsignin.jpeg";
 import * as Yup from "yup";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
