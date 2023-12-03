@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import "./styles.css";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import zxcvbn from "zxcvbn";
 import * as Yup from "yup";
 import { Link } from "react-router-dom";
@@ -396,7 +396,7 @@ function Signup(props) {
                 ) : (
                   <></>
                 )}
-                
+
                 <div className="flex justify-center mb-10">
                   <div className="form-button">
                     <button

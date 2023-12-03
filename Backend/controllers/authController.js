@@ -65,9 +65,9 @@ const authControllers = {
       if (!user) {
         return res.status(404).json("Wrong email !!!");
       }
-      if (!user.isActivated) {
-        return res.status(404).json("Please activate your account !!!");
-      }
+      // if (!user.isActivated) {
+      //   return res.status(404).json("Please activate your account !!!");
+      // }
 
       const validPassword = await bcrypt.compare(
         req.body.password,
