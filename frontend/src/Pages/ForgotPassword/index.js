@@ -59,14 +59,12 @@ function ForgotPassword(props) {
         });
       }
       else {
-        if(forgot.error){
-          setForgotState({
-            ...forgotState,
-            initial: false,
-            userCheck: false,
-            confirm: false,
-          })
-        }
+        setForgotState({
+          ...forgotState,
+          initial: false,
+          userCheck: false,
+          confirm: false,
+        })
       }
     }
 

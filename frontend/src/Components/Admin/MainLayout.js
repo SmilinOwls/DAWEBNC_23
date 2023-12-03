@@ -5,7 +5,7 @@ import {
   MenuUnfoldOutlined,
   UserOutlined,
 } from '@ant-design/icons';
-import { AiOutlineDashboard, AiOutlineBackward } from 'react-icons/ai';
+import { AiOutlineDashboard } from 'react-icons/ai';
 import { IoIosNotifications } from 'react-icons/io';
 import './style.css';
 import { user } from '../../utils/customUser';
@@ -51,16 +51,11 @@ function MainLayout({children}) {
               icon: <UserOutlined className="fs-4" />,
               label: 'User',
             },
-            {
-              key: '/',
-              icon: <AiOutlineBackward className='fs-4'/>,
-              label: 'Back'
-            }
           ]}
         />
       </Sider>
       <Layout className='pt-0'>
-      <Header
+        <Header
           className='d-flex justify-content-between ps-1 pe-3'
           style={{
             padding: 0,
