@@ -83,6 +83,29 @@ export const loginUser = (value) => {
   };
 };
 
+export const loginUserViaGG = (value) => {
+  return async (dispatch) => {
+    dispatch({ type: LOGIN_REQUEST });
+    try {
+      console.log(value);
+      const { data } = await authApi.logInUserViaGoogle(value);
+      localStorage.setItem("user", JSON.stringify(data));
+      dispatch({ type: LOGIN_SUCCESS, payload: data });
+      Swal.fire(
+        "Sign in successfully !!!",
+        "Wish you have a good experience at Booking4T",
+        "Success"
+      ).then((result) => {
+        if (result.isConfirmed) {
+          window.location.href = "/";
+        }
+      });
+    } catch (error) {
+      dispatch({ type: LOGIN_FAILURE, payload: error });
+    }
+  };
+};
+
 export const logout = () => {
   return (dispatch) => {
     localStorage.removeItem("user");

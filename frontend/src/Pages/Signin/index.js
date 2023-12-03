@@ -1,11 +1,11 @@
 import React, { useState, useEffect } from "react";
 import "./styles.css";
-import { useHistory, Link } from "react-router-dom";
+import { useHistory, Link, useLocation } from "react-router-dom";
 import bgSignin from "../../Assets/images/bgsignin.jpg";
 import * as Yup from "yup";
 import { Formik, Field, Form, ErrorMessage } from "formik";
 import { useDispatch, useSelector } from "react-redux";
-import { loginUser } from "../../Actions/AuthAction";
+import { loginUser, loginUserViaGG } from "../../Actions/AuthAction";
 import axios from "../../Services/axios";
 import { Divider } from "antd";
 
@@ -22,7 +22,19 @@ function Signin(props) {
   // console.log(userLogin)
   const history = useHistory();
   const dispatch = useDispatch();
+  const { search } = useLocation();
   const userInfo = JSON.parse(localStorage.getItem("user"));
+
+  useEffect(() => {
+    const params = new URLSearchParams(search);
+    if (params.get('gg_login') === 'true') {
+      const code = params.get('code');
+      if (code) {
+        dispatch(loginUserViaGG({ code }));
+      }
+    }
+  }, []);
+
   const validationSchema = () => {
     return Yup.object().shape({
       email: Yup.string()
@@ -84,8 +96,6 @@ function Signin(props) {
     };
     dispatch(loginUser(data));
   };
-
-  const handleLoginGoogle = "http://localhost:5000/api/auth/google";
 
   if (userInfo) {
     history.push("/");
@@ -169,7 +179,7 @@ function Signin(props) {
               <div className="w-full -mt-4 flex justify-center items-center">
                 <div className="flex-1">
                   <a
-                    href={handleLoginGoogle}
+                    href="http://localhost:5000/api/auth/google"
                     target="_blank"
                     class="flex items-center justify-center w-full px-4 py-2 mt-2 space-x-3 text-sm text-center bg-red-500 text-white transition-colors duration-200 transform border rounded-lg dark:text-gray-300 dark:border-gray-300 hover:bg-gray-600 dark:hover:bg-gray-700"
                   >

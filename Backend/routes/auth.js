@@ -24,13 +24,11 @@ router.get(
     scope: ["profile", "email"],
   })
 );
-
 router.get(
   "/google/callback",
   passport.authenticate("google"),
-  (req, res) => {
-    res.redirect(`${process.env.BASE_URL}:3000/${req.user._id}`);
-  }
+  authControllers.handleGoogleCallback
 );
+router.post("/login/google", authControllers.loginUserViaGoogle);
 
 module.exports = router;
