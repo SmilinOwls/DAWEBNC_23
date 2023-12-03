@@ -3,7 +3,7 @@ const Token = require("../models/Token");
 const bcrypt = require("bcrypt");
 const crypto = require("crypto");
 const jwt = require("jsonwebtoken");
-const mailer = require("../utils/mailer");
+const mailer = require("../services/mailer");
 
 let refreshTokens = [];
 const authControllers = {

@@ -7,7 +7,8 @@ const mongoose = require("mongoose");
 const path = require("path");
 const fs = require("fs");
 const multer = require("multer");
-
+const passport = require("passport");
+const session = require("express-session");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const placeRouter = require("./routes/place");
@@ -16,16 +17,25 @@ const siteRouter = require("./routes/site");
 const blogRouter = require("./routes/blog");
 const bookingRouter = require("./routes/booking");
 
-const app = express();
 dotenv.config();
+require("./services/passport");
+
+const app = express();
+
 app.use(
   cors({
     credentials: true,
-    origin: "http://localhost:3000/",
+    origin: "http://localhost:3000",
   })
 );
+
+app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
 app.use(cookieParser());
 app.use(express.json());
+
+app.use(passport.initialize());
+app.use(passport.session());
+
 const publicPath = path.join(__dirname, "./public");
 app.use("/public", express.static(publicPath));
 
