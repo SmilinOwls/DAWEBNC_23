@@ -54,7 +54,7 @@ const Home = () => {
         </Container>
       </section>
       <Process />
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12">
@@ -63,10 +63,10 @@ const Home = () => {
                 Top destinations in Vietnam
               </h2>
             </Col>
-            <Col lg="12">{/* <FeatureSites /> */}</Col>
+            <Col lg="12"></Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       <section>
         <Container>
           <Row>
