@@ -155,7 +155,7 @@ const authControllers = {
         }
       );
 
-      const link = `${process.env.BASE_URL}:3000/activenewpass?resetToken=${resetToken}`;
+      const link = `https://btvn-03-iota.vercel.app/activenewpass?resetToken=${resetToken}`;
       const htmlContent = `<p>
                 Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Travelgo <br/>
 
@@ -291,13 +291,13 @@ const authControllers = {
   handleGoogleCallback: async (req, res) => {
     const user = req.user;
     const accessToken = authControllers.generateAccessToken(user);
-    res.redirect(`${process.env.BASE_URL}:3000/sign-in?gg_login=true&code=${accessToken}`);
+    res.redirect(`https://btvn-03-iota.vercel.app/sign-in?gg_login=true&code=${accessToken}`);
   },
 
   handleFacebookCallback: async (req, res) => {
     const user = req.user;
     const accessToken = authControllers.generateAccessToken(user);
-    res.redirect(`${process.env.BASE_URL}:3000/sign-in?fb_login=true&code=${accessToken}`);
+    res.redirect(`https://btvn-03-iota.vercel.app/sign-in?fb_login=true&code=${accessToken}`);
   },
 
   loginUserVia3rdParty: async (req, res) => {
