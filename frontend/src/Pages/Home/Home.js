@@ -10,8 +10,8 @@ import Process from "./Components/Process/Process";
 import ServiceList from "./Components/ServiceList/ServiceList";
 import Reviews from "./Components/Reviews/Reviews";
 import Contact from "./Components/Contact/Contact";
-import FeatureHotels from "./Components/FeatureHotels";
-import FeatureSites from "./Components/FeatureSites/FeatureSites";
+// import FeatureHotels from "./Components/FeatureHotels";
+// import FeatureSites from "./Components/FeatureSites/FeatureSites";
 
 const Home = () => {
   return (
@@ -54,7 +54,7 @@ const Home = () => {
         </Container>
       </section>
       <Process />
-      <section>
+      {/* <section>
         <Container>
           <Row>
             <Col lg="12">
@@ -63,12 +63,10 @@ const Home = () => {
                 Top destinations in Vietnam
               </h2>
             </Col>
-            <Col lg="12">
-              <FeatureSites />
-            </Col>
+            <Col lg="12"></Col>
           </Row>
         </Container>
-      </section>
+      </section> */}
       <section>
         <Container>
           <Row>
@@ -89,7 +87,7 @@ const Home = () => {
                 Featured courses recommended for you
               </h2>
             </Col>
-            <FeatureHotels />
+            {/* <FeatureHotels /> */}
           </Row>
         </Container>
       </section>
