@@ -25,11 +25,13 @@ const app = express();
 app.use(
   cors({
     credentials: true,
-    origin: "https://btvn-03-iota.vercel.app",
+    origin: "http://localhost:3000/",
   })
 );
 
-app.use(session({ secret: 'keyboard cat', resave: true, saveUninitialized: true }));
+app.use(
+  session({ secret: "keyboard cat", resave: true, saveUninitialized: true })
+);
 app.use(cookieParser());
 app.use(express.json());
 
