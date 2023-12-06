@@ -35,6 +35,10 @@ const userSchema = new mongoose.Schema(
       type: Boolean,
       default: false,
     },
+    role: {
+      type: ["TEACHER", "STUDENT"],
+      default: "STUDENT",
+    },
     activatedToken: {
       type: String,
     },

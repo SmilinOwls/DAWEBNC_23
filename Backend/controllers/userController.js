@@ -29,12 +29,14 @@ const userControllers = {
       (user.name = req.body.name || user.name),
         (user.email = req.body.email || user.email);
       user.phone = req.body.phone || user.phone;
+      user.role = req.body.role || user.role;
       user.isAdmin = req.body.isAdmin || user.isAdmin;
       const updatedUser = await user.save();
       res.status(200).json({
         name: updatedUser.name,
         email: updatedUser.email,
         phone: updatedUser.phone,
+        role: updatedUser.role,
         isAdmin: updatedUser.isAdmin,
       });
     } else {
@@ -65,6 +67,7 @@ const userControllers = {
         email: user.email,
         profilePic: user.profilePic,
         phone: user.phone,
+        role: user.role,
         isAdmin: user.isAdmin,
       });
     } else {
@@ -83,6 +86,7 @@ const userControllers = {
         profilePic: updatedUser.profilePic,
         phone: updatedUser.phone,
         isAdmin: updatedUser.isAdmin,
+        role: updatedUser.role,
         isOnline: updatedUser.isOnline,
       });
     } else {
@@ -109,6 +113,7 @@ const userControllers = {
         profilePic: updatedUser.profilePic,
         phone: updatedUser.phone,
         isAdmin: updatedUser.isAdmin,
+        role: user.role,
         isOnline: updatedUser.isOnline,
       });
     } else {

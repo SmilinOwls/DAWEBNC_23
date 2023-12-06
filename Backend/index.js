@@ -13,9 +13,9 @@ const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const placeRouter = require("./routes/place");
 const roomRouter = require("./routes/room");
-const siteRouter = require("./routes/site");
 const blogRouter = require("./routes/blog");
 const bookingRouter = require("./routes/booking");
+const classRouter = require("./routes/classroom");
 
 dotenv.config();
 require("./services/passport");
@@ -56,6 +56,15 @@ const avatarStorage = multer.diskStorage({
   },
 });
 
+const classroomStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images/classroom");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
 const photoMiddleware = multer({
   storage: storage,
   fileFilter: function (req, file, cb) {
@@ -74,6 +83,20 @@ const avatarMiddlewware = multer({
   storage: avatarStorage,
   fileFilter: function (req, file, cb) {
     const extensionImageList = [".png", ".jpg", ".jpeg", "svg"];
+    const extension = file.originalname.slice(-4);
+    const check = extensionImageList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
+    }
+  },
+});
+
+const classroomMiddleware = multer({
+  storage: classroomStorage,
+  fileFilter: function (req, file, cb) {
+    const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
     const extension = file.originalname.slice(-4);
     const check = extensionImageList.includes(extension);
     if (check) {
@@ -134,13 +157,30 @@ app.post(
   }
 );
 
+app.post(
+  "/api/upload-classroon",
+  classroomMiddleware.array("classroooms", 100),
+  (req, res) => {
+    const uploadedFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+      const { path, originalname } = req.files[i];
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      uploadedFiles.push(newPath);
+    }
+    res.status(200).json(uploadedFiles);
+  }
+);
+
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
 app.use("/api/place", placeRouter);
 app.use("/api/room", roomRouter);
-app.use("/api/site", siteRouter);
 app.use("/api/blog", blogRouter);
 app.use("/api/book", bookingRouter);
+app.use("/api/classroom", classRouter);
 
 const PORT = process.env.PORT || 5000;
 const URI = process.env.DB_URL;
