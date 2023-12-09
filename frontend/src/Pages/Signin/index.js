@@ -108,9 +108,6 @@ function Signin(props) {
     dispatch(loginUser(data));
   };
 
-  if (userInfo) {
-    history.push("/");
-  }
   return (
     <div className="SignIn mt-5">
       <div className="signin-label">

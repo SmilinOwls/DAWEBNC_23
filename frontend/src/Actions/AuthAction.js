@@ -74,7 +74,7 @@ export const loginUser = (value) => {
         "Success"
       ).then((result) => {
         if (result.isConfirmed) {
-          window.location.href = "/";
+          window.location.href = "/classroom";
         }
       });
     } catch (error) {
