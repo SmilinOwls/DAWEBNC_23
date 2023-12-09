@@ -27,6 +27,14 @@ const teacherSchema = new mongoose.Schema({
   subject: {
     type: String,
   },
+  isInvited: {
+    type: Boolean,
+    default: false,
+  },
+  isJoined: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 const studentSchema = new mongoose.Schema({
@@ -48,6 +56,14 @@ const studentSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+  },
+  isInvited: {
+    type: Boolean,
+    default: false,
+  },
+  isJoined: {
+    type: Boolean,
+    default: false,
   },
 });
 
@@ -75,6 +91,10 @@ const classroomSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: "User",
       required: true,
+    },
+    invitationCode: {
+      type: String,
+      default: Math.random().toString(36).slice(2, Math.floor(Math.random() * 3) + 7),
     },
   },
   { timestamps: true }

@@ -72,7 +72,7 @@ const authControllers = {
       if(user.isBanned) {
         return res.status(404).json("Your account has been blocked !!!");
       }
-      
+
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
@@ -133,7 +133,7 @@ const authControllers = {
     res.status(200).json("Logged out successfully!");
   },
   forgotPassword: async (req, res) => {
-    const subject = "Booking4T - Confirm new password";
+    const subject = "Booking4T - Xác nhận đổi mật khẩu";
 
     try {
       const { email } = req.body;
@@ -161,7 +161,7 @@ const authControllers = {
 
       const link = `http://localhost:3000/activenewpass?resetToken=${resetToken}`;
       const htmlContent = `<p>
-                Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Travelgo <br/>
+                Bạn đã tiến hành lấy lại thông tin tài khoản trên website của Elearning <br/>
 
                 Xin hãy kích vào đường dẫn dưới đây để xác nhận và lấy lại tên tài khoản cùng mật khẩu mới: <br/>
                 
@@ -230,7 +230,7 @@ const authControllers = {
   },
 
   sendActiveAccountMail: async (req, res) => {
-    const subject = "Travelgo - Account Activation";
+    const subject = "ELearning - Kích hoạt tài khoản đăng ký";
     try {
       const { email } = req.user;
       const user = await User.findOne({ email: email });
