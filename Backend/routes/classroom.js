@@ -21,7 +21,7 @@ router.get("/", classController.getAllClasses);
 router.get("/:id", classController.getClassById);
 
 router.get(
-  "/created_user",
+  "/teacher/me",
   authMiddleware.verifyToken,
   classController.getClassByCreatedUser
 );

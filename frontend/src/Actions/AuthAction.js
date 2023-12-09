@@ -70,7 +70,7 @@ export const loginUser = (value) => {
       dispatch({ type: LOGIN_SUCCESS, payload: data });
       Swal.fire(
         "Sign in successfully !!!",
-        "Wish you have a good experience at Booking4T",
+        "Wish you have a good experience at Edu Elearning",
         "Success"
       ).then((result) => {
         if (result.isConfirmed) {

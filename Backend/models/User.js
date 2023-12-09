@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
       type: ["TEACHER", "STUDENT"],
       default: "STUDENT",
     },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
     activatedToken: {
       type: String,
     },
@@ -48,6 +52,12 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpire: {
       type: Date,
     },
+    classroom: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: "Classroom",
+      },
+    ],
   },
   { timestamps: true }
 );

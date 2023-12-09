@@ -69,6 +69,10 @@ const authControllers = {
       //   return res.status(404).json("Please activate your account !!!");
       // }
 
+      if(user.isBanned) {
+        return res.status(404).json("Your account has been blocked !!!");
+      }
+      
       const validPassword = await bcrypt.compare(
         req.body.password,
         user.password
