@@ -12,13 +12,19 @@ router.post(
 // Create Classroom by teacher
 router.post(
   "/role-teacher",
-  authMiddleware.authorizeTeacher,
+  authMiddleware.verifyToken,
   classController.createClass
 );
 
 router.get("/", classController.getAllClasses);
 
 router.get("/:id", classController.getClassById);
+
+router.get(
+  "/created_user",
+  authMiddleware.verifyToken,
+  classController.getClassByCreatedUser
+);
 
 // Delete room
 router.delete(
@@ -28,7 +34,7 @@ router.delete(
 );
 router.delete(
   "/role-teacher/:id",
-  authMiddleware.authorizeTeacher,
+  authMiddleware.verifyToken,
   classController.deleteClass
 );
 
@@ -39,7 +45,7 @@ router.put(
 );
 router.put(
   "/role-teacher/:id",
-  authMiddleware.authorizeTeacher,
+  authMiddleware.verifyToken,
   classController.updateClass
 );
 

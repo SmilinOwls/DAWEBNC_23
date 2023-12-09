@@ -4,6 +4,7 @@ const ApiFeature = require("../utils/ApiFeature");
 const classController = {
   createClass: async (req, res) => {
     const newClass = new Classroom({
+      createdUser: req.user.id,
       ...req.body,
     });
     try {
@@ -27,6 +28,20 @@ const classController = {
   getClassById: async (req, res) => {
     try {
       const classroom = await Classroom.findById(req.params.id);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+      res.status(200).json(classroom);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  getClassByCreatedUser: async (req, res) => {
+    try {
+      const classroom = await Classroom.find({ createdUser: req.user.id });
       if (!classroom) {
         return res.status(404).json({
           success: false,
