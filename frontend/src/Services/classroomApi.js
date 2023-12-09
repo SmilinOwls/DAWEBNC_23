@@ -19,7 +19,7 @@ const classroomApi = {
     return axiosClient.get("/api/classroom");
   },
   getClassroomByCreatedUser: () => {
-    return axiosClient.get("/api/classroom/created_user");
+    return axiosClient.get("/api/classroom/teacher/me");
   },
 };
 

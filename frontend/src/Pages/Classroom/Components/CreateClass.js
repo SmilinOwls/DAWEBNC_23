@@ -250,7 +250,7 @@ const CreateClass = () => {
           </div>
         </div>
         <button
-          className="mt-6 flex items-center justify-center hover:bg-white hover:border hover:border-[#E48F45] hover:!text-[#E48F45] transition text-center px-3 py-2 rounded-xl bg-[#E48F45] text-white font-semibold"
+          className="mt-6 flex items-center justify-center border hover:bg-white hover:border hover:border-[#E48F45] hover:!text-[#E48F45] transition text-center px-3 py-2 rounded-xl bg-[#E48F45] text-white font-semibold"
           onClick={handleCreateClass}
         >
           Create

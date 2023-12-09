@@ -1,6 +1,7 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
+import classroomApi from "../../Services/classroomApi";
 import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
@@ -12,6 +13,19 @@ const Classroom = () => {
   const handleCreateClass = () => {
     history.push("/create-class");
   };
+  const handleGetClassroom = async () => {
+    try {
+      const response = await classroomApi.getClassroomByCreatedUser();
+      setClassroomList(response.data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    handleGetClassroom();
+  }, []);
+
   return (
     <div className="h-[1200px] w-full px-[60px]">
       <section className="mb-5 pb-4 border-b border-[#efefef]">
@@ -58,8 +72,34 @@ const Classroom = () => {
           Create Class
         </button>
       </div>
+      <div className="flex items-center justify-center">
+        <p className="text-black text-center font-semibold text-[25px] my-6">
+          Courses
+        </p>
+      </div>
       {classroomList.length > 0 ? (
-        <div></div>
+        <div className="flex gap-4 flex-wrap items-center">
+          {classroomList.map((item, index) => (
+            <div className="border rounded-xl w-[25%]">
+              <div className="bg-[#FFB534] h-[80px] w-full"></div>
+              <div className="border bg-white p-4">
+                <p className="text-black font-semibold text-[18px] mb-3">
+                  Subject: {item.name}
+                </p>
+                <p className="text-black mb-3">
+                  Description:{" "}
+                  {item.description?.length > 50
+                    ? item.description.slice(0, 50) + "..."
+                    : item.description}
+                </p>
+                <p className="text-black mb-4">Level: {item.categoryCode}</p>
+                <button className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold">
+                  Detail
+                </button>
+              </div>
+            </div>
+          ))}
+        </div>
       ) : (
         <div className="flex items-center justify-center">
           <p className="text-[22px] font-bold text-center">
