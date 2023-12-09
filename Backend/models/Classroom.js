@@ -1,6 +1,10 @@
 const mongoose = require("mongoose");
 
 const teacherSchema = new mongoose.Schema({
+  accountId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
   fullname: {
     type: String,
     required: true,
@@ -28,6 +32,10 @@ const teacherSchema = new mongoose.Schema({
 });
 
 const studentSchema = new mongoose.Schema({
+  accountId: {
+    type: mongoose.Schema.ObjectId,
+    ref: "User",
+  },
   fullname: {
     type: String,
     required: true,
