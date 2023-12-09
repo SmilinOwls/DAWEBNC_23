@@ -17,7 +17,8 @@ import ResetPassword from "./Pages/ResetPassword";
 import Dashboard from "./Pages/Admin/Dashboard";
 import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
-
+import Classroom from "./Pages/Classroom";
+import CreateClass from "./Pages/Classroom/Components/CreateClass";
 
 function App() {
   return (
@@ -31,51 +32,6 @@ function App() {
                   <Home />
                 </AppLayout>
               </Route>
-              {/* <Route path="/search" exact>
-                  <AppLayout>
-                     <SearchResult />
-                  </AppLayout>
-              </Route>
-              <Route path="/hotels" exact>
-                <AppLayout>
-                  <Hotels />
-                </AppLayout>
-              </Route>
-              <Route path="/hotel/:hotelId" exact>
-                 <AppLayout>
-                   <DetailHotel />
-                 </AppLayout>
-              </Route> */}
-              {/* <Route path="/news" exact>
-                <AppLayout>
-                  <News />
-                </AppLayout>
-              </Route>
-              <Route path="/new/:newId" exact>
-                <AppLayout>
-                  <DetailNews />
-                </AppLayout>
-              </Route>
-              <Route path="/room/:roomId" exact>
-                <AppLayout>
-                  <DetailRoom />
-                </AppLayout>
-              </Route>
-              <Route path="/payment" exact>
-                <AppLayout>
-                  <Payment />
-                </AppLayout>
-              </Route>
-              <Route path="/thank-you" exact>
-                <AppLayout>
-                  <ThankYou />
-                </AppLayout>
-              </Route> 
-              <Route path="/site/:id" exact>
-                <AppLayout>
-                  <DetailSite />
-                </AppLayout>
-              </Route>*/}
               <Route path="/account/bookings" exact>
                 <AppLayout>
                   <AccountBooking />
@@ -91,6 +47,16 @@ function App() {
                   <AccountSetting />
                 </AppLayout>
               </Route>
+              <Route path="/classroom" exact>
+                <AppLayout>
+                  <Classroom />
+                </AppLayout>
+              </Route>
+              <Route path="/create-class" exact>
+                <AppLayout>
+                  <CreateClass />
+                </AppLayout>
+              </Route>
               <AdminRoute path="/dashboard" exact>
                 <MainLayout>
                   <Dashboard />
@@ -102,7 +68,7 @@ function App() {
                 </MainLayout>
               </AdminRoute>
               <Route path="/sign-up">
-                <AppLayout >
+                <AppLayout>
                   <Signup />
                 </AppLayout>
               </Route>
@@ -123,7 +89,7 @@ function App() {
               </Route>
               <Route path="/activenewpass">
                 <AppLayout>
-                  <ResetPassword/>
+                  <ResetPassword />
                 </AppLayout>
               </Route>
               <Route path="*">

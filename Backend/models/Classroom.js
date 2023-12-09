@@ -11,13 +11,12 @@ const teacherSchema = new mongoose.Schema({
   },
   birthday: {
     type: Date,
-    required: true,
   },
   address: {
     type: String,
     default: "",
   },
-  phone: {
+  email: {
     type: String,
     required: true,
   },
@@ -27,7 +26,6 @@ const teacherSchema = new mongoose.Schema({
   },
   subject: {
     type: String,
-    required: true,
   },
 });
 
@@ -42,13 +40,12 @@ const studentSchema = new mongoose.Schema({
   },
   birthday: {
     type: Date,
-    required: true,
   },
   address: {
     type: String,
     default: "",
   },
-  phone: {
+  email: {
     type: String,
     required: true,
   },
@@ -77,6 +74,7 @@ const classroomSchema = new mongoose.Schema(
     createdUser: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
+      required: true,
     },
   },
   { timestamps: true }
