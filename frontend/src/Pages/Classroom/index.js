@@ -9,11 +9,13 @@ import heroVideo from "../../Assets/images/Mern.png";
 import { Dropdown } from "antd";
 import {
   EllipsisOutlined,
-  DoubleRightOutlined,
+  DragOutlined,
   CopyOutlined,
   LinkOutlined,
   EditOutlined,
   ContainerOutlined,
+  DeleteOutlined,
+  CloseOutlined,
 } from "@ant-design/icons";
 import "./styles.css";
 
@@ -23,6 +25,8 @@ const Classroom = () => {
   const handleCreateClass = () => {
     history.push("/create-class");
   };
+
+  const userInfo = JSON.parse(localStorage.getItem("user"));
 
   const renderListImage = () => {
     return Math.floor(Math.random() * classroomList.length + 1);
@@ -37,44 +41,68 @@ const Classroom = () => {
     }
   };
 
-  const menuProps = (item) => {
-    const items = [
-      {
-        label: "Move",
-        key: "0",
-        icon: <DoubleRightOutlined />,
-        onClick: () => {},
-      },
-      {
-        label: "Copy invite link",
-        key: "1",
-        icon: <LinkOutlined />,
-        onClick: () => {
-          navigator.clipboard.writeText(
-            `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
-          );
+  const menuProps = (item, isCreatedUser) => {
+    let items = [];
+    if(isCreatedUser){
+      items = [
+        {
+          label: "Move",
+          key: "0",
+          icon: <DragOutlined />,
+          onClick: () => {},
         },
-      },
-      {
-        label: "Edit",
-        key: "2",
-        icon: <EditOutlined />,
-        onClick: () => {},
-      },
-      {
-        label: "Copy",
-        key: "3",
-        icon: <CopyOutlined />,
-        onClick: () => {},
-      },
-      {
-        label: "Archive",
-        key: "4",
-        icon: <ContainerOutlined />,
-        onClick: () => {},
-      },
-    ];
-
+        {
+          label: "Copy invite link",
+          key: "1",
+          icon: <LinkOutlined />,
+          onClick: () => {
+            navigator.clipboard.writeText(
+              `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
+            );
+          },
+        },
+        {
+          label: "Edit",
+          key: "2",
+          icon: <EditOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Copy",
+          key: "3",
+          icon: <CopyOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Archive",
+          key: "4",
+          icon: <ContainerOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Delete",
+          key: "1",
+          icon: <DeleteOutlined />,
+          onClick: () => {},
+        }
+      ];
+    } else{
+      items = [
+        {
+          label: "Move",
+          key: "0",
+          icon: <DragOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Unenroll",
+          key: "1",
+          icon: <CloseOutlined />,
+          onClick: () => {},
+        }
+        
+      ];
+    }
     return {
       items,
     };
@@ -149,7 +177,7 @@ const Classroom = () => {
                   className="w-full h-full object-cover rounded-t-xl"
                 />
                 <Dropdown.Button
-                  menu={menuProps(item)}
+                  menu={menuProps(item, item.createdUser === userInfo._id)}
                   trigger={["click"]}
                   buttonsRender={([]) => [
                     <div />,
