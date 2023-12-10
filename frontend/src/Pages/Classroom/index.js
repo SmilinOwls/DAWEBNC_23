@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useHistory } from "react-router-dom";
 import { Col, Container, Row } from "reactstrap";
 import classroomApi from "../../Services/classroomApi";
+import { listImages } from "../../Constants/ListImage";
 import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
@@ -13,6 +14,11 @@ const Classroom = () => {
   const handleCreateClass = () => {
     history.push("/create-class");
   };
+
+  const renderListImage = () => {
+    return Math.floor(Math.random() * classroomList.length + 1);
+  };
+
   const handleGetClassroom = async () => {
     try {
       const response = await classroomApi.getClassroomByCreatedUser();
@@ -27,7 +33,7 @@ const Classroom = () => {
   }, []);
 
   return (
-    <div className="h-[1200px] w-full px-[60px]">
+    <div className="w-full px-[60px] mb-[100px]">
       <section className="mb-5 pb-4 border-b border-[#efefef]">
         <Container>
           <Row>
@@ -81,7 +87,13 @@ const Classroom = () => {
         <div className="flex gap-4 flex-wrap items-center">
           {classroomList.map((item, index) => (
             <div className="border rounded-xl w-[25%]">
-              <div className="bg-[#FFB534] h-[80px] w-full"></div>
+              <div className="w-full h-[200px]">
+                <img
+                  src={listImages[renderListImage()]}
+                  alt="classroom"
+                  className="w-full h-full"
+                />
+              </div>
               <div className="border bg-white p-4">
                 <p className="text-black font-semibold text-[18px] mb-3">
                   Subject: {item.name}
