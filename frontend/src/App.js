@@ -19,6 +19,7 @@ import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
 import Classroom from "./Pages/Classroom";
 import CreateClass from "./Pages/Classroom/Components/CreateClass";
+import DetailClass from "./Pages/Classroom/Components/DetailClass";
 
 function App() {
   return (
@@ -50,6 +51,11 @@ function App() {
               <Route path="/classroom" exact>
                 <AppLayout>
                   <Classroom />
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/:id" exact>
+                <AppLayout>
+                  <DetailClass />
                 </AppLayout>
               </Route>
               <Route path="/create-class" exact>
