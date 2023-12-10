@@ -19,6 +19,7 @@ import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
 import Classroom from "./Pages/Classroom";
 import CreateClass from "./Pages/Classroom/Components/CreateClass";
+import ClassJoining from "./Pages/JoinClassroom/ClassJoining";
 import DetailClass from "./Pages/Classroom/Components/DetailClass";
 
 function App() {
@@ -51,6 +52,11 @@ function App() {
               <Route path="/classroom" exact>
                 <AppLayout>
                   <Classroom />
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/:id/join/link" exact>
+                <AppLayout>
+                  <ClassJoining/>
                 </AppLayout>
               </Route>
               <Route path="/classroom/:id" exact>

@@ -39,6 +39,10 @@ const userSchema = new mongoose.Schema(
       type: ["TEACHER", "STUDENT"],
       default: "STUDENT",
     },
+    isBanned: {
+      type: Boolean,
+      default: false,
+    },
     activatedToken: {
       type: String,
     },

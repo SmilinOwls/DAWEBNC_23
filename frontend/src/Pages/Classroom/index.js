@@ -6,6 +6,17 @@ import { listImages } from "../../Constants/ListImage";
 import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
+import { Dropdown, message } from "antd";
+import {
+  EllipsisOutlined,
+  DragOutlined,
+  CopyOutlined,
+  LinkOutlined,
+  EditOutlined,
+  ContainerOutlined,
+  DeleteOutlined,
+  CloseOutlined,
+} from "@ant-design/icons";
 import "./styles.css";
 
 const Classroom = () => {
@@ -15,17 +26,87 @@ const Classroom = () => {
     history.push("/create-class");
   };
 
+  const userInfo = JSON.parse(localStorage.getItem("user"));
+
   const renderListImage = () => {
     return Math.floor(Math.random() * classroomList.length + 1);
   };
 
   const handleGetClassroom = async () => {
     try {
-      const response = await classroomApi.getClassroomByCreatedUser();
+      const response = await classroomApi.getAllParticipatedClassroom();
       setClassroomList(response.data);
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const menuProps = (item, isCreatedUser) => {
+    let items = [];
+    if(isCreatedUser){
+      items = [
+        {
+          label: "Move",
+          key: "0",
+          icon: <DragOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Copy invite link",
+          key: "1",
+          icon: <LinkOutlined />,
+          onClick: () => {
+            navigator.clipboard.writeText(
+              `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
+            );
+            message.success("Copied to clipboard");
+          },
+        },
+        {
+          label: "Edit",
+          key: "2",
+          icon: <EditOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Copy",
+          key: "3",
+          icon: <CopyOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Archive",
+          key: "4",
+          icon: <ContainerOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Delete",
+          key: "5",
+          icon: <DeleteOutlined />,
+          onClick: () => {},
+        }
+      ];
+    } else{
+      items = [
+        {
+          label: "Move",
+          key: "0",
+          icon: <DragOutlined />,
+          onClick: () => {},
+        },
+        {
+          label: "Unenroll",
+          key: "1",
+          icon: <CloseOutlined />,
+          onClick: () => {},
+        }
+        
+      ];
+    }
+    return {
+      items,
+    };
   };
 
   useEffect(() => {
@@ -84,17 +165,30 @@ const Classroom = () => {
         </p>
       </div>
       {classroomList.length > 0 ? (
-        <div className="flex gap-4 flex-wrap items-center">
+        <div className="justify-center xl:justify-start grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-12">
           {classroomList.map((item, index) => (
-            <div className="border rounded-xl w-[25%]">
-              <div className="w-full h-[200px]">
+            <div
+              key={index}
+              className="border rounded-xl  min-w-[280px] flex flex-col"
+            >
+              <div className="w-full h-[200px] relative">
                 <img
                   src={listImages[renderListImage()]}
                   alt="classroom"
-                  className="w-full h-full"
+                  className="w-full h-full object-cover rounded-t-xl"
+                />
+                <Dropdown.Button
+                  menu={menuProps(item, item.createdUser === userInfo._id)}
+                  trigger={["click"]}
+                  buttonsRender={([]) => [
+                    <div />,
+                    <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
+                      <EllipsisOutlined className="text-[32px] text-slate-100" />
+                    </div>,
+                  ]}
                 />
               </div>
-              <div className="border bg-white p-4">
+              <div className="border rounded-b-xl bg-white p-4">
                 <p className="text-black font-semibold text-[18px] mb-3">
                   Subject: {item.name}
                 </p>
@@ -105,7 +199,10 @@ const Classroom = () => {
                     : item.description}
                 </p>
                 <p className="text-black mb-4">Level: {item.categoryCode}</p>
-                <button className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold">
+                <button
+                  onClick={() => history.push(`/classroom/${item._id}`)}
+                  className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold"
+                >
                   Detail
                 </button>
               </div>

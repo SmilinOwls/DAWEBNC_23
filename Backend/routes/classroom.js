@@ -26,6 +26,13 @@ router.get(
   classController.getClassByCreatedUser
 );
 
+router.get(
+  "/participate/me",
+  authMiddleware.verifyToken,
+  classController.getAllParticipatedClass
+);
+
+
 // Delete room
 router.delete(
   "/admin/:id",
@@ -48,5 +55,13 @@ router.put(
   authMiddleware.verifyToken,
   classController.updateClass
 );
+
+router.get('/:id/account-joined', authMiddleware.verifyToken, classController.checkClassJoined);
+router.post('/:id/accept/code', authMiddleware.verifyToken, classController.joinClassViaCode);
+router.get('/:id/join/link', authMiddleware.verifyToken, classController.validateInvitationLink);
+router.post('/accept/link', authMiddleware.verifyToken, classController.joinClassViaInvitationLink);
+router.post('/:id/send-email', authMiddleware.verifyToken, classController.sendEmailInvitation);
+router.get('/email/redirect', authMiddleware.verifyToken, classController.validateEmailInvitationLink);
+router.post('/:id/accept/email', authMiddleware.verifyToken, classController.joinClassViaEmail);
 
 module.exports = router;

@@ -13,8 +13,8 @@ const nav_links = [
     display: "Home",
   },
   {
-    path: "/courses",
-    display: "Courses",
+    path: "/classroom",
+    display: "Classroom",
   },
   {
     path: "/news",
@@ -87,6 +87,7 @@ const Header = () => {
                           className={(isActive) =>
                             isActive ? "active__link" : ""
                           }
+                          exact={true}
                         >
                           {item.display}
                         </NavLink>
