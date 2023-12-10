@@ -7,7 +7,14 @@ import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
 import { Dropdown } from "antd";
-import { EllipsisOutlined, DoubleRightOutlined, CopyOutlined, LinkOutlined, EditOutlined, ContainerOutlined, } from "@ant-design/icons";
+import {
+  EllipsisOutlined,
+  DoubleRightOutlined,
+  CopyOutlined,
+  LinkOutlined,
+  EditOutlined,
+  ContainerOutlined,
+} from "@ant-design/icons";
 import "./styles.css";
 
 const Classroom = () => {
@@ -70,7 +77,7 @@ const Classroom = () => {
 
     return {
       items,
-    }
+    };
   };
 
   useEffect(() => {
@@ -131,7 +138,10 @@ const Classroom = () => {
       {classroomList.length > 0 ? (
         <div className="justify-center xl:justify-start grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-12">
           {classroomList.map((item, index) => (
-            <div key={index} className="border rounded-xl  min-w-[280px] flex flex-col">
+            <div
+              key={index}
+              className="border rounded-xl  min-w-[280px] flex flex-col"
+            >
               <div className="w-full h-[200px] relative">
                 <img
                   src={listImages[renderListImage()]}
@@ -160,7 +170,10 @@ const Classroom = () => {
                     : item.description}
                 </p>
                 <p className="text-black mb-4">Level: {item.categoryCode}</p>
-                <button className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold">
+                <button
+                  onClick={() => history.push(`/classroom/${item._id}`)}
+                  className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold"
+                >
                   Detail
                 </button>
               </div>
