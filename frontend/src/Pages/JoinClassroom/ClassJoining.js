@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from "react";
 import { Button, Card, Skeleton } from "antd";
-import logo from "../../../Assets/images/Logo.jpg";
-import { Redirect, useParams, useLocation, useHistory } from "react-router-dom";
-import classroomApi from "../../../Services/classroomApi";
+import logo from "../../Assets/images/Logo.jpg";
+import { useParams, useLocation, useHistory } from "react-router-dom";
+import classroomApi from "../../Services/classroomApi";
 
 const { Meta } = Card;
 

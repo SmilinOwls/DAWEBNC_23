@@ -6,7 +6,7 @@ import { listImages } from "../../Constants/ListImage";
 import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
-import { Dropdown } from "antd";
+import { Dropdown, message } from "antd";
 import {
   EllipsisOutlined,
   DragOutlined,
@@ -59,6 +59,7 @@ const Classroom = () => {
             navigator.clipboard.writeText(
               `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
             );
+            message.success("Copied to clipboard");
           },
         },
         {
@@ -81,7 +82,7 @@ const Classroom = () => {
         },
         {
           label: "Delete",
-          key: "1",
+          key: "5",
           icon: <DeleteOutlined />,
           onClick: () => {},
         }

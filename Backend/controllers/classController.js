@@ -143,8 +143,8 @@ const classController = {
         _id: req.params.id, 
         $or: [
           { createdUser: req.user.id },
-          { teachers: { $elemMatch: { accountId: req.user.id, isJoined: false } } },
-          { students: { $elemMatch: { accountId: req.user.id, isJoined: false } } },
+          { teachers: { $elemMatch: { accountId: req.user.id, isJoined: true } } },
+          { students: { $elemMatch: { accountId: req.user.id, isJoined: true } } },
         ],
 
       });

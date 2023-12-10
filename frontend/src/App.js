@@ -19,7 +19,7 @@ import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
 import Classroom from "./Pages/Classroom";
 import CreateClass from "./Pages/Classroom/Components/CreateClass";
-import ClassJoining from "./Pages/Classroom/Components/ClassJoining";
+import ClassJoining from "./Pages/JoinClassroom/ClassJoining";
 import DetailClass from "./Pages/Classroom/Components/DetailClass";
 
 function App() {
