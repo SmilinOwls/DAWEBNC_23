@@ -107,6 +107,7 @@ const classController = {
   joinClassViaCode: async (req, res) => {
     try {
       const classroom = await Classroom.findOne({
+        _id: req.params.id,
         invitationCode: req.body.invitationCode,
       });
 
@@ -142,7 +143,7 @@ const classController = {
   },
   validateInvitationLink: async (req, res) => {
     try {
-      const classroom = await Classroom.findById(req.params.classId);
+      const classroom = await Classroom.findById(req.params.id);
       if (!classroom) {
         return res.status(404).json({
           success: false,
@@ -193,7 +194,7 @@ const classController = {
     }
   },
   sendEmailInvitation: async (req, res) => {
-    const classroom = await Classroom.findById(req.body.classId);
+    const classroom = await Classroom.findById(req.body.id);
     if (!classroom) {
       return res.status(404).json({
         success: false,
@@ -228,6 +229,15 @@ const classController = {
         success: true,
         message: "Send email successfully",
       });
+
+      const newTeacher = {
+        accountId: req.user.id,
+        fullName: req.user.userName,
+        email: req.user.email,
+      };
+
+      classroom.teachers.push(newTeacher);
+
     } catch (error) {
       res.status(500).json(error);
     }
@@ -236,6 +246,13 @@ const classController = {
     try {
       const token = req.query.token;
       const decoded = jwt.verify(token, process.env.MY_SECRETKEY);
+      if(!decoded.classId || !decoded.role){
+        return res.status(401).json({
+          success: false,
+          message: "Invalid invitation link !!!",
+        });
+      }
+
       const classroom = await Classroom.findById(decoded.classId);
       if (!classroom) {
         return res.status(404).json({
@@ -244,39 +261,56 @@ const classController = {
         });
       }
 
-      if (decoded.role === "student") {
-        const student = classroom.students.find(
-          (student) => student.accountId === req.user.id
-        );
+      res.redirect(
+        `http://localhost:3000/classroom/invite/accept_token/${classroom._id}?token=${token}`
+      );
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  joinClassViaEmail: async (req, res) => {
+    try {
+      const classroom = await Classroom.findById(req.params.id);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
 
-        if (!student) {
-          const newStudent = {
-            accountId: req.user.id,
-            fullName: req.user.userName,
-            email: req.user.email,
-            isJoined: true,
-          };
-          classroom.students.push(newStudent);
-        } else if (!student.isJoined) {
-          classroom.students.pull({ accountId: req.user.id });
-          classroom.students.push({ ...student, isJoined: true });
-        }
-      } else if (decoded.role === "teacher"){
-        const teacher = classroom.teachers.find(
-          (teacher) => teacher.accountId === req.user.id
-        );
+      if (req.query.token) {
+        const decoded = jwt.verify(req.query.token, process.env.MY_SECRETKEY);
+        if (decoded.role === "student") {
+          const student = classroom.students.find(
+            (student) => student.accountId === req.user.id
+          );
 
-        if (!teacher) {
-          const newTeacher = {
-            accountId: req.user.id,
-            fullName: req.user.userName,
-            email: req.user.email,
-            isJoined: true,
-          };
-          classroom.teachers.push(newTeacher);
-        } else if (!teacher.isJoined) {
-          classroom.teachers.pull({ accountId: req.user.id });
-          classroom.teachers.push({ ...teacher, isJoined: true });
+          if (!student) {
+            const newStudent = {
+              accountId: req.user.id,
+              fullName: req.user.userName,
+              email: req.user.email,
+              isJoined: true,
+            };
+            classroom.students.push(newStudent);
+          } else if (!student.isJoined) {
+            classroom.students.pull({ accountId: req.user.id });
+            classroom.students.push({ ...student, isJoined: true });
+          }
+        } else if (decoded.role === "teacher") {
+          const teacher = classroom.teachers.find(
+            (teacher) => teacher.accountId === req.user.id
+          );
+
+          if (!teacher) {
+            res.status(404).json({
+              success: false,
+              message: "Teacher not found !!!",
+            });
+          } else if (!teacher.isJoined) {
+            classroom.teachers.pull({ accountId: req.user.id });
+            classroom.teachers.push({ ...teacher, isJoined: true });
+          }
         }
       }
 
