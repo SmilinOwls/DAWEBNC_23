@@ -49,7 +49,6 @@ router.put(
   classController.updateClass
 );
 
-
 router.post('/:id/accept/code', authMiddleware.verifyToken, classController.joinClassViaCode);
 router.get('/:id/join/link', authMiddleware.verifyToken, classController.validateInvitationLink);
 router.post('/:id/accept/link', authMiddleware.verifyToken, classController.joinClassViaInvitationLink);

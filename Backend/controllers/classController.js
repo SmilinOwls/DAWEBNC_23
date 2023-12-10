@@ -8,7 +8,14 @@ const classController = {
     const newClass = new Classroom({
       createdUser: req.user.id,
       ...req.body,
+      teacher: [{
+        accountId: req.user.id,
+        fullname: req.user.userName,
+        email: req.user.email,
+        isJoined: true,
+      }],
     });
+
     try {
       const savedClass = await newClass.save();
       res.status(200).json(savedClass);
@@ -43,7 +50,13 @@ const classController = {
   },
   getClassByCreatedUser: async (req, res) => {
     try {
-      const classroom = await Classroom.find({ createdUser: req.user.id });
+      const classroom = await Classroom.find({
+        $or: [
+          { createdUser: req.user.id },
+          { teacher: { $elemMatch: { accountId: req.user.id } } },
+          { student: { $elemMatch: { accountId: req.user.id } } },
+        ],
+      });
       if (!classroom) {
         return res.status(404).json({
           success: false,

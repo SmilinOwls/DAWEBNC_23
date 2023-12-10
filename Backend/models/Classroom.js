@@ -57,6 +57,10 @@ const studentSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  role: {
+    type: String,
+    default: "STUDENT",
+  },
   isInvited: {
     type: Boolean,
     default: false,
