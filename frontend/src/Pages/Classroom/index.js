@@ -23,7 +23,7 @@ const Classroom = () => {
 
   const handleGetClassroom = async () => {
     try {
-      const response = await classroomApi.getClassroomByCreatedUser();
+      const response = await classroomApi.getAllParticipatedClassroom();
       setClassroomList(response.data);
     } catch (error) {
       console.log(error);
@@ -44,7 +44,7 @@ const Classroom = () => {
         icon: <LinkOutlined />,
         onClick: () => {
           navigator.clipboard.writeText(
-            `http://localhost:5000/api/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
+            `http://localhost:3000/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
           );
         },
       },
@@ -129,9 +129,9 @@ const Classroom = () => {
         </p>
       </div>
       {classroomList.length > 0 ? (
-        <div className="flex gap-4 flex-wrap items-center">
+        <div className="justify-center xl:justify-start grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-12">
           {classroomList.map((item, index) => (
-            <div key={index} className="border rounded-xl w-[25%] flex flex-col">
+            <div key={index} className="border rounded-xl  min-w-[280px] flex flex-col">
               <div className="w-full h-[200px] relative">
                 <img
                   src={listImages[renderListImage()]}
@@ -149,7 +149,7 @@ const Classroom = () => {
                   ]}
                 />
               </div>
-              <div className="border rounded-xl bg-white p-4">
+              <div className="border rounded-b-xl bg-white p-4">
                 <p className="text-black font-semibold text-[18px] mb-3">
                   Subject: {item.name}
                 </p>

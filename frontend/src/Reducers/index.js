@@ -15,6 +15,7 @@ import wishlistReducer from './WishlistReducer';
 import addSidebarReducer from './SidebarReducer';
 
 import UserAdminReducer from './UserAdminReducer';
+import classRoomReducer from './ClassRoomReducer';
 
 const rootReducer = combineReducers({
     hotels: hotelsReducer,
@@ -35,6 +36,7 @@ const rootReducer = combineReducers({
     activate: activateReducer,
     review: reviewReducer,
     cart: cartReducer,
+    classRoom: classRoomReducer,
     wishlist: wishlistReducer,
     sidebar: addSidebarReducer,
     order: orderReducer,

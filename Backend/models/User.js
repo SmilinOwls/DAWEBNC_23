@@ -52,12 +52,6 @@ const userSchema = new mongoose.Schema(
     resetPasswordExpire: {
       type: Date,
     },
-    classroom: [
-      {
-        type: mongoose.Schema.ObjectId,
-        ref: "Classroom",
-      },
-    ],
   },
   { timestamps: true }
 );
