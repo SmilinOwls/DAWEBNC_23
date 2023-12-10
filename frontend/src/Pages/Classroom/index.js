@@ -6,6 +6,8 @@ import { listImages } from "../../Constants/ListImage";
 import hero01 from "../../Assets/images/Course.png";
 import hero02 from "../../Assets/images/what-is-ui.jpg";
 import heroVideo from "../../Assets/images/Mern.png";
+import { Dropdown } from "antd";
+import { EllipsisOutlined, DoubleRightOutlined, CopyOutlined, LinkOutlined, EditOutlined, ContainerOutlined, } from "@ant-design/icons";
 import "./styles.css";
 
 const Classroom = () => {
@@ -25,6 +27,49 @@ const Classroom = () => {
       setClassroomList(response.data);
     } catch (error) {
       console.log(error);
+    }
+  };
+
+  const menuProps = (item) => {
+    const items = [
+      {
+        label: "Move",
+        key: "0",
+        icon: <DoubleRightOutlined />,
+        onClick: () => {},
+      },
+      {
+        label: "Copy invite link",
+        key: "1",
+        icon: <LinkOutlined />,
+        onClick: () => {
+          navigator.clipboard.writeText(
+            `http://localhost:5000/api/classroom/${item._id}/join/link?cjc=${item.invitationCode}`
+          );
+        },
+      },
+      {
+        label: "Edit",
+        key: "2",
+        icon: <EditOutlined />,
+        onClick: () => {},
+      },
+      {
+        label: "Copy",
+        key: "3",
+        icon: <CopyOutlined />,
+        onClick: () => {},
+      },
+      {
+        label: "Archive",
+        key: "4",
+        icon: <ContainerOutlined />,
+        onClick: () => {},
+      },
+    ];
+
+    return {
+      items,
     }
   };
 
@@ -86,15 +131,25 @@ const Classroom = () => {
       {classroomList.length > 0 ? (
         <div className="flex gap-4 flex-wrap items-center">
           {classroomList.map((item, index) => (
-            <div className="border rounded-xl w-[25%]">
-              <div className="w-full h-[200px]">
+            <div key={index} className="border rounded-xl w-[25%] flex flex-col">
+              <div className="w-full h-[200px] relative">
                 <img
                   src={listImages[renderListImage()]}
                   alt="classroom"
-                  className="w-full h-full"
+                  className="w-full h-full object-cover rounded-t-xl"
+                />
+                <Dropdown.Button
+                  menu={menuProps(item)}
+                  trigger={["click"]}
+                  buttonsRender={([]) => [
+                    <div />,
+                    <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
+                      <EllipsisOutlined className="text-[32px] text-slate-100" />
+                    </div>,
+                  ]}
                 />
               </div>
-              <div className="border bg-white p-4">
+              <div className="border rounded-xl bg-white p-4">
                 <p className="text-black font-semibold text-[18px] mb-3">
                   Subject: {item.name}
                 </p>
