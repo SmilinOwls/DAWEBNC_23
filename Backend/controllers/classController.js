@@ -172,7 +172,7 @@ const classController = {
   },
   joinClassViaCode: async (req, res) => {
     try {
-      const classroom = await Classroom.findOne({
+      let classroom = await Classroom.findOne({
         _id: req.params.id,
         invitationCode: req.body.invitationCode,
       });
@@ -242,7 +242,7 @@ const classController = {
   },
   joinClassViaInvitationLink: async (req, res) => {
     try {
-      const classroom = await Classroom.findById(req.body.id);
+      let classroom = await Classroom.findById(req.body.id);
       if (!classroom) {
         return res.status(404).json({
           success: false,
