@@ -198,8 +198,20 @@ const classController = {
         };
         classroom.students.push(newStudent);
       } else if (!student.isJoined) {
-        classroom.students.pull({ accountId: req.user.id });
-        classroom.students.push({ ...student, isJoined: true });
+        Classroom.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          },
+          { $set: { "students.$.isJoined": true } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            classroom = doc;
+          }
+        );
       }
 
       const updatedClass = await classroom.save();
@@ -259,8 +271,20 @@ const classController = {
         };
         classroom.students.push(newStudent);
       } else if (!student.isJoined) {
-        classroom.students.pull({ accountId: req.user.id });
-        classroom.students.push({ ...student, isJoined: true });
+        Classroom.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          },
+          { $set: { "students.$.isJoined": true } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            classroom = doc;
+          }
+        );
       }
 
       const updatedClass = await classroom.save();
@@ -346,7 +370,7 @@ const classController = {
     <p>Để tham gia vào lớp học, bạn vui lòng nhấn vào link bên dưới.</p>
     <a href="${link}">Chấp nhận lời mời</a>
     <p>Trân trọng,</p>
-    <p>Elearning Team/p>
+    <p>Elearning Team</p>
     `;
     try {
       await mailer.sendMail(req.body.email, subject, html);
@@ -386,21 +410,23 @@ const classController = {
     }
   },
   joinClassViaEmail: async (req, res) => {
+
     try {
-      const classroom = await Classroom.findById(req.body.id);
+      let classroom = await Classroom.findById(req.body.id);
       if (!classroom) {
         return res.status(404).json({
           success: false,
           message: "Classroom not found !!!",
         });
       }
-
+      
       if (req.body.token) {
         const decoded = jwt.verify(req.body.token, process.env.MY_SECRETKEY);
         if (decoded.role === "STUDENT") {
-          const student = classroom.students.find(
-            (student) => student.accountId === req.user.id
-          );
+          const student = await Classroom.findOne({
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          });
 
           if (!student) {
             const newStudent = {
@@ -412,13 +438,28 @@ const classController = {
             };
             classroom.students.push(newStudent);
           } else if (!student.isJoined) {
-            classroom.students.pull({ accountId: req.user.id });
-            classroom.students.push({ ...student, isJoined: true });
+            Classroom.findOneAndUpdate(
+              {
+                _id: req.body.id,
+                students: { $elemMatch: { accountId: req.user.id } },
+              },
+              { $set: { "students.$.isJoined": true } },
+              { new: true },
+              (err, doc) => {
+                if (err) {
+                  console.log("Something wrong when updating data!");
+                }
+                classroom = doc;
+              }
+            );
           }
         } else if (decoded.role === "TEACHER") {
-          const teacher = classroom.teachers.find(
-            (teacher) => teacher.accountId === req.user.id
-          );
+          const teacher = await Classroom.findOne({
+            _id: req.body.id,
+            teachers: { $elemMatch: { accountId: req.user.id } },
+          });
+
+          console.log(teacher);
 
           if (!teacher) {
             const newTeacher = {
@@ -428,11 +469,24 @@ const classController = {
               profilePic: req.user.profilePic,
               isJoined: true,
             };
-            classroom.students.push(newTeacher);
+            classroom.teachers.push(newTeacher);
+            await classroom.save();
 
           } else if (!teacher.isJoined) {
-            classroom.teachers.pull({ accountId: req.user.id });
-            classroom.teachers.push({ ...teacher, isJoined: true });
+            Classroom.findOneAndUpdate(
+              {
+                _id: req.body.id,
+                teachers: { $elemMatch: { accountId: req.user.id } },
+              },
+              { $set: { "teachers.$.isJoined": true } },
+              { new: true },
+              (err, doc) => {
+                if (err) {
+                  console.log("Something wrong when updating data!");
+                }
+                classroom = doc;
+              }
+            );
           }
         }
       }
