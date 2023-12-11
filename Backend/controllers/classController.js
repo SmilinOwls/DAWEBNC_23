@@ -346,7 +346,7 @@ const classController = {
         });
       }
 
-      classroom.teachers.push(newAccount);
+      classroom.students.push(newAccount);
       await classroom.save();
     }
 
