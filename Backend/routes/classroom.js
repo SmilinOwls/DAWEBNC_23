@@ -60,8 +60,8 @@ router.get('/:id/account-joined', authMiddleware.verifyToken, classController.ch
 router.post('/:id/accept/code', authMiddleware.verifyToken, classController.joinClassViaCode);
 router.get('/:id/join/link', authMiddleware.verifyToken, classController.validateInvitationLink);
 router.post('/accept/link', authMiddleware.verifyToken, classController.joinClassViaInvitationLink);
-router.post('/:id/send-email', authMiddleware.verifyToken, classController.sendEmailInvitation);
-router.get('/email/redirect', authMiddleware.verifyToken, classController.validateEmailInvitationLink);
-router.post('/:id/accept/email', authMiddleware.verifyToken, classController.joinClassViaEmail);
+router.post('/:id/invite/email', authMiddleware.verifyToken, classController.sendEmailInvitation);
+router.get('/email/redirect', classController.validateEmailInvitationLink);
+router.post('/accept/email', authMiddleware.verifyToken, classController.joinClassViaEmail);
 
 module.exports = router;

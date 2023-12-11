@@ -42,6 +42,7 @@ const Classroom = () => {
   };
 
   const menuProps = (item, isCreatedUser) => {
+    console.log(item, userInfo._id);
     let items = [];
     if(isCreatedUser){
       items = [
@@ -182,7 +183,7 @@ const Classroom = () => {
                   trigger={["click"]}
                   buttonsRender={([]) => [
                     <div />,
-                    <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
+                    <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/10">
                       <EllipsisOutlined className="text-[32px] text-slate-100" />
                     </div>,
                   ]}

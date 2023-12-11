@@ -19,8 +19,9 @@ import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
 import Classroom from "./Pages/Classroom";
 import CreateClass from "./Pages/Classroom/Components/CreateClass";
-import ClassJoining from "./Pages/JoinClassroom/ClassJoining";
-import DetailClass from "./Pages/Classroom/Components/DetailClass";
+import DetailClass from "./Pages/DetailClassroom";
+import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
+import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
 
 function App() {
   return (
@@ -56,7 +57,12 @@ function App() {
               </Route>
               <Route path="/classroom/:id/join/link" exact>
                 <AppLayout>
-                  <ClassJoining/>
+                  <ClassDirectJoining/>
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/invite/accept_token/:id" exact>
+                <AppLayout>
+                  <ClassEmailJoining/>
                 </AppLayout>
               </Route>
               <Route path="/classroom/:id" exact>

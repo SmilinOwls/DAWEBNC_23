@@ -35,7 +35,13 @@ const classroomApi = {
   },
   joinClassByInvitationCode: (id, code) => {
     return axiosClient.post(`/api/classroom/accept/link`, { id, code });
-  }
+  },
+  sendInvitationViaEmail: (id, data) => {
+    return axiosClient.post(`/api/classroom/${id}/invite/email`, data);
+  },
+  joinClassByEmail: (id, token) => {
+    return axiosClient.post(`/api/classroom/accept/email`, { id, token });
+  },
 };
 
 export default classroomApi;
