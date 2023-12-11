@@ -20,6 +20,10 @@ const teacherSchema = new mongoose.Schema({
     type: String,
     required: true,
   },
+  profilePic: {
+    type: String,
+    default: "",
+  },
   role: {
     type: String,
     default: "TEACHER",
@@ -56,6 +60,10 @@ const studentSchema = new mongoose.Schema({
   email: {
     type: String,
     required: true,
+  },
+  profilePic: {
+    type: String,
+    default: "",
   },
   role: {
     type: String,
