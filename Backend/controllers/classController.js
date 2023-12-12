@@ -159,12 +159,12 @@ const classController = {
       if (!classroom) {
         return res.status(200).json({
           joined: false,
-          classroom: classroom
+          classroom: classroom,
         });
       }
       res.status(200).json({
         joined: true,
-        classroom: classroom
+        classroom: classroom,
       });
     } catch (error) {
       res.status(500).json(error);
@@ -362,7 +362,7 @@ const classController = {
     );
 
     const subject = `ELearning - Lời mời tham gia lớp học: "${classroom.name}"`;
-    const link = `http://localhost:5000/api/classroom/email/redirect?token=${token}`;
+    const link = `https://elearning-g2i8.onrender.com/api/classroom/email/redirect?token=${token}`;
 
     const html = `
     <p>Chào bạn <b>${req.user.username}</b>,</p>
@@ -410,7 +410,6 @@ const classController = {
     }
   },
   joinClassViaEmail: async (req, res) => {
-
     try {
       let classroom = await Classroom.findById(req.body.id);
       if (!classroom) {
@@ -419,7 +418,7 @@ const classController = {
           message: "Classroom not found !!!",
         });
       }
-      
+
       if (req.body.token) {
         const decoded = jwt.verify(req.body.token, process.env.MY_SECRETKEY);
         if (decoded.role === "STUDENT") {
@@ -471,7 +470,6 @@ const classController = {
             };
             classroom.teachers.push(newTeacher);
             await classroom.save();
-
           } else if (!teacher.isJoined) {
             Classroom.findOneAndUpdate(
               {
