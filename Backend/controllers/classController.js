@@ -9,11 +9,12 @@ const classController = {
     const newClass = new Classroom({
       createdUser: req.user.id,
       ...req.body,
-      teacher: [
+      teachers: [
         {
           accountId: req.user.id,
-          fullname: req.user.userName,
+          fullname: req.user.username,
           email: req.user.email,
+          profilePic: req.user.profilePic,
           isJoined: true,
         },
       ],
@@ -140,21 +141,30 @@ const classController = {
   checkClassJoined: async (req, res) => {
     try {
       const classroom = await Classroom.findOne({
-        _id: req.params.id, 
+        _id: req.params.id,
         $or: [
           { createdUser: req.user.id },
-          { teachers: { $elemMatch: { accountId: req.user.id, isJoined: true } } },
-          { students: { $elemMatch: { accountId: req.user.id, isJoined: true } } },
+          {
+            teachers: {
+              $elemMatch: { accountId: req.user.id, isJoined: true },
+            },
+          },
+          {
+            students: {
+              $elemMatch: { accountId: req.user.id, isJoined: true },
+            },
+          },
         ],
-
       });
       if (!classroom) {
         return res.status(200).json({
           joined: false,
+          classroom: classroom
         });
       }
       res.status(200).json({
         joined: true,
+        classroom: classroom
       });
     } catch (error) {
       res.status(500).json(error);
@@ -162,7 +172,7 @@ const classController = {
   },
   joinClassViaCode: async (req, res) => {
     try {
-      const classroom = await Classroom.findOne({
+      let classroom = await Classroom.findOne({
         _id: req.params.id,
         invitationCode: req.body.invitationCode,
       });
@@ -181,14 +191,27 @@ const classController = {
       if (!student) {
         const newStudent = {
           accountId: req.user.id,
-          fullName: req.user.userName,
+          fullname: req.user.username,
           email: req.user.email,
+          profilePic: req.user.profilePic,
           isJoined: true,
         };
         classroom.students.push(newStudent);
       } else if (!student.isJoined) {
-        classroom.students.pull({ accountId: req.user.id });
-        classroom.students.push({ ...student, isJoined: true });
+        Classroom.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          },
+          { $set: { "students.$.isJoined": true } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            classroom = doc;
+          }
+        );
       }
 
       const updatedClass = await classroom.save();
@@ -219,7 +242,7 @@ const classController = {
   },
   joinClassViaInvitationLink: async (req, res) => {
     try {
-      const classroom = await Classroom.findById(req.body.id);
+      let classroom = await Classroom.findById(req.body.id);
       if (!classroom) {
         return res.status(404).json({
           success: false,
@@ -239,18 +262,29 @@ const classController = {
       );
 
       if (!student) {
-        
         const newStudent = {
           accountId: req.user.id,
           fullname: req.user.username,
           email: req.user.email,
+          profilePic: req.user.profilePic,
           isJoined: true,
         };
         classroom.students.push(newStudent);
-        
       } else if (!student.isJoined) {
-        classroom.students.pull({ accountId: req.user.id });
-        classroom.students.push({ ...student, isJoined: true });
+        Classroom.findOneAndUpdate(
+          {
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          },
+          { $set: { "students.$.isJoined": true } },
+          { new: true },
+          (err, doc) => {
+            if (err) {
+              console.log("Something wrong when updating data!");
+            }
+            classroom = doc;
+          }
+        );
       }
 
       const updatedClass = await classroom.save();
@@ -260,13 +294,62 @@ const classController = {
     }
   },
   sendEmailInvitation: async (req, res) => {
-    const classroom = await Classroom.findById(req.body.id);
+    const classroom = await Classroom.findById(req.params.id);
     if (!classroom) {
       return res.status(404).json({
         success: false,
         message: "Classroom not found !!!",
       });
     }
+
+    const user = await User.findOne({ email: req.body.email });
+    if (!user) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found !!!",
+      });
+    }
+
+    const newAccount = {
+      accountId: user.id,
+      fullname: user.username,
+      email: user.email,
+      profilePic: user.profilePic,
+      isInvited: true,
+    };
+
+    if (req.body.role == "TEACHER") {
+      const teacher = await Classroom.findOne({
+        _id: req.params.id,
+        teachers: { $elemMatch: { email: req.body.email } },
+      });
+
+      if (teacher) {
+        return res.status(400).json({
+          success: false,
+          message: "User already joined or invited to this class !!!",
+        });
+      }
+
+      classroom.teachers.push(newAccount);
+      await classroom.save();
+    } else if (req.body.role == "STUDENT") {
+      const student = await Classroom.findOne({
+        _id: req.params.id,
+        students: { $elemMatch: { email: req.body.email } },
+      });
+
+      if (student) {
+        return res.status(400).json({
+          success: false,
+          message: "User already joined or invited to this class !!!",
+        });
+      }
+
+      classroom.students.push(newAccount);
+      await classroom.save();
+    }
+
     const token = jwt.sign(
       {
         classId: classroom._id,
@@ -278,31 +361,24 @@ const classController = {
       }
     );
 
-    const subject = `ELearning - Lời mời cùng dạy lớp học: "${classroom.name}"`;
+    const subject = `ELearning - Lời mời tham gia lớp học: "${classroom.name}"`;
     const link = `http://localhost:5000/api/classroom/email/redirect?token=${token}`;
 
     const html = `
-    <h1>Chào bạn ${req.user.userName},</h1>
+    <p>Chào bạn <b>${req.user.username}</b>,</p>
     <p>Bạn nhận được email này vì bạn đã được mời tham gia vào lớp học <b>${classroom.name}</b> trên hệ thống ELearning.</p>
     <p>Để tham gia vào lớp học, bạn vui lòng nhấn vào link bên dưới.</p>
     <a href="${link}">Chấp nhận lời mời</a>
     <p>Trân trọng,</p>
-    <p>ELearning Team</p>
+    <p>Elearning Team</p>
     `;
     try {
-      await mailer.sendMail(req.user.email, subject, html);
+      await mailer.sendMail(req.body.email, subject, html);
+
       res.status(200).json({
         success: true,
         message: "Send email successfully",
       });
-
-      const newTeacher = {
-        accountId: req.user.id,
-        fullname: req.user.username,
-        email: req.user.email,
-      };
-
-      classroom.teachers.push(newTeacher);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -327,54 +403,90 @@ const classController = {
       }
 
       res.redirect(
-        `http://localhost:3000/classroom/invite/accept_token/${classroom._id}?token=${token}`
+        `http://localhost:3000/classroom/invite/accept_token/${classroom._id}?token=${token}&role=${decoded.role}`
       );
     } catch (error) {
       res.status(500).json(error);
     }
   },
   joinClassViaEmail: async (req, res) => {
+
     try {
-      const classroom = await Classroom.findById(req.params.id);
+      let classroom = await Classroom.findById(req.body.id);
       if (!classroom) {
         return res.status(404).json({
           success: false,
           message: "Classroom not found !!!",
         });
       }
-
-      if (req.query.token) {
-        const decoded = jwt.verify(req.query.token, process.env.MY_SECRETKEY);
-        if (decoded.role === "student") {
-          const student = classroom.students.find(
-            (student) => student.accountId === req.user.id
-          );
+      
+      if (req.body.token) {
+        const decoded = jwt.verify(req.body.token, process.env.MY_SECRETKEY);
+        if (decoded.role === "STUDENT") {
+          const student = await Classroom.findOne({
+            _id: req.body.id,
+            students: { $elemMatch: { accountId: req.user.id } },
+          });
 
           if (!student) {
             const newStudent = {
               accountId: req.user.id,
               fullname: req.user.username,
               email: req.user.email,
+              profilePic: req.user.profilePic,
               isJoined: true,
             };
             classroom.students.push(newStudent);
           } else if (!student.isJoined) {
-            classroom.students.pull({ accountId: req.user.id });
-            classroom.students.push({ ...student, isJoined: true });
+            Classroom.findOneAndUpdate(
+              {
+                _id: req.body.id,
+                students: { $elemMatch: { accountId: req.user.id } },
+              },
+              { $set: { "students.$.isJoined": true } },
+              { new: true },
+              (err, doc) => {
+                if (err) {
+                  console.log("Something wrong when updating data!");
+                }
+                classroom = doc;
+              }
+            );
           }
-        } else if (decoded.role === "teacher") {
-          const teacher = classroom.teachers.find(
-            (teacher) => teacher.accountId === req.user.id
-          );
+        } else if (decoded.role === "TEACHER") {
+          const teacher = await Classroom.findOne({
+            _id: req.body.id,
+            teachers: { $elemMatch: { accountId: req.user.id } },
+          });
+
+          console.log(teacher);
 
           if (!teacher) {
-            res.status(404).json({
-              success: false,
-              message: "Teacher not found !!!",
-            });
+            const newTeacher = {
+              accountId: req.user.id,
+              fullname: req.user.username,
+              email: req.user.email,
+              profilePic: req.user.profilePic,
+              isJoined: true,
+            };
+            classroom.teachers.push(newTeacher);
+            await classroom.save();
+
           } else if (!teacher.isJoined) {
-            classroom.teachers.pull({ accountId: req.user.id });
-            classroom.teachers.push({ ...teacher, isJoined: true });
+            Classroom.findOneAndUpdate(
+              {
+                _id: req.body.id,
+                teachers: { $elemMatch: { accountId: req.user.id } },
+              },
+              { $set: { "teachers.$.isJoined": true } },
+              { new: true },
+              (err, doc) => {
+                if (err) {
+                  console.log("Something wrong when updating data!");
+                }
+                classroom = doc;
+              }
+            );
           }
         }
       }

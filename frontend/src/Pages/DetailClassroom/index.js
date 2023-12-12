@@ -1,12 +1,13 @@
 import React, { useState, useEffect, useLayoutEffect } from "react";
-import { CameraIcon } from "./CameraIcon";
+import { CameraIcon } from "../Classroom/Components/CameraIcon";
 import Tabs from "@mui/material/Tabs";
 import Tab from "@mui/material/Tab";
 import Typography from "@mui/material/Typography";
 import Box from "@mui/material/Box";
-import classroomApi from "../../../Services/classroomApi";
+import classroomApi from "../../Services/classroomApi";
 import { useParams, useHistory } from "react-router-dom";
 import { message, Skeleton } from "antd";
+import People from "./Components/People";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -27,8 +28,10 @@ const DetailClass = () => {
             message.error("You are not allowed to join this class");
             setTimeout(() => {
               history.push("/classroom");
-            }, 2000);
+            }, 1000);
           } else{
+            console.log(res.data);
+            setClassroom(res.data.classroom);
             setLoading(false);
           }
         })
@@ -100,7 +103,7 @@ const DetailClass = () => {
               Exercises
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              People
+              <People classroom={classroom} />
             </CustomTabPanel>
           </Box>
         </div>

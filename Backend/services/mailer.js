@@ -31,7 +31,6 @@ const sendMail = async (to, subject, htmlContent) => {
         })
 
         const mailOptions = {
-            from: '<no-reply@elearning.com>',
             to: to,
             subject: subject,
             html: htmlContent

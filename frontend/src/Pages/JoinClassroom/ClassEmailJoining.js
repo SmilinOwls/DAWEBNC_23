@@ -3,16 +3,18 @@ import { Button, Card, Skeleton } from "antd";
 import logo from "../../Assets/images/Logo.jpg";
 import { useParams, useLocation, useHistory } from "react-router-dom";
 import classroomApi from "../../Services/classroomApi";
+import { message } from "antd";
 
 const { Meta } = Card;
 
-const ClassJoining = () => {
+const ClassEmailJoining = () => {
   const [loading, setLoading] = useState(false);
   const [loadingJoin, setLoadingJoin] = useState(false);
   const [classroom, setClassroom] = useState({});
   const { id } = useParams();
   const { search } = useLocation();
-  const code = new URLSearchParams(search).get("cjc");
+  const token = new URLSearchParams(search).get("token");
+  const role = new URLSearchParams(search).get("role");
   const history = useHistory();
   const userInfo = JSON.parse(localStorage.getItem("user"));
   if (!userInfo) {
@@ -36,7 +38,7 @@ const ClassJoining = () => {
     if (!loading) {
       setLoading(true);
       classroomApi
-        .getClassroomByInvitationCode(id, code)
+        .getClassroomById(id)
         .then((res) => {
           const data = res.data;
           setClassroom(data);
@@ -56,11 +58,14 @@ const ClassJoining = () => {
   const handleJoinClass = async () => {
     setLoadingJoin(true);
     try {
-      await classroomApi.joinClassByInvitationCode(id, code);
-      history.push(`/classroom/${id}`);
+      await classroomApi.joinClassByEmail(id, token);
+      message.success("Join class successfully");
+      setTimeout(() => {
+        history.push(`/classroom/${id}`);
+      }, 1000);
     } catch (error) {
       console.log(error);
-      history.push(`/classroom`);
+      message.error("Join class failed");
     } finally {
       setLoadingJoin(false);
     }
@@ -106,8 +111,7 @@ const ClassJoining = () => {
                   </div>
                 </div>
                 <span>
-                  You are joining the class "{classroom.name}" as role of
-                  student
+                  You are joining the class "{classroom.name}" as role of "{role}"
                 </span>
                 <Button
                   type="primary"
@@ -131,4 +135,4 @@ const ClassJoining = () => {
   );
 };
 
-export default ClassJoining;
+export default ClassEmailJoining;
