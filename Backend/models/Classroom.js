@@ -112,4 +112,4 @@ const classroomSchema = new mongoose.Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("classroom", classroomSchema);
+module.exports = mongoose.model("Classroom", classroomSchema);

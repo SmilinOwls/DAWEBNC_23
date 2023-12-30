@@ -6,6 +6,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { updateUserProfile } from "../../Actions/UserAction";
 import axios from "../../Services/axios";
 
+// https://elearning-g2i8.onrender.com/
+
 const AccountSetting = () => {
   const [file, setFile] = useState(null);
   console.log(file);
@@ -43,9 +45,9 @@ const AccountSetting = () => {
         };
 
         const { data } = await axios.post(url, formData, headers);
-        setFile("https://elearning-g2i8.onrender.com/" + data.profilePic);
+        setFile("http://localhost:5000/" + data.profilePic);
         updatedUser.profilePic =
-          "https://elearning-g2i8.onrender.com/" + data.profilePic ||
+          "http://localhost:5000/" + data.profilePic ||
           userInfo.profilePic;
       } catch (err) {
         console.log(err.response.data);

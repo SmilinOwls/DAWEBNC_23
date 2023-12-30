@@ -11,21 +11,21 @@ const passport = require("passport");
 const session = require("express-session");
 const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
-const placeRouter = require("./routes/place");
-const roomRouter = require("./routes/room");
-const blogRouter = require("./routes/blog");
 const bookingRouter = require("./routes/booking");
 const classRouter = require("./routes/classroom");
+const assignmentRouter = require("./routes/assignment")
 
 dotenv.config();
 require("./services/passport");
 
 const app = express();
 
+// https://edulearning.vercel.app
+
 app.use(
   cors({
     credentials: true,
-    origin: "https://edulearning.vercel.app",
+    origin: "http://localhost:3000",
   })
 );
 
@@ -59,6 +59,15 @@ const avatarStorage = multer.diskStorage({
 const classroomStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/images/classroom");
+  },
+  filename: function (req, file, cb) {
+    cb(null, Date.now() + "_" + file.originalname);
+  },
+});
+
+const assignmentStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/images/assignment");
   },
   filename: function (req, file, cb) {
     cb(null, Date.now() + "_" + file.originalname);
@@ -107,6 +116,20 @@ const classroomMiddleware = multer({
   },
 });
 
+const assignmentMiddleware = multer({
+  storage: assignmentStorage,
+  fileFilter: function (req, file, cb) {
+    const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
+    const extension = file.originalname.slice(-4);
+    const check = extensionImageList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
+    }
+  },
+});
+
 app.post(
   "/api/upload-photo",
   photoMiddleware.array("photos", 100),
@@ -141,23 +164,6 @@ app.post(
 );
 
 app.post(
-  "/api/upload-room",
-  photoMiddleware.array("photoRooms", 100),
-  (req, res) => {
-    const uploadedFiles = [];
-    for (let i = 0; i < req.files.length; i++) {
-      const { path, originalname } = req.files[i];
-      const parts = originalname.split(".");
-      const ext = parts[parts.length - 1];
-      const newPath = path + "." + ext;
-      fs.renameSync(path, newPath);
-      uploadedFiles.push(newPath);
-    }
-    res.status(200).json(uploadedFiles);
-  }
-);
-
-app.post(
   "/api/upload-classroon",
   classroomMiddleware.array("classroooms", 100),
   (req, res) => {
@@ -174,13 +180,28 @@ app.post(
   }
 );
 
+app.post(
+  "/api/upload-assignment",
+  assignmentMiddleware.array("assignments", 100),
+  (req, res) => {
+    const uploadedFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+      const { path, originalname } = req.files[i];
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      uploadedFiles.push(newPath);
+    }
+    res.status(200).json(uploadedFiles);
+  }
+);
+
 app.use("/api/auth", authRouter);
 app.use("/api/user", userRouter);
-app.use("/api/place", placeRouter);
-app.use("/api/room", roomRouter);
-app.use("/api/blog", blogRouter);
 app.use("/api/book", bookingRouter);
 app.use("/api/classroom", classRouter);
+app.use("/api/assignment", assignmentRouter);
 
 const PORT = process.env.PORT || 5000;
 const URI = process.env.DB_URL;
