@@ -1,5 +1,5 @@
 const Booking = require("../models/Booking");
-const Room = require("../models/Room");
+// const Room = require("../models/Room");
 
 
 const BookingControllers = {
@@ -71,17 +71,17 @@ const BookingControllers = {
             res.status(500).json(error);
         }
     },
-    updateStock: async(id, quantity) => {
-        const room = await Room.findById(id);
-        if(!room){
-            return res.status(404).json("Room not found !!!");
-        }
-        if(!room.countInStock){
-            product.countInStock = -1;
-        }
-        room.countInStock -= quantity;
-        await room.save();
-    },
+    // updateStock: async(id, quantity) => {
+    //     const room = await Room.findById(id);
+    //     if(!room){
+    //         return res.status(404).json("Room not found !!!");
+    //     }
+    //     if(!room.countInStock){
+    //         product.countInStock = -1;
+    //     }
+    //     room.countInStock -= quantity;
+    //     await room.save();
+    // },
 
     updateOrderByStatus: async(req, res) => {
         try {
