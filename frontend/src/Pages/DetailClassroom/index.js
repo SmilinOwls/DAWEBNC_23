@@ -8,6 +8,7 @@ import classroomApi from "../../Services/classroomApi";
 import { useParams, useHistory } from "react-router-dom";
 import { message, Skeleton } from "antd";
 import People from "./Components/People";
+import Exercises from "./Components/Exercises";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -29,7 +30,7 @@ const DetailClass = () => {
             setTimeout(() => {
               history.push("/classroom");
             }, 1000);
-          } else{
+          } else {
             console.log(res.data);
             setClassroom(res.data.classroom);
             setLoading(false);
@@ -37,7 +38,7 @@ const DetailClass = () => {
         })
         .then((err) => {
           console.log(err);
-        })
+        });
     }
   }, []);
 
@@ -100,7 +101,7 @@ const DetailClass = () => {
               News
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              Exercises
+              <Exercises />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
               <People classroom={classroom} />

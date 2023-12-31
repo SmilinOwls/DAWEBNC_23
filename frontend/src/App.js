@@ -22,6 +22,7 @@ import CreateClass from "./Pages/Classroom/Components/CreateClass";
 import DetailClass from "./Pages/DetailClassroom";
 import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
 import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
+import CreateAssignment from "./Pages/CreateAssignment";
 
 function App() {
   return (
@@ -57,12 +58,12 @@ function App() {
               </Route>
               <Route path="/classroom/:id/join/link" exact>
                 <AppLayout>
-                  <ClassDirectJoining/>
+                  <ClassDirectJoining />
                 </AppLayout>
               </Route>
               <Route path="/classroom/invite/accept_token/:id" exact>
                 <AppLayout>
-                  <ClassEmailJoining/>
+                  <ClassEmailJoining />
                 </AppLayout>
               </Route>
               <Route path="/classroom/:id" exact>
@@ -93,6 +94,11 @@ function App() {
               <Route path="/sign-in" exact>
                 <AppLayout>
                   <Signin />
+                </AppLayout>
+              </Route>
+              <Route path="/create-assignment">
+                <AppLayout>
+                  <CreateAssignment />
                 </AppLayout>
               </Route>
               <Route path="/logout">
