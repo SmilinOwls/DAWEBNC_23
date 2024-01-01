@@ -5,6 +5,7 @@ const Exercises = ({classId}) => {
   const history = useHistory();
 
   function handleClick() {
+    localStorage.setItem("classId", classId);
     history.push(`/create-assignment`);
   }
 

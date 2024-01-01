@@ -8,6 +8,10 @@ const CreateAssignment = () => {
   const [file, setFile] = useState(null);
   const [value, setValue] = React.useState(null);
 
+  const classId = localStorage.getItem("classId") || "";
+
+  console.log("class id", classId);
+
   return (
     <div className="mt-5 mx-[60px] mb-4 border p-6 rounded-lg">
       <p className="text-[25px] font-bold text-center mb-6">
