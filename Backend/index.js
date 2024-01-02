@@ -13,7 +13,8 @@ const authRouter = require("./routes/auth");
 const userRouter = require("./routes/users");
 const bookingRouter = require("./routes/booking");
 const classRouter = require("./routes/classroom");
-const assignmentRouter = require("./routes/assignment")
+const assignmentRouter = require("./routes/assignment");
+const gradeRouter = require("./routes/grade");
 
 dotenv.config();
 require("./services/passport");
@@ -202,6 +203,7 @@ app.use("/api/user", userRouter);
 app.use("/api/book", bookingRouter);
 app.use("/api/classroom", classRouter);
 app.use("/api/assignment", assignmentRouter);
+app.use("/api/grade", gradeRouter);
 
 const PORT = process.env.PORT || 5000;
 const URI = process.env.DB_URL;
