@@ -77,7 +77,6 @@ const classController = {
           { students: { $elemMatch: { accountId: req.user.id } } },
         ],
       });
-      console.log(classroom);
       if (!classroom) {
         return res.status(404).json({
           success: false,
@@ -173,8 +172,7 @@ const classController = {
   joinClassViaCode: async (req, res) => {
     try {
       let classroom = await Classroom.findOne({
-        _id: req.params.id,
-        invitationCode: req.body.invitationCode,
+        invitationCode: req.body.code,
       });
 
       if (!classroom) {
@@ -457,8 +455,6 @@ const classController = {
             _id: req.body.id,
             teachers: { $elemMatch: { accountId: req.user.id } },
           });
-
-          console.log(teacher);
 
           if (!teacher) {
             const newTeacher = {

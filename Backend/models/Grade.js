@@ -14,7 +14,19 @@ const gradeSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "User",
         required: true,
-    }
+    },
+    review: {
+        reviewerId: {
+            type: mongoose.Schema.ObjectId,
+            ref: "User",
+        },
+        feedback: {
+            type: String,
+        },
+        reviewDate: {
+            type: Date,
+        },
+      },
 },  { timestamps: true });
 
 module.exports = mongoose.model("Grade", gradeSchema);
