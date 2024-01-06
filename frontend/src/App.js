@@ -13,6 +13,7 @@ import LogOut from "./Pages/Logout";
 import PageNotFound from "./Pages/PageNotFound";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
+import DetailAssignment from './Pages/DetailAssignment'
 
 import Dashboard from "./Pages/Admin/Dashboard";
 import MainLayout from "./Components/Admin/MainLayout";
@@ -23,6 +24,7 @@ import DetailClass from "./Pages/DetailClassroom";
 import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
 import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
 import CreateAssignment from "./Pages/CreateAssignment";
+
 
 function App() {
   return (
@@ -74,6 +76,11 @@ function App() {
               <Route path="/create-class" exact>
                 <AppLayout>
                   <CreateClass />
+                </AppLayout>
+              </Route>
+              <Route path="/assignment/:assignmentId" exact>
+                <AppLayout>
+                  <DetailAssignment />
                 </AppLayout>
               </Route>
               <AdminRoute path="/dashboard" exact>

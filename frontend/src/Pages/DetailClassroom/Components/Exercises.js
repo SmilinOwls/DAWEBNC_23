@@ -3,6 +3,7 @@ import { useHistory } from "react-router-dom";
 import { AiOutlineClose } from "react-icons/ai";
 import assignmentApi from "../../../Services/assignmentApi";
 import { AssignmentIcon } from "./ExerciseIcon";
+import Swal from "sweetalert2";
 
 const Exercises = ({ classId }) => {
   const [assignments, setAsssignments] = useState([]);
@@ -22,11 +23,32 @@ const Exercises = ({ classId }) => {
     }
   };
 
+  const handleDeleteAssignment = async (id) => {
+    try {
+      const response = await assignmentApi.deleteAssignment(id);
+      if(response) {
+        console.log(response);
+        Swal.fire({
+          title: "Delete Assignment successfully!",
+          text: "Great!",
+          icon: "success",
+        });
+      }
+      const currentAssignment = assignments.filter(item => item.id !== id);
+      setAsssignments(currentAssignment)
+    } catch (error) {
+      console.log(error);
+      Swal.fire({
+        title: "Delete Assignment Failed!",
+        text: "Oops!",
+        icon: "error",
+      });
+    }
+  }
+
   useEffect(() => {
     handleGetAssignment();
-  }, [classId]);
-
-  console.log("assignment", assignments);
+  }, [classId, assignments]);
 
   return (
     <>
@@ -38,7 +60,11 @@ const Exercises = ({ classId }) => {
       </div>
       {assignments.length > 0 && assignments.map(item => {
         return   (
-          <div key={item.id} className="bg-white my-5 border rounded-[12px] flex items-center justify-between p-4 cursor-pointer">
+          <div 
+            key={item._id} 
+            className="bg-white my-5 border rounded-[12px] flex items-center justify-between p-4 cursor-pointer"
+            onClick={() => history.push(`/assignment/${item._id}`)}
+            >
             <div className="flex items-center justify-center gap-4">
               <div className="p-3 rounded-full bg-cyan-400 text-center">
                 <AssignmentIcon />
@@ -49,7 +75,7 @@ const Exercises = ({ classId }) => {
             </div>
             <div className="flex items-center justify-center gap-4">
                 <p className="text-[15px] text-[#d5d5d5] mt-[20px]">Posted: {item?.dueDate?.slice(0, 10)}</p>
-                <div className="pt-2">
+                <div className="pt-2" onClick={() => handleDeleteAssignment(item._id)}>
                   <AiOutlineClose />
                 </div>
             </div>

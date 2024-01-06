@@ -14,6 +14,18 @@ const assignmentApi = {
   getAssignmentByClass: async (id) => {
     return axiosClient.get(`/api/assignment/${id}`);
   },
+
+  getDetailAssignment: async (id) => {
+    return axiosClient.get(`/api/assignment/detail/${id}`);
+  },
+  deleteAssignment: async (id) => {
+    try {
+      const response = await axios.delete(`/assignment/${id}`, configAxios);
+      return response.data;
+    } catch (error) {
+      throw error;
+    }
+  },
 };
 
 export default assignmentApi;
