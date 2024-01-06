@@ -48,7 +48,7 @@ const Exercises = ({ classId }) => {
 
   useEffect(() => {
     handleGetAssignment();
-  }, [classId, assignments]);
+  }, []);
 
   return (
     <>
