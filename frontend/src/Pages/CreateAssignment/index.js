@@ -4,6 +4,9 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
 import axios from "../../Services/axios";
 import assignmentApi from "../../Services/assignmentApi";
+import MenuItem from "@mui/material/MenuItem";
+import Box from "@mui/material/Box";
+import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
 
 const CreateAssignment = () => {
@@ -12,6 +15,10 @@ const CreateAssignment = () => {
   const [date, setDate] = React.useState(null);
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
+  const [gradeComposition, setGradeComposition] = useState({
+    name: "Attendance",
+    weight: null,
+  });
   const [isLoading, setIsLoading] = useState(false);
 
   const classId = localStorage.getItem("classId") || "";
@@ -77,6 +84,7 @@ const CreateAssignment = () => {
       image: files[0] || "",
       document: documents || [],
       classroom: classId || "",
+      gradeComposition: gradeComposition,
     };
     try {
       const response = await assignmentApi.createAssignment(data);
@@ -94,6 +102,11 @@ const CreateAssignment = () => {
     } catch (error) {
       console.log(error);
     }
+  };
+
+  const handleChange = (e) => {
+    e.preventDefault();
+    setGradeComposition((prev) => ({ ...prev, name: e.target.value }));
   };
 
   return (
@@ -167,6 +180,40 @@ const CreateAssignment = () => {
               Upload Document
             </p>
           </button>
+        </div>
+        <div className="mb-4">
+          <div>
+            <label className="text-[15px] text-[#d5d5d5] mb-3">
+              Grade Composition
+            </label>
+          </div>
+          <div className="flex items-center justify-start gap-4">
+            <Box sx={{ minWidth: "200px" }}>
+              <Select
+                labelId="demo-simple-select-label"
+                id="demo-simple-select"
+                value={gradeComposition.name}
+                label="grade"
+                onChange={handleChange}
+              >
+                <MenuItem value={"Attendance"}>Attendance</MenuItem>
+                <MenuItem value={"Midterm "}>Midterm </MenuItem>
+                <MenuItem value={"Final"}>Final</MenuItem>
+              </Select>
+            </Box>
+            <input
+              type="number"
+              className="w-[200px] rounded-[12px] px-3 py-2 border focus:outline focus:outline-[#6DB9EF] placeholder:text-[20px] placeholder:text-[#ddd]"
+              placeholder="Enter Grade"
+              value={gradeComposition.weight}
+              onChange={(e) =>
+                setGradeComposition((prev) => ({
+                  ...prev,
+                  weight: Number(e.target.value),
+                }))
+              }
+            />
+          </div>
         </div>
         <div className="mb-4">
           <label className="text-[15px] text-[#d5d5d5] mb-3">Description</label>

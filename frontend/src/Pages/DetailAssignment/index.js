@@ -60,7 +60,9 @@ const DetaiAssignment = () => {
               </span>
             </p>
             <div>
-              <p className="text-[20px] font-[580] text-[#121212]">Documents:</p>
+              <p className="text-[20px] font-[580] text-[#121212]">
+                Documents:
+              </p>
               <div className="bg-[#efefef] rounded-[8px] p-4">
                 {detailAssignment?.document?.map((item) => (
                   <div className="mb-3">
@@ -70,6 +72,12 @@ const DetaiAssignment = () => {
                   </div>
                 ))}
               </div>
+            </div>
+            <div>
+              <p className="text-[20px] font-[580] text-[#121212]">
+                Point type:{" "}
+                <span className="font-[450]">{detailAssignment?.gradeComposition.name}</span>
+              </p>
             </div>
           </div>
         </div>

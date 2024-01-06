@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const gradeCompositionSchema = require("./GradeComposition");
 
 const assignmentSchema = new mongoose.Schema({
     title: {
@@ -23,7 +24,8 @@ const assignmentSchema = new mongoose.Schema({
         type: mongoose.Schema.ObjectId,
         ref: "Classroom",
         required: true,
-    }
+    },
+    gradeComposition: gradeCompositionSchema,
 },  { timestamps: true });
 
 module.exports = mongoose.model("Assignment", assignmentSchema);

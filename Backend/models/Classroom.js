@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+const gradeCompositionSchema = require("./GradeComposition");
 
 const teacherSchema = new mongoose.Schema({
   accountId: {
@@ -108,6 +109,7 @@ const classroomSchema = new mongoose.Schema(
       type: String,
       default: Math.random().toString(36).slice(2, Math.floor(Math.random() * 3) + 7),
     },
+    gradeComposition: [gradeCompositionSchema]
   },
   { timestamps: true }
 );
