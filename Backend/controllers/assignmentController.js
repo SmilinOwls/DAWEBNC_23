@@ -38,6 +38,20 @@ const assignmentController = {
       res.status(500).json(error);
     }
   },
+  getDetailAssignment: async (req, res) => {
+    try {
+      const assignment = await Assignment.findById(req.params.id);
+      if (!assignment) {
+        return res.status(404).json({
+          success: false,
+          message: "Assignment not found !!!",
+        });
+      }
+      res.status(200).json(assignment);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
   deleteAssignment: async (req, res) => {
     const assignment = await Assignment.findById(req.params.id);
     if (!assignment) {
@@ -47,13 +61,13 @@ const assignmentController = {
       });
     }
     try {
-        await assignment.remove();
-        return res.status(200).json({
-            success: true,
-            message: "Assignment has been deleted successfully",
-          });
+      await assignment.remove();
+      return res.status(200).json({
+        success: true,
+        message: "Assignment has been deleted successfully",
+      });
     } catch (error) {
-        res.status(500).json(error);
+      res.status(500).json(error);
     }
   },
   updateAssignment: async (req, res) => {
@@ -65,20 +79,16 @@ const assignmentController = {
       });
     }
     try {
-        const {
-            title,
-            description,
-            dueDate
-        } = req.body;
-        assignment.title = title || assignment.title;
-        assignment.description = description || assignment.description;
-        assignment.dueDate = dueDate || assignment.dueDate;
-        const updatedAssignment = await assignment.save();
-        res.status(200).json(updatedAssignment)
+      const { title, description, dueDate } = req.body;
+      assignment.title = title || assignment.title;
+      assignment.description = description || assignment.description;
+      assignment.dueDate = dueDate || assignment.dueDate;
+      const updatedAssignment = await assignment.save();
+      res.status(200).json(updatedAssignment);
     } catch (error) {
-        res.status(500).json(error);
+      res.status(500).json(error);
     }
-  }
+  },
 };
 
 module.exports = assignmentController;

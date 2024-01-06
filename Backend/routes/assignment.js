@@ -19,10 +19,13 @@ router.get(
 //get assignments
 router.get("/", assignmentController.getAllAssignments);
 
+//get detail assignment
+router.get("/detail/:id", assignmentController.getDetailAssignment);
+
 //delete assignment
 router.delete(
   "/:id",
-  authMiddleware.authorizeRole,
+  authMiddleware.verifyToken,
   assignmentController.deleteAssignment
 );
 
