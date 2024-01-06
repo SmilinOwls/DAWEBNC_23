@@ -38,7 +38,7 @@ const AccountSetting = () => {
       // data.append("name", filename);
       formData.append("avatar", file);
       try {
-        let url = `/user/upload-avatar`;
+        let url = `/upload-assignment`;
 
         const headers = {
           "Content-type": "multipart/form-data",

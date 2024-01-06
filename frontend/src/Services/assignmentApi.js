@@ -1,4 +1,5 @@
 import axios from "./axios";
+import axiosClient from "./axiosClient";
 import { configAxios } from "../utils/customUser";
 
 const assignmentApi = {
@@ -9,6 +10,9 @@ const assignmentApi = {
     } catch (error) {
       throw error;
     }
+  },
+  getAssignmentByClass: async (id) => {
+    return axiosClient.get(`/api/assignment/${id}`);
   },
 };
 
