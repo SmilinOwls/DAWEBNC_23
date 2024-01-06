@@ -4,21 +4,33 @@ const router = require("express").Router();
 
 //create assignment
 router.post(
-    "/",
-    authMiddleware.authorizeRole,
-    assignmentController.createAssignment
+  "/",
+  authMiddleware.verifyToken,
+  assignmentController.createAssignment
 );
 
 //get assignments by classroom
-router.get("/:id", authMiddleware.verifyToken, assignmentController.getAssignmentByClass);
+router.get(
+  "/:id",
+  authMiddleware.verifyToken,
+  assignmentController.getAssignmentByClass
+);
 
 //get assignments
 router.get("/", assignmentController.getAllAssignments);
 
 //delete assignment
-router.delete("/:id", authMiddleware.authorizeRole, assignmentController.deleteAssignment);
+router.delete(
+  "/:id",
+  authMiddleware.authorizeRole,
+  assignmentController.deleteAssignment
+);
 
 //edit assignment
-router.put("/:id", authMiddleware.authorizeRole, assignmentController.updateAssignment);
+router.put(
+  "/:id",
+  authMiddleware.authorizeRole,
+  assignmentController.updateAssignment
+);
 
 module.exports = router;

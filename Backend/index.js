@@ -70,8 +70,11 @@ const assignmentStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/images/assignment");
   },
-  filename: function (req, file, cb) {
-    cb(null, Date.now() + "_" + file.originalname);
+});
+
+const documentStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/document/assignment");
   },
 });
 
@@ -120,7 +123,23 @@ const classroomMiddleware = multer({
 const assignmentMiddleware = multer({
   storage: assignmentStorage,
   fileFilter: function (req, file, cb) {
-    const extensionImageList = [".png", ".jpg", ".jpeg", ".webp"];
+    console.log("file", file);
+    const extensionImageList = [".png", ".jpg", ".jpeg", ".webp", ".svg"];
+    const extension = file.originalname.slice(-4);
+    const check = extensionImageList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
+    }
+  },
+});
+
+const documentMiddleware = multer({
+  storage: assignmentStorage,
+  fileFilter: function (req, file, cb) {
+    console.log("file", file);
+    const extensionImageList = [".pdf", ".docx"];
     const extension = file.originalname.slice(-4);
     const check = extensionImageList.includes(extension);
     if (check) {
@@ -184,6 +203,23 @@ app.post(
 app.post(
   "/api/upload-assignment",
   assignmentMiddleware.array("assignments", 100),
+  (req, res) => {
+    const uploadedFiles = [];
+    for (let i = 0; i < req.files.length; i++) {
+      const { path, originalname } = req.files[i];
+      const parts = originalname.split(".");
+      const ext = parts[parts.length - 1];
+      const newPath = path + "." + ext;
+      fs.renameSync(path, newPath);
+      uploadedFiles.push(newPath);
+    }
+    res.status(200).json(uploadedFiles);
+  }
+);
+
+app.post(
+  "/api/upload-document",
+  documentMiddleware.array("documents", 100),
   (req, res) => {
     const uploadedFiles = [];
     for (let i = 0; i < req.files.length; i++) {
