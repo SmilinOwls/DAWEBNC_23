@@ -30,7 +30,7 @@ const GradeStructure = ({ classId }) => {
       const res = await gradeApi.getGradeStructures(classId);
       const data = res.data;
       setGradeStructures(data);
-      setTotalWeight(getOriginWeight(data));
+      setEditingId(null, () => setTotalWeight(getOriginWeight(data)));
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -43,11 +43,14 @@ const GradeStructure = ({ classId }) => {
     try {
       if (editingId) {
         await gradeApi.updateGradeStructureById(classId, editingId, values);
-        setEditingId(null);
-      } else await gradeApi.createGradeStructure(classId, values);
+        fetchGradeStructures();
+      } else {
+        await gradeApi.createGradeStructure(classId, values);
+        fetchGradeStructures();
+      }
 
       message.success("Successfully saved the grade structure");
-      await fetchGradeStructures();
+      
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
