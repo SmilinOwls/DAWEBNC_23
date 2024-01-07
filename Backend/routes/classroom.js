@@ -56,6 +56,7 @@ router.put(
   classController.updateClass
 );
 
+// join classroom
 router.get('/:id/account-joined', authMiddleware.verifyToken, classController.checkClassJoined);
 router.post('/accept/code', authMiddleware.verifyToken, classController.joinClassViaCode);
 router.get('/:id/join/link', authMiddleware.verifyToken, classController.validateInvitationLink);
@@ -63,5 +64,12 @@ router.post('/accept/link', authMiddleware.verifyToken, classController.joinClas
 router.post('/:id/invite/email', authMiddleware.verifyToken, classController.sendEmailInvitation);
 router.get('/email/redirect', classController.validateEmailInvitationLink);
 router.post('/accept/email', authMiddleware.verifyToken, classController.joinClassViaEmail);
+
+// grade structure
+router.post('/:classId/grade-structure', authMiddleware.verifyToken, classController.createGradeStructure);
+router.get('/:classId/grade-structure', authMiddleware.verifyToken, classController.getGradeStructures);
+router.put('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.updateGradeStructureById);
+router.delete('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.deleteGradeStructure);
+router.put('/:classId/grade-structure', authMiddleware.verifyToken, classController.updateGradeStructures);
 
 module.exports = router;
