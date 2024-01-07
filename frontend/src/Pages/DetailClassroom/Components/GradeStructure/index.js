@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useCallback } from "react";
+import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Button, Input, Form, message, InputNumber, List } from "antd";
 import gradeApi from "../../../../Services/gradeApi";
 import { arrayMoveImmutable } from "array-move";
@@ -9,7 +9,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
   const [gradeStructures, setGradeStructures] = useState([]);
   const [loading, setLoading] = useState(false);
   const [totalWeight, setTotalWeight] = useState(0);
-  const [editingId, setEditingId] = useState(null);
+  const editingId = useRef(null);
 
   useEffect(() => {
     fetchGradeStructures();
@@ -17,7 +17,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
 
   const getOriginWeight = (data) => {
     const weight = data.reduce((acc, cur) => {
-      if (cur._id == editingId) return acc;
+      if (cur._id == editingId.current) return acc;
       return acc + cur.weight;
     }, 0);
 
@@ -30,7 +30,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
       const res = await gradeApi.getGradeStructures(classId);
       const data = res.data;
       setGradeStructures(data);
-      setEditingId(null, () => setTotalWeight(getOriginWeight(data)));
+      setTotalWeight(getOriginWeight(data));
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -41,8 +41,9 @@ const GradeStructure = ({ isTeacher, classId }) => {
   const handleSave = async (values) => {
     setLoading(true);
     try {
-      if (editingId) {
-        await gradeApi.updateGradeStructureById(classId, editingId, values);
+      if (editingId.current) {
+        await gradeApi.updateGradeStructureById(classId,  editingId.current, values);
+        editingId.current = null;
         fetchGradeStructures();
       } else {
         await gradeApi.createGradeStructure(classId, values);
@@ -60,7 +61,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
 
   const handleEdit = (gradeComposition) => {
     setTotalWeight(getOriginWeight(gradeStructures));
-    setEditingId(gradeComposition._id);
+    editingId.current = gradeComposition._id;
     form.setFieldsValue(gradeComposition);
   };
 
@@ -119,7 +120,7 @@ const GradeStructure = ({ isTeacher, classId }) => {
                 type="default"
                 className="mr-2"
                 onClick={() => {
-                  setEditingId(null);
+                  editingId.current = null;
                   form.resetFields();
                 }}
               >
