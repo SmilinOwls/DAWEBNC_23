@@ -32,7 +32,11 @@ function ClassroomAdmin({ classroom, actions }) {
   const [form] = Form.useForm();
   const [card, setCard] = useState({});
   const [data, setData] = useState(classroom);
+  const [dataClone, setDataClone] = useState(classroom);
   const [disabled, setDisabled] = useState(false);
+  const [showModal, setShowModal] = useState(false);
+  const [confirmLoading, setConfirmLoading] = useState(false);
+  const [inputValue, setInputValue] = useState("");
   const [messageApi, contextHolder] = message.useMessage();
 
   useEffect(() => {
@@ -48,6 +52,59 @@ function ClassroomAdmin({ classroom, actions }) {
     setData(classroom);
   };
 
+  useEffect(() => {
+    if (inputValue.trim()) {
+      const newData = [...data];
+      var filteredData = newData.filter(
+        ({ name, description, categoryCode }) =>
+          `${name}${description}${categoryCode}`
+            .toUpperCase()
+            .indexOf(inputValue.toUpperCase()) !== -1
+      );
+      setDataClone(filteredData.length === 0 ? [] : filteredData);
+    } else {
+      setDataClone([...data]);
+    }
+  }, [data, inputValue]);
+
+  const updateHandle = () => {
+    // if it's just to see user info
+    if (disabled) {
+      setShowModal(false);
+      return;
+    }
+
+    setConfirmLoading(true);
+
+    // axios handler goes here (PUT)
+
+    const classroom = { ...card };
+
+    try {
+      setTimeout(() => {
+        actions.updateClassroom({
+          ...classroom,
+        });
+        setConfirmLoading(false);
+        messageApi.open({
+          type: "success",
+          content: "Successfully update classroom!",
+        });
+        setShowModal(false);
+      }, 2000);
+    } catch (error) {
+      messageApi.open({
+        type: "error",
+        content: "Error to update classroom!",
+      });
+      throw error;
+    }
+  };
+
+  const onSearch = (e) => {
+    setInputValue(e.target.value);
+  };
+
   return (
     <div className="mt-3">
       {contextHolder}
@@ -59,6 +116,7 @@ function ClassroomAdmin({ classroom, actions }) {
         <Col span={4}>
           <Input
             placeholder="input search text"
+            onChange={(e) => onSearch(e)}
             allowClear
             suffix={<SearchOutlined />}
           />
@@ -67,7 +125,7 @@ function ClassroomAdmin({ classroom, actions }) {
       <List
         className="mt-4"
         grid={{ gutter: 16 }}
-        // dataSource={dataClone}
+        dataSource={dataClone}
         renderItem={(item) => (
           <List.Item>
             <Card
@@ -83,7 +141,7 @@ function ClassroomAdmin({ classroom, actions }) {
                 } catch (error) {
                   throw error;
                 }
-                // setShowModal(true);
+                setShowModal(true);
               }}
               actions={[
                 <EditOutlined
@@ -91,13 +149,11 @@ function ClassroomAdmin({ classroom, actions }) {
                     try {
                       setCard({ ...item });
                       setDisabled(false);
-                      // form.setFieldsValue({
-                      //     ...item,
-                      //     profilePic: [{uid: '-1', url: item.profilePic}],
-                      //     role: item.isAdmin ? "admin" : "user"
-                      // });
+                      form.setFieldsValue({
+                        ...item,
+                      });
                     } catch (e) {}
-                    // setShowModal(true);
+                    setShowModal(true);
                   }}
                 />,
                 <Popconfirm
@@ -109,10 +165,107 @@ function ClassroomAdmin({ classroom, actions }) {
                   </span>
                 </Popconfirm>,
               ]}
-            ></Card>
+            >
+              <Meta title={item.name} description={item.description}></Meta>
+              <Tag color={"blue"} className="mt-2" key={item._id}>
+                {item.categoryCode}
+              </Tag>
+              <p className="mt-2 mb-2 text-[#212121] font-[580]">
+                Teacher List:
+              </p>
+              {item?.teachers.length > 0 && (
+                <div>
+                  {item?.teachers.map((item, index) => (
+                    <div className="mb-2">
+                      <p>Teacher {index + 1}</p>
+                      <p>email: {item.email || "none"}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+              <p className="mt-2 mb-2 text-[#212121] font-[580]">
+                Student List:
+              </p>
+              {item?.teachers.length > 0 && (
+                <div>
+                  {item?.teachers.map((item, index) => (
+                    <div className="mb-2">
+                      <p>Student {index + 1}</p>
+                      <p>email: {item.email || "none"}</p>
+                    </div>
+                  ))}
+                </div>
+              )}
+            </Card>
           </List.Item>
         )}
       ></List>
+      <Modal
+        mask={false}
+        title={disabled ? "Classroom Info" : "Updating"}
+        open={showModal}
+        onOk={updateHandle}
+        onCancel={() => setShowModal(false)}
+        confirmLoading={confirmLoading}
+      >
+        <Form
+          {...formItemLayout}
+          form={form}
+          style={{ width: 430 }}
+          onValuesChange={(value) => {
+            setCard({ ...card, ...value });
+          }}
+          disabled={disabled}
+          scrollToFirstError
+        >
+          <Form.Item
+            name="name"
+            label="Title: "
+            rules={[
+              {
+                required: true,
+                message: "Please input title of class!",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="description"
+            label="Description: "
+            rules={[
+              {
+                required: true,
+                message: "Please input your description",
+              },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="categoryCode"
+            label="Category: "
+            rules={[
+              {
+                required: true,
+                message: "Please input your Category code!",
+              },
+            ]}
+            hasFeedback
+          >
+            <Input />
+          </Form.Item>
+          <Form.Item
+            name="invitationCode"
+            label="Invitation: "
+            rules={[
+              { required: true, message: "Please input your Inviation code" },
+            ]}
+          >
+            <Input />
+          </Form.Item>
+        </Form>
+      </Modal>
     </div>
   );
 }
