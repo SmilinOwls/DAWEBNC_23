@@ -47,6 +47,14 @@ const DetailClass = () => {
     setValue(newValue);
   };
 
+  const isTeacher = () => {
+    const userInfo = JSON.parse(localStorage.getItem("user"));
+    if(classroom.teachers) {
+      return classroom.teachers.find((teacher) => teacher._id === userInfo._id)
+    }
+    return false;
+  };
+
   function CustomTabPanel(props) {
     const { children, value, index, ...other } = props;
 
@@ -106,7 +114,7 @@ const DetailClass = () => {
               <Exercises classId={id} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
-              <GradeStructure classId={id} />
+              <GradeStructure isTeacher={isTeacher} classId={id} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={3}>
               <People classroom={classroom} />

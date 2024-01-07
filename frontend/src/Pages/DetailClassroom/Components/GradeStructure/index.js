@@ -1,10 +1,10 @@
 import React, { useState, useEffect, useCallback } from "react";
-import { Button, Input, Form, message, InputNumber } from "antd";
+import { Button, Input, Form, message, InputNumber, List } from "antd";
 import gradeApi from "../../../../Services/gradeApi";
 import { arrayMoveImmutable } from "array-move";
 import GradeCompositionList from "./Components/GradeCompositionList";
 
-const GradeStructure = ({ classId }) => {
+const GradeStructure = ({ isTeacher, classId }) => {
   const [form] = Form.useForm();
   const [gradeStructures, setGradeStructures] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -50,7 +50,6 @@ const GradeStructure = ({ classId }) => {
       }
 
       message.success("Successfully saved the grade structure");
-      
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -81,7 +80,6 @@ const GradeStructure = ({ classId }) => {
 
   const onWeightChanged = (value) => {
     const originWeight = getOriginWeight(gradeStructures);
-    console.log(originWeight);
     setTotalWeight(originWeight + value);
   };
 
@@ -103,50 +101,67 @@ const GradeStructure = ({ classId }) => {
         total sum must be exactly 100%
       </p>
 
-      <Form form={form} layout="vertical" onFinish={handleSave}>
-        <Form.Item label="Grade Name" name="name">
-          <Input placeholder="Enter grade name" />
-        </Form.Item>
-        <Form.Item label="Grade Weight (%)" name="weight">
-          <InputNumber
-            min={0}
-            placeholder="Enter grade weight"
-            onChange={onWeightChanged}
-          />
-        </Form.Item>
-        <div>
-          <Button
-            type="default"
-            className="mr-2"
-            onClick={() => {
-              setEditingId(null);
-              form.resetFields();
-            }}
-          >
-            Reset
-          </Button>
-          <Button
-            type="primary"
-            disabled={!editingId && totalWeight > 100}
-            loading={loading}
-            htmlType="submit"
-          >
-            Save
-          </Button>
-        </div>
-      </Form>
-      <div className="mt-4 text-sm text-black/40">
-        The remaining percent: {100 - totalWeight}%
-      </div>
-      <hr />
+      {isTeacher ? (
+        <>
+          <Form form={form} layout="vertical" onFinish={handleSave}>
+            <Form.Item label="Grade Name" name="name">
+              <Input placeholder="Enter grade name" />
+            </Form.Item>
+            <Form.Item label="Grade Weight (%)" name="weight">
+              <InputNumber
+                min={0}
+                placeholder="Enter grade weight"
+                onChange={onWeightChanged}
+              />
+            </Form.Item>
+            <div>
+              <Button
+                type="default"
+                className="mr-2"
+                onClick={() => {
+                  setEditingId(null);
+                  form.resetFields();
+                }}
+              >
+                Reset
+              </Button>
+              <Button
+                type="primary"
+                disabled={!editingId && totalWeight > 100}
+                loading={loading}
+                htmlType="submit"
+              >
+                Save
+              </Button>
+            </div>
+          </Form>
+          <div className="mt-4 text-sm text-black/40">
+            The remaining percent: {100 - totalWeight}%
+          </div>
+          <hr />
 
-      <GradeCompositionList
-        items={gradeStructures}
-        editingId={editingId}
-        handleEdit={handleEdit}
-        handleDelete={handleDelete}
-        onSortEnd={onSortEnd}
-      />
+          <GradeCompositionList
+            items={gradeStructures}
+            editingId={editingId}
+            handleEdit={handleEdit}
+            handleDelete={handleDelete}
+            onSortEnd={onSortEnd}
+          />
+        </>
+      ) : (
+        <List
+          dataSource={gradeStructures}
+          renderItem={(item) => (
+            <List.Item className="w-full bg-white/10 flex items-center gap-2">
+              <List.Item.Meta
+                className="flex-1"
+                title={item.name}
+                description={`Grade Weight: ${item.weight}%`}
+              />
+            </List.Item>
+          )}
+        />
+      )}
     </div>
   );
 };
