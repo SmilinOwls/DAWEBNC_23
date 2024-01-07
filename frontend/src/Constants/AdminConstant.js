@@ -17,6 +17,11 @@ export const ADD_PLACE = 'ADD_PLACE';
 export const UPDATE_PLACE = 'UPDATE_PLACE';
 export const DELETE_PLACE = 'DELETE_PLACE';
 
+export const GET_CLASSROOM = 'GET_CLASSROOM';
+export const ADD_CLASSROOM = 'ADD_CLASSROOM';
+export const UPDATE_CLASSROOM = 'UPDATE_CLASSROOM';
+export const DELETE_CLASSROOM = 'DELETE_CLASSROOM';
+
 export const GET_USER = 'GET_USER';
 export const UPDATE_USER = 'UPDATE_USER';
 export const DELETE_USER = 'DELETE_USER';

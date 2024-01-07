@@ -16,6 +16,7 @@ import addSidebarReducer from './SidebarReducer';
 
 import UserAdminReducer from './UserAdminReducer';
 import classRoomReducer from './ClassRoomReducer';
+import ClassroomAdminReducer from './ClassroomAdminReducer';
 
 const rootReducer = combineReducers({
     hotels: hotelsReducer,
@@ -42,6 +43,7 @@ const rootReducer = combineReducers({
     order: orderReducer,
     myOrder: myOrderList,
     userAdmin: UserAdminReducer,
+    classroomAdmin: ClassroomAdminReducer,
 });
 
 export default rootReducer;

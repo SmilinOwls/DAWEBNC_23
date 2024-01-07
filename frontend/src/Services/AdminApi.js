@@ -161,7 +161,31 @@ const adminApi = {
         } catch (error) {
             throw error;
         }
-    }
+    },
+    async getAllClassroom() {
+        try {
+            const response = await axios.get(`/classroom`);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+    async updateClassroom(classroom){
+        try {
+            const response = await axios.put(`/classroom/admin/${classroom._id}`,classroom, configAxios);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    },
+    async deleteClassroom(id) {
+        try {
+            const response = await axios.delete(`/classroom/admin/${id}`, configAxios);
+            return response.data;
+        } catch (error) {
+            throw error;
+        }
+    }  
 };
 
 export default adminApi;
