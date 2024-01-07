@@ -77,7 +77,6 @@ const classController = {
           { students: { $elemMatch: { accountId: req.user.id } } },
         ],
       });
-      console.log(classroom);
       if (!classroom) {
         return res.status(404).json({
           success: false,
