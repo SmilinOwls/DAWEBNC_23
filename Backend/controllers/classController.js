@@ -123,6 +123,7 @@ const classController = {
         categoryCode,
         students,
         teachers,
+        isActive
       } = req.body;
       classroom.name = name || classroom.name;
       classroom.image = image || classroom.image;
@@ -131,6 +132,7 @@ const classController = {
       classroom.categoryCode = categoryCode || classroom.categoryCode;
       classroom.students = students || classroom.students;
       classroom.teachers = teachers || classroom.teachers;
+      classroom.isActive = isActive || classroom.isActive;
       const updatedClass = await classroom.save();
       res.status(200).json(updatedClass);
     } catch (error) {

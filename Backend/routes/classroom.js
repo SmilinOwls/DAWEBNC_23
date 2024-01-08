@@ -32,7 +32,6 @@ router.get(
   classController.getAllParticipatedClass
 );
 
-
 // Delete room
 router.delete(
   "/admin/:id",
@@ -56,12 +55,36 @@ router.put(
   classController.updateClass
 );
 
-router.get('/:id/account-joined', authMiddleware.verifyToken, classController.checkClassJoined);
-router.post('/:id/accept/code', authMiddleware.verifyToken, classController.joinClassViaCode);
-router.get('/:id/join/link', authMiddleware.verifyToken, classController.validateInvitationLink);
-router.post('/accept/link', authMiddleware.verifyToken, classController.joinClassViaInvitationLink);
-router.post('/:id/invite/email', authMiddleware.verifyToken, classController.sendEmailInvitation);
-router.get('/email/redirect', classController.validateEmailInvitationLink);
-router.post('/accept/email', authMiddleware.verifyToken, classController.joinClassViaEmail);
+router.get(
+  "/:id/account-joined",
+  authMiddleware.verifyToken,
+  classController.checkClassJoined
+);
+router.post(
+  "/:id/accept/code",
+  authMiddleware.verifyToken,
+  classController.joinClassViaCode
+);
+router.get(
+  "/:id/join/link",
+  authMiddleware.verifyToken,
+  classController.validateInvitationLink
+);
+router.post(
+  "/accept/link",
+  authMiddleware.verifyToken,
+  classController.joinClassViaInvitationLink
+);
+router.post(
+  "/:id/invite/email",
+  authMiddleware.verifyToken,
+  classController.sendEmailInvitation
+);
+router.get("/email/redirect", classController.validateEmailInvitationLink);
+router.post(
+  "/accept/email",
+  authMiddleware.verifyToken,
+  classController.joinClassViaEmail
+);
 
 module.exports = router;
