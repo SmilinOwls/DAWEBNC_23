@@ -185,7 +185,7 @@ const adminApi = {
         } catch (error) {
             throw error;
         }
-    }  
+    },
 };
 
 export default adminApi;

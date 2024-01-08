@@ -216,6 +216,11 @@ function ClassroomAdmin({ classroom, actions }) {
             setCard({ ...card, ...value });
           }}
           disabled={disabled}
+          initialValues={
+            {
+                isActive: "Active"
+            }
+        }
           scrollToFirstError
         >
           <Form.Item
@@ -263,6 +268,16 @@ function ClassroomAdmin({ classroom, actions }) {
             ]}
           >
             <Input />
+          </Form.Item>
+          <Form.Item
+            name="isActive"
+            label="Status"
+            rules={[{ required: true, message: "Please select your Status!" }]}
+          >
+            <Select>
+              <Select.Option value="true">Active</Select.Option>
+              <Select.Option value="false">InActive</Select.Option>
+            </Select>
           </Form.Item>
         </Form>
       </Modal>

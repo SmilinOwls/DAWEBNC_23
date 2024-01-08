@@ -44,7 +44,7 @@ const Classroom = () => {
   const menuProps = (item, isCreatedUser) => {
     console.log(item, userInfo._id);
     let items = [];
-    if(isCreatedUser){
+    if (isCreatedUser) {
       items = [
         {
           label: "Move",
@@ -86,9 +86,9 @@ const Classroom = () => {
           key: "5",
           icon: <DeleteOutlined />,
           onClick: () => {},
-        }
+        },
       ];
-    } else{
+    } else {
       items = [
         {
           label: "Move",
@@ -101,8 +101,7 @@ const Classroom = () => {
           key: "1",
           icon: <CloseOutlined />,
           onClick: () => {},
-        }
-        
+        },
       ];
     }
     return {
@@ -167,48 +166,54 @@ const Classroom = () => {
       </div>
       {classroomList.length > 0 ? (
         <div className="justify-center xl:justify-start grid xl:grid-cols-4 lg:grid-cols-3 md:grid-cols-2 sm:grid-cols-1 gap-12">
-          {classroomList.map((item, index) => (
-            <div
-              key={index}
-              className="border rounded-xl  min-w-[280px] flex flex-col"
-            >
-              <div className="w-full h-[200px] relative">
-                <img
-                  src={listImages[renderListImage()]}
-                  alt="classroom"
-                  className="w-full h-full object-cover rounded-t-xl"
-                />
-                <Dropdown.Button
-                  menu={menuProps(item, item.createdUser === userInfo._id)}
-                  trigger={["click"]}
-                  buttonsRender={([]) => [
-                    <div />,
-                    <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/10">
-                      <EllipsisOutlined className="text-[32px] text-slate-100" />
-                    </div>,
-                  ]}
-                />
-              </div>
-              <div className="border rounded-b-xl bg-white p-4">
-                <p className="text-black font-semibold text-[18px] mb-3">
-                  Subject: {item.name}
-                </p>
-                <p className="text-black mb-3">
-                  Description:{" "}
-                  {item.description?.length > 50
-                    ? item.description.slice(0, 50) + "..."
-                    : item.description}
-                </p>
-                <p className="text-black mb-4">Level: {item.categoryCode}</p>
-                <button
-                  onClick={() => history.push(`/classroom/${item._id}`)}
-                  className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold"
+          {classroomList.map((item, index) => {
+            return (
+              item.isActive && (
+                <div
+                  key={index}
+                  className="border rounded-xl  min-w-[280px] flex flex-col"
                 >
-                  Detail
-                </button>
-              </div>
-            </div>
-          ))}
+                  <div className="w-full h-[200px] relative">
+                    <img
+                      src={listImages[renderListImage()]}
+                      alt="classroom"
+                      className="w-full h-full object-cover rounded-t-xl"
+                    />
+                    <Dropdown.Button
+                      menu={menuProps(item, item.createdUser === userInfo._id)}
+                      trigger={["click"]}
+                      buttonsRender={([]) => [
+                        <div />,
+                        <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/10">
+                          <EllipsisOutlined className="text-[32px] text-slate-100" />
+                        </div>,
+                      ]}
+                    />
+                  </div>
+                  <div className="border rounded-b-xl bg-white p-4">
+                    <p className="text-black font-semibold text-[18px] mb-3">
+                      Subject: {item.name}
+                    </p>
+                    <p className="text-black mb-3">
+                      Description:{" "}
+                      {item.description?.length > 50
+                        ? item.description.slice(0, 50) + "..."
+                        : item.description}
+                    </p>
+                    <p className="text-black mb-4">
+                      Level: {item.categoryCode}
+                    </p>
+                    <button
+                      onClick={() => history.push(`/classroom/${item._id}`)}
+                      className="mt-6 flex items-center border justify-center hover:bg-white hover:border hover:border-[#3081D0] hover:!text-[#3081D0] transition text-center px-3 py-2 rounded-xl bg-[#3081D0] text-white font-semibold"
+                    >
+                      Detail
+                    </button>
+                  </div>
+                </div>
+              )
+            );
+          })}
         </div>
       ) : (
         <div className="flex items-center justify-center">
