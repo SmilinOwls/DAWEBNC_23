@@ -25,6 +25,7 @@ import DetailClass from "./Pages/DetailClassroom";
 import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
 import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
 import CreateAssignment from "./Pages/CreateAssignment";
+import ClassCodeJoining from "./Pages/JoinClassroom/ClassCodeJoining";
 
 function App() {
   return (
@@ -56,6 +57,11 @@ function App() {
               <Route path="/classroom" exact>
                 <AppLayout>
                   <Classroom />
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/join" exact>
+                <AppLayout>
+                  <ClassCodeJoining />
                 </AppLayout>
               </Route>
               <Route path="/classroom/:id/join/link" exact>

@@ -42,6 +42,16 @@ const classroomApi = {
   joinClassByEmail: (id, token) => {
     return axiosClient.post(`/api/classroom/accept/email`, { id, token });
   },
+  joinClassByCode: (code) => {
+    return axiosClient.post(`/api/classroom/accept/code`, { code });
+  },
+  deleteClassroom: (id) => {
+    return axiosClient.delete(`/api/classroom/role-teacher/${id}`);
+  },
+  updateClassroom: (id, data) => {
+    return axiosClient.put(`/api/classroom/role-teacher/${id}`, data);
+  },
+  
 };
 
 export default classroomApi;

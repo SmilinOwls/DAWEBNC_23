@@ -6,11 +6,6 @@ const gradeCompositionSchema = new mongoose.Schema({
         required: true,
         default: "",
     },
-    gradeScale: {
-        type: Number,
-        required: true,
-        default: 100,
-    }, 
     weight: {
         type: Number,
         default: 0,

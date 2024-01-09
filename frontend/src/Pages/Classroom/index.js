@@ -41,6 +41,10 @@ const Classroom = () => {
     }
   };
 
+  const handleJoinClass = () => {
+    history.push("/classroom/join");
+  };
+
   const menuProps = (item, isCreatedUser) => {
     console.log(item, userInfo._id);
     let items = [];
@@ -151,7 +155,13 @@ const Classroom = () => {
           </Row>
         </Container>
       </section>
-      <div className="flex items-center justify-end pl-5 mb-10">
+      <div className="flex items-center justify-end pl-5 mb-10 gap-2">
+        <button
+          className="px-3 py-2 rounded-lg flex items-center justify-center hover:border-[#6DB9EF] border-[#3081D0] text-[#3081D0] text-[16px] font-semibold border"
+          onClick={handleJoinClass}
+        >
+          Join Class
+        </button>
         <button
           className="px-3 py-2 rounded-lg flex items-center justify-center hover:bg-[#6DB9EF] bg-[#3081D0] text-white text-[16px] font-semibold"
           onClick={handleCreateClass}

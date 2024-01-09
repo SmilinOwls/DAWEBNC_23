@@ -190,8 +190,7 @@ const classController = {
   joinClassViaCode: async (req, res) => {
     try {
       let classroom = await Classroom.findOne({
-        _id: req.params.id,
-        invitationCode: req.body.invitationCode,
+        invitationCode: req.body.code,
       });
 
       if (!classroom) {
@@ -475,8 +474,6 @@ const classController = {
             teachers: { $elemMatch: { accountId: req.user.id } },
           });
 
-          console.log(teacher);
-
           if (!teacher) {
             const newTeacher = {
               accountId: req.user.id,
@@ -512,6 +509,121 @@ const classController = {
       res.status(500).json(error);
     }
   },
+  createGradeStructure: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    try {
+      const newGradeComposition = {
+        name: req.body.name,
+        weight: req.body.weight,
+      };
+
+      classroom.gradeComposition.push(newGradeComposition);
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  getGradeStructures: async (req, res) => {
+    try {
+      const classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+      res.status(200).json(classroom.gradeComposition);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  updateGradeStructureById: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    const { name, weight } = req.body;
+
+    try {
+      const gradeComposition = classroom.gradeComposition.find(
+        (gradeComposition) => gradeComposition._id == req.params.id
+      );
+
+      if (!gradeComposition) {
+        return res.status(404).json({
+          success: false,
+          message: "Grade structure not found !!!",
+        });
+      }
+
+      gradeComposition.name = name || gradeComposition.name;
+      gradeComposition.weight =
+        weight || gradeComposition.weight;
+
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  deleteGradeStructure: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    try {
+      const gradeComposition = classroom.gradeComposition.find(
+        (gradeComposition) => gradeComposition._id == req.params.id
+      );
+
+      if (!gradeComposition) {
+        return res.status(404).json({
+          success: false,
+          message: "Grade structure not found !!!",
+        });
+      }
+
+      gradeComposition.remove();
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  updateGradeStructures: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    try {
+      const gradeCompositions = req.body;
+      classroom.gradeComposition = gradeCompositions;
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
 };
 
 module.exports = classController;

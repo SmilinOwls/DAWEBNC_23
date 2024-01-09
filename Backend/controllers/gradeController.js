@@ -1,3 +1,4 @@
+const Grade = require("../models/Grade");
 
 const gradeController = {
   createGrade: async (req, res) => {

@@ -93,4 +93,11 @@ router.post(
   classController.joinClassViaEmail
 );
 
+// grade structure
+router.post('/:classId/grade-structure', authMiddleware.verifyToken, classController.createGradeStructure);
+router.get('/:classId/grade-structure', authMiddleware.verifyToken, classController.getGradeStructures);
+router.put('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.updateGradeStructureById);
+router.delete('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.deleteGradeStructure);
+router.put('/:classId/grade-structure', authMiddleware.verifyToken, classController.updateGradeStructures);
+
 module.exports = router;
