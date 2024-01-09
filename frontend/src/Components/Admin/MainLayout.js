@@ -4,6 +4,7 @@ import {
   MenuFoldOutlined,
   MenuUnfoldOutlined,
   UserOutlined,
+  CarryOutOutlined
 } from '@ant-design/icons';
 import { AiOutlineDashboard } from 'react-icons/ai';
 import { IoIosNotifications } from 'react-icons/io';
@@ -24,9 +25,9 @@ function MainLayout({children}) {
       <Sider trigger={null} collapsible collapsed={collapsed} className="h-auto ">
         <div className="logo-admin">
           {collapsed ?
-            <div className='text-white text-center py-3 fs-5'>B4T</div>
+            <div className='text-white text-center py-3 fs-5'>Edu</div>
             :
-            <div className='text-white text-center py-3 fs-5'>Booking4T</div>
+            <div className='text-white text-center py-3 fs-5'>Edu Learning</div>
           }
         </div>
         <Menu
@@ -51,6 +52,11 @@ function MainLayout({children}) {
               icon: <UserOutlined className="fs-4" />,
               label: 'User',
             },
+            {
+              key: '/admin/classroom',
+              icon: <CarryOutOutlined className="fs-4" />,
+              label: "Classroom",
+            }
           ]}
         />
       </Sider>

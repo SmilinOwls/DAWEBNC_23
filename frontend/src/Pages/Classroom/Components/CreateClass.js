@@ -19,6 +19,8 @@ const CreateClass = () => {
   const [listOfTeachers, setListOfTeacher] = useState([]);
   const [listOfStudent, setListOfStudent] = useState([]);
 
+  const classId = localStorage.getItem("classId") || "";
+
   const handleAddTeacher = () => {
     if (teacherInfo.fullname && teacherInfo.email) {
       setListOfTeacher((prev) => [
@@ -61,10 +63,10 @@ const CreateClass = () => {
       categoryCode: classroomInfo.categoryCode,
       teachers: listOfTeachers,
       students: listOfStudent,
+      createdUser: classId,
     };
     try {
       const response = await classroomApi.createClassroom(data);
-      console.log(response);
       if (response) {
         Swal.fire(
           "Create class successfully!",

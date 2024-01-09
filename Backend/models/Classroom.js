@@ -91,6 +91,10 @@ const classroomSchema = new mongoose.Schema(
       type: String,
       required: true,
     },
+    isActive: {
+      type: Boolean,
+      default: true,
+    },
     ratings: {
       type: Number,
     },
@@ -103,7 +107,6 @@ const classroomSchema = new mongoose.Schema(
     createdUser: {
       type: mongoose.Schema.ObjectId,
       ref: "User",
-      required: true,
     },
     invitationCode: {
       type: String,

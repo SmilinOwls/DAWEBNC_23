@@ -13,12 +13,13 @@ import LogOut from "./Pages/Logout";
 import PageNotFound from "./Pages/PageNotFound";
 import ForgotPassword from "./Pages/ForgotPassword";
 import ResetPassword from "./Pages/ResetPassword";
-import DetailAssignment from './Pages/DetailAssignment'
+import DetailAssignment from "./Pages/DetailAssignment";
 
 import Dashboard from "./Pages/Admin/Dashboard";
 import MainLayout from "./Components/Admin/MainLayout";
 import User from "./Pages/Admin/UserAdmin/User";
 import Classroom from "./Pages/Classroom";
+import ClassroomAdmin from "./Pages/Admin/ClassroomAdmin/ClassroomAdmin";
 import CreateClass from "./Pages/Classroom/Components/CreateClass";
 import DetailClass from "./Pages/DetailClassroom";
 import ClassDirectJoining from "./Pages/JoinClassroom/ClassDirectJoining";
@@ -96,6 +97,11 @@ function App() {
               <AdminRoute path="/admin/user" exact>
                 <MainLayout>
                   <User />
+                </MainLayout>
+              </AdminRoute>
+              <AdminRoute path="/admin/classroom" exact>
+                <MainLayout>
+                  <ClassroomAdmin />
                 </MainLayout>
               </AdminRoute>
               <Route path="/sign-up">

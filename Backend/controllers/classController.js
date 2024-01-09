@@ -123,6 +123,7 @@ const classController = {
         categoryCode,
         students,
         teachers,
+        isActive
       } = req.body;
       classroom.name = name || classroom.name;
       classroom.image = image || classroom.image;
@@ -131,8 +132,25 @@ const classController = {
       classroom.categoryCode = categoryCode || classroom.categoryCode;
       classroom.students = students || classroom.students;
       classroom.teachers = teachers || classroom.teachers;
+      classroom.isActive = isActive || classroom.isActive;
       const updatedClass = await classroom.save();
       res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  getClassByUserId: async (req, res) => {
+    try {
+      const classroom = await Classroom.find({
+        createdUser: req.params.id,
+      });
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+      res.status(200).json(classroom);
     } catch (error) {
       res.status(500).json(error);
     }
