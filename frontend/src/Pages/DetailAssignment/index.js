@@ -75,8 +75,14 @@ const DetaiAssignment = () => {
             </div>
             <div>
               <p className="text-[20px] font-[580] text-[#121212]">
+                Grade Composition:{" "}
+                <span className="font-[450]">{detailAssignment?.gradeComposition}</span>
+              </p>
+            </div>
+            <div>
+              <p className="text-[20px] font-[580] text-[#121212]">
                 Point type:{" "}
-                <span className="font-[450]">{detailAssignment?.gradeComposition.name}</span>
+                <span className="font-[450]">{detailAssignment?.maxPoint}</span>
               </p>
             </div>
           </div>
