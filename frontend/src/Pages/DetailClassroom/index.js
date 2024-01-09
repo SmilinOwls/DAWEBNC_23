@@ -111,7 +111,7 @@ const DetailClass = () => {
               News
             </CustomTabPanel>
             <CustomTabPanel value={value} index={1}>
-              <Exercises classId={id} />
+              <Exercises isTeacher={isTeacher} classId={id} />
             </CustomTabPanel>
             <CustomTabPanel value={value} index={2}>
               <GradeStructure isTeacher={isTeacher} classId={id} />

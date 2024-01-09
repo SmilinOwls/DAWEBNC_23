@@ -25,7 +25,14 @@ const assignmentSchema = new mongoose.Schema({
         ref: "Classroom",
         required: true,
     },
-    gradeComposition: gradeCompositionSchema,
+    // gradeComposition: gradeCompositionSchema,
+    gradeComposition: {
+        type: String,
+    },
+    maxPoint: {
+        type: Number,
+        required: true,
+    },
 },  { timestamps: true });
 
 module.exports = mongoose.model("Assignment", assignmentSchema);

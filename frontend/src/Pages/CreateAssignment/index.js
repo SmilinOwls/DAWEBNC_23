@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { LocalizationProvider } from "@mui/x-date-pickers/LocalizationProvider";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { DatePicker } from "@mui/x-date-pickers/DatePicker";
@@ -8,6 +8,7 @@ import MenuItem from "@mui/material/MenuItem";
 import Box from "@mui/material/Box";
 import Select from "@mui/material/Select";
 import Swal from "sweetalert2";
+import classroomApi from "../../Services/classroomApi";
 
 const CreateAssignment = () => {
   const [files, setFiles] = useState([]);
@@ -16,12 +17,30 @@ const CreateAssignment = () => {
   const [title, setTitle] = useState("");
   const [description, setDescription] = useState("");
   const [gradeComposition, setGradeComposition] = useState({
-    name: "Attendance",
-    weight: null,
+    name: "",
   });
+  const [maxPoint, setMaxPoint] = useState(100);
+
   const [isLoading, setIsLoading] = useState(false);
 
   const classId = localStorage.getItem("classId") || "";
+  const [classroom, setClassroom] = useState({});
+
+  useEffect(() => {
+    handleGetClassroom();
+  }, []);
+
+  // Get Classroom by Id
+  const handleGetClassroom = async () => {
+    try {
+      const response = await classroomApi.getClassroomById(classId);
+      const data = response.data;
+
+      setClassroom(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const handleUpload = async () => {
     setIsLoading(true);
@@ -84,7 +103,8 @@ const CreateAssignment = () => {
       image: files[0] || "",
       document: documents || [],
       classroom: classId || "",
-      gradeComposition: gradeComposition,
+      gradeComposition: gradeComposition.name || "",
+      maxPoint: maxPoint || 0,
     };
     try {
       const response = await assignmentApi.createAssignment(data);
@@ -95,7 +115,7 @@ const CreateAssignment = () => {
           "success"
         ).then((result) => {
           if (result.isConfirmed) {
-            window.location.href = "/classroom";
+            window.location.href = `/classroom/${classId}`;
           }
         });
       }
@@ -194,24 +214,21 @@ const CreateAssignment = () => {
                 id="demo-simple-select"
                 value={gradeComposition.name}
                 label="grade"
+                displayEmpty
                 onChange={handleChange}
               >
-                <MenuItem value={"Attendance"}>Attendance</MenuItem>
-                <MenuItem value={"Midterm "}>Midterm </MenuItem>
-                <MenuItem value={"Final"}>Final</MenuItem>
+                <MenuItem value="">No grade composition selected</MenuItem>
+                {classroom?.gradeComposition?.map((item) => (
+                  <MenuItem value={item.name}>{item.name}</MenuItem>
+                ))}
               </Select>
             </Box>
             <input
               type="number"
               className="w-[200px] rounded-[12px] px-3 py-2 border focus:outline focus:outline-[#6DB9EF] placeholder:text-[20px] placeholder:text-[#ddd]"
               placeholder="Enter Grade"
-              value={gradeComposition.weight}
-              onChange={(e) =>
-                setGradeComposition((prev) => ({
-                  ...prev,
-                  weight: Number(e.target.value),
-                }))
-              }
+              value={maxPoint}
+              onChange={(e) => setMaxPoint(e.target.value)}
             />
           </div>
         </div>
