@@ -139,6 +139,22 @@ const classController = {
       res.status(500).json(error);
     }
   },
+  getClassByUserId: async (req, res) => {
+    try {
+      const classroom = await Classroom.find({
+        createdUser: req.params.id,
+      });
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+      res.status(200).json(classroom);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
   checkClassJoined: async (req, res) => {
     try {
       const classroom = await Classroom.findOne({

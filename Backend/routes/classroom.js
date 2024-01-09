@@ -27,6 +27,12 @@ router.get(
 );
 
 router.get(
+  "/teacher/:id",
+  authMiddleware.verifyToken,
+  classController.getClassByUserId
+);
+
+router.get(
   "/participate/me",
   authMiddleware.verifyToken,
   classController.getAllParticipatedClass
