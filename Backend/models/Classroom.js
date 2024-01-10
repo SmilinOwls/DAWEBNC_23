@@ -46,6 +46,11 @@ const studentSchema = new mongoose.Schema({
   accountId: {
     type: mongoose.Schema.ObjectId,
     ref: "User",
+    required: false,
+  },
+  studentId: {
+    type: String,
+    default: "",
   },
   fullname: {
     type: String,
@@ -60,7 +65,6 @@ const studentSchema = new mongoose.Schema({
   },
   email: {
     type: String,
-    required: true,
   },
   profilePic: {
     type: String,

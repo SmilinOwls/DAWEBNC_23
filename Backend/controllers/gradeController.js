@@ -39,7 +39,7 @@ const gradeController = {
       }
       res.status(200).json(grade);
     } catch (error) {
-        res.status(500).json(error);
+      res.status(500).json(error);
     }
   },
   deleteGrade: async (req, res) => {

@@ -6,13 +6,25 @@ const router = require("express").Router();
 router.post("/", authMiddleware.authorizeRole, gradeController.createGrade);
 
 //Get grade by assignment id
-router.get("/assignment/:id", authMiddleware.verifyToken, gradeController.getGradeByAssignment);
+router.get(
+  "/assignment/:id",
+  authMiddleware.verifyToken,
+  gradeController.getGradeByAssignment
+);
 
 //Get grade by user id
-router.get("/student/", authMiddleware.verifyToken, gradeController.getGradeByUserId);
+router.get(
+  "/student/",
+  authMiddleware.verifyToken,
+  gradeController.getGradeByUserId
+);
 
 // Delete grade
-router.delete("/:id", authMiddleware.authorizeRole, gradeController.deleteGrade);
+router.delete(
+  "/:id",
+  authMiddleware.authorizeRole,
+  gradeController.deleteGrade
+);
 
 // Update Grade
 router.put("/:id", authMiddleware.authorizeRole, gradeController.updateGrade);

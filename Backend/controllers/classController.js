@@ -3,6 +3,7 @@ const ApiFeature = require("../utils/ApiFeature");
 const mailer = require("../services/mailer");
 const jwt = require("jsonwebtoken");
 const User = require("../models/User");
+const { utils, readFile } = require("xlsx");
 
 const classController = {
   createClass: async (req, res) => {
@@ -47,7 +48,12 @@ const classController = {
           message: "Classroom not found !!!",
         });
       }
-      res.status(200).json(classroom);
+
+      const classWithPopulate = await classroom.populate(
+        "students.accountId",
+        "teachers.accountId"
+      );
+      res.status(200).json(classWithPopulate);
     } catch (error) {
       res.status(500).json(error);
     }
@@ -123,7 +129,7 @@ const classController = {
         categoryCode,
         students,
         teachers,
-        isActive
+        isActive,
       } = req.body;
       classroom.name = name || classroom.name;
       classroom.image = image || classroom.image;
@@ -569,8 +575,7 @@ const classController = {
       }
 
       gradeComposition.name = name || gradeComposition.name;
-      gradeComposition.weight =
-        weight || gradeComposition.weight;
+      gradeComposition.weight = weight || gradeComposition.weight;
 
       const updatedClass = await classroom.save();
       res.status(200).json(updatedClass);
@@ -623,7 +628,61 @@ const classController = {
     } catch (error) {
       res.status(500).json(error);
     }
-  }
+  },
+  uploadStudent: async (req, res) => {
+    const workbook = readFile(req.file.path);
+    const sheetNameList = workbook.SheetNames;
+    const students = utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
+
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    let newStudents = [];
+
+    for (let student of students) {
+      const classStudents = classroom.students;
+      const existedStudent = classStudents.find(
+        (s) => s.studentId == student.studentId
+      );
+
+      if (existedStudent) {
+        continue;
+      }
+
+      const user = await User.findOne({ studentId: student.studentId });
+      let newStudent = {};
+
+      if (!user) {
+        newStudent = {
+          studentId: student.studentId,
+          fullname: student.fullname,
+        };
+      } else {
+        newStudent = {
+          accountId: user._id,
+          studentId: student.studentId,
+          fullname: student.fullname,
+          ...user,
+        };
+      }
+
+      newStudents.push(newStudent);
+    }
+
+    try {
+      classroom.students.push(...newStudents);
+      await classroom.save();
+      res.status(200).json(classroom);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  },
 };
 
 module.exports = classController;

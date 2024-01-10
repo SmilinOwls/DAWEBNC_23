@@ -1,6 +1,28 @@
 const classController = require("../controllers/classController");
 const authMiddleware = require("../middleware/authMiddleware");
 const router = require("express").Router();
+const multer = require("multer");
+
+const classroomStorage = multer.diskStorage({
+  destination: function (req, file, cb) {
+    cb(null, "./public/files/uploads");
+  },
+});
+
+const classroomMiddleware = multer({
+  storage: classroomStorage,
+  fileFilter: function (req, file, cb) {
+    console.log("file", file);
+    const extensionFileList = ["csv", "xlsx"];
+    const extension = file.originalname.split(".").pop();
+    const check = extensionFileList.includes(extension);
+    if (check) {
+      cb(null, true);
+    } else {
+      cb(new Error("extention không hợp lệ"));
+    }
+  },
+});
 
 //Create Classroom by admin
 router.post(
@@ -99,5 +121,12 @@ router.get('/:classId/grade-structure', authMiddleware.verifyToken, classControl
 router.put('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.updateGradeStructureById);
 router.delete('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.deleteGradeStructure);
 router.put('/:classId/grade-structure', authMiddleware.verifyToken, classController.updateGradeStructures);
+
+router.post(
+  "/:classId/import-student-list",
+  authMiddleware.verifyToken,
+  classroomMiddleware.single("grade"),
+  classController.uploadStudent
+);
 
 module.exports = router;

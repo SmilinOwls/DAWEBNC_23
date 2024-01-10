@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useCallback, useRef } from "react";
 import { Button, Input, Form, message, InputNumber, List } from "antd";
-import gradeApi from "../../../../Services/gradeApi";
+import gradeApi from "../../Services/gradeApi";
 import { arrayMoveImmutable } from "array-move";
 import GradeCompositionList from "./Components/GradeCompositionList";
 
