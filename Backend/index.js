@@ -72,6 +72,7 @@ const assignmentStorage = multer.diskStorage({
   },
 });
 
+
 const documentStorage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, "./public/document/assignment");
@@ -149,6 +150,8 @@ const documentMiddleware = multer({
     }
   },
 });
+
+
 
 app.post(
   "/api/upload-photo",

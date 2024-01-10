@@ -9,7 +9,8 @@ import { useParams, useHistory } from "react-router-dom";
 import { message, Skeleton } from "antd";
 import People from "./Components/People";
 import Exercises from "./Components/Exercises";
-import GradeStructure from "./Components/GradeStructure";
+import GradeStructure from "../GradeStructure";
+import GradeManagement from "../GradeManagement";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -49,8 +50,8 @@ const DetailClass = () => {
 
   const isTeacher = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
-    if(classroom.teachers) {
-      return classroom.teachers.find((teacher) => teacher._id === userInfo._id)
+    if (classroom.teachers) {
+      return classroom.teachers.find((teacher) => teacher._id === userInfo._id);
     }
     return false;
   };
@@ -66,11 +67,7 @@ const DetailClass = () => {
         aria-labelledby={`simple-tab-${index}`}
         {...other}
       >
-        {value === index && (
-          <Box sx={{ p: 3 }}>
-            {children}
-          </Box>
-        )}
+        {value === index && <Box sx={{ p: 3 }}>{children}</Box>}
       </div>
     );
   }
@@ -104,7 +101,8 @@ const DetailClass = () => {
                 <Tab label="News" {...a11yProps(0)} />
                 <Tab label="Exercises" {...a11yProps(1)} />
                 <Tab label="Grade Structure" {...a11yProps(2)} />
-                <Tab label="People" {...a11yProps(3)} />
+                <Tab label="Grade Management" {...a11yProps(3)} />
+                <Tab label="People" {...a11yProps(4)} />
               </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -116,7 +114,12 @@ const DetailClass = () => {
             <CustomTabPanel value={value} index={2}>
               <GradeStructure isTeacher={isTeacher} classId={id} />
             </CustomTabPanel>
-            <CustomTabPanel value={value} index={3}>
+            {isTeacher && (
+              <CustomTabPanel value={value} index={3}>
+                <GradeManagement classId={id}  />
+              </CustomTabPanel>
+            )}
+            <CustomTabPanel value={value} index={4}>
               <People classroom={classroom} />
             </CustomTabPanel>
           </Box>

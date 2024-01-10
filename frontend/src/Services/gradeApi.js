@@ -15,7 +15,7 @@ const gradeApi = {
   },
   updateGradeStructures: (classId, data) => {
     return axiosClient.put(`/api/classroom/${classId}/grade-structure`, data);
-  }
+  },
 };
 
 export default gradeApi;

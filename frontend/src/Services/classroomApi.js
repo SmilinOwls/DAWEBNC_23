@@ -51,7 +51,16 @@ const classroomApi = {
   updateClassroom: (id, data) => {
     return axiosClient.put(`/api/classroom/role-teacher/${id}`, data);
   },
-  
+  uploadStudentList: (id, data) => {
+    return axiosClient.post(
+      `/api/classroom/${id}/import-student-list`,
+      data, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      }
+    );
+  },
 };
 
 export default classroomApi;
