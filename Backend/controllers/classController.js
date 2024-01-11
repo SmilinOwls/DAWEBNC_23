@@ -719,10 +719,10 @@ const classController = {
       if (!grade) {
         student.grades.push({
           assignmentId: assignmentId,
-          grade: newGrade,
+          tempGrade: newGrade,
         });
       } else {
-        grade.grade = newGrade;
+        grade.tempGrade = newGrade;
       }
 
       await classroom.save();

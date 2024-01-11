@@ -7,6 +7,7 @@ const GradeBoard = ({ classroom, setClassroom }) => {
   const [assignments, setAssignments] = useState([]);
   const [grade, setGrade] = useState(0);
   const [editingRecord, setEditingRecord] = useState({});
+  const [editingAssignment, setEditingAssignment] = useState({});
   const [loadingGrade, setLoadingGrade] = useState(false);
 
   useEffect(() => {
@@ -80,27 +81,35 @@ const GradeBoard = ({ classroom, setClassroom }) => {
       title: assignment.title,
       dataIndex: assignment._id,
       key: assignment._id,
-      render: (text, record) => (
-        <div className="flex flex-col gap-1">
-          <InputNumber
-            min={0}
-            max={100}
-            defaultValue={text || record.grades[index]?.grade}
-            onChange={(newGrade) => {
+      render: (text, record) => {
+        const tempGrade = record.grades[index]?.tempGrade;
+        const grade = record.grades[index]?.grade;
+
+        return (
+          <div className="flex flex-col gap-1">
+            <InputNumber
+              min={0}
+              max={100}
+              defaultValue={tempGrade || grade}
+              onChange={(newGrade) => {
                 setGrade(newGrade);
                 setEditingRecord(record);
-            }}
-            onBlur={() => handleGradeChange(record.studentId, assignment._id)}
-          />
-          <span className="text-xs text-gray-400">
-            {record._id == editingRecord._id && loadingGrade
-              ? "Loading..."
-              : record.grades[index]?.isFinal
-              ? "Final"
-              : "Draft"}
-          </span>
-        </div>
-      ),
+                setEditingAssignment(assignment);
+              }}
+              onBlur={() => handleGradeChange(record.studentId, assignment._id)}
+            />
+            <span className="text-xs text-gray-400">
+              {record._id == editingRecord._id &&
+              assignment._id == editingAssignment._id &&
+              loadingGrade
+                ? "Loading..."
+                : !record.grades[index]?.isFinal && !tempGrade
+                ? ""
+                : "Draft"}
+            </span>
+          </div>
+        );
+      },
     })),
   ];
 
