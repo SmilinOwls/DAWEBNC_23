@@ -129,4 +129,5 @@ router.post(
   classController.uploadStudent
 );
 
+router.put('/:classId/student/:studentId/assignment/:assignmentId', authMiddleware.verifyToken, classController.updateGrade);
 module.exports = router;

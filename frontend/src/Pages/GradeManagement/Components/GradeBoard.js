@@ -1,17 +1,24 @@
 import React, { useState, useEffect } from "react";
-import { Table, InputNumber, Space } from "antd";
+import { Table, InputNumber, message } from "antd";
 import assignmentApi from "../../../Services/assignmentApi";
+import classrommApi from "../../../Services/classroomApi";
 
 const GradeBoard = ({ classroom, setClassroom }) => {
   const [assignments, setAssignments] = useState([]);
+  const [grade, setGrade] = useState(0);
+  const [editingRecord, setEditingRecord] = useState({});
+  const [loadingGrade, setLoadingGrade] = useState(false);
 
   useEffect(() => {
     getAssignmentByClass();
   }, [classroom]);
 
   const getAssignmentByClass = async () => {
+    const classroomId = classroom._id;
+    if (!classroomId) return;
+
     try {
-      const response = await assignmentApi.getAssignmentByClass(classroom._id);
+      const response = await assignmentApi.getAssignmentByClass(classroomId);
       const data = response.data;
       setAssignments(data);
     } catch (error) {
@@ -19,15 +26,20 @@ const GradeBoard = ({ classroom, setClassroom }) => {
     }
   };
 
-  const handleGradeChange = (studentId, assignmentId, newGrade) => {
-    // Replace this with a call to your API to update the grade
-    fetch(`/api/students/${studentId}/assignments/${assignmentId}`, {
-      method: "PUT",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ grade: newGrade }),
-    })
-      .then(() => console.log("Grade updated successfully"))
-      .catch((err) => console.error(err));
+  const handleGradeChange = async (studentId, assignmentId) => {
+    setLoadingGrade(true);
+    try {
+      await classrommApi.updateGrade(
+        classroom._id,
+        studentId,
+        assignmentId,
+        grade
+      );
+    } catch (error) {
+      message.error(error.response.data.message);
+    } finally {
+      setLoadingGrade(false);
+    }
   };
 
   const columns = [
@@ -35,16 +47,20 @@ const GradeBoard = ({ classroom, setClassroom }) => {
       title: "Student ID",
       dataIndex: "studentId",
       key: "studentId",
+      width: "10%",
     },
     {
       title: "Full Name",
       dataIndex: "fullname",
+      width: "20%",
       key: "fullname",
       render: (text, record) => (
         <div className="flex items-center gap-2">
           <img
             src={
-              record.avatar ? record.avatar : "https://i.imgur.com/HeIi0wU.png"
+              record.profilePic
+                ? record.profilePic
+                : "https://i.imgur.com/HeIi0wU.png"
             }
             alt="avatar"
             style={{ width: "30px", height: "30px", borderRadius: "50%" }}
@@ -60,24 +76,35 @@ const GradeBoard = ({ classroom, setClassroom }) => {
         </div>
       ),
     },
-    ...assignments.map((assignment) => ({
+    ...assignments.map((assignment, index) => ({
       title: assignment.title,
       dataIndex: assignment._id,
       key: assignment._id,
       render: (text, record) => (
-        <InputNumber
-          min={0}
-          max={100}
-          defaultValue={text}
-          onChange={(newGrade) =>
-            handleGradeChange(record.studentId, assignment._id, newGrade)
-          }
-        />
+        <div className="flex flex-col gap-1">
+          <InputNumber
+            min={0}
+            max={100}
+            defaultValue={text || record.grades[index]?.grade}
+            onChange={(newGrade) => {
+                setGrade(newGrade);
+                setEditingRecord(record);
+            }}
+            onBlur={() => handleGradeChange(record.studentId, assignment._id)}
+          />
+          <span className="text-xs text-gray-400">
+            {record._id == editingRecord._id && loadingGrade
+              ? "Loading..."
+              : record.grades[index]?.isFinal
+              ? "Final"
+              : "Draft"}
+          </span>
+        </div>
       ),
     })),
   ];
 
-  return <Table dataSource={classroom.students} columns={columns} />;
+  return <Table bordered dataSource={classroom.students} columns={columns} />;
 };
 
 export default GradeBoard;

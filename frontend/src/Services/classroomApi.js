@@ -61,6 +61,9 @@ const classroomApi = {
       }
     );
   },
+  updateGrade: (classId, studentId, assignmentId, newGrade) => {
+    return axiosClient.put(`/api/classroom/${classId}/student/${studentId}/assignment/${assignmentId}`, { newGrade: newGrade });
+  }
 };
 
 export default classroomApi;

@@ -5,6 +5,7 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { utils, readFile } = require("xlsx");
 
+
 const classController = {
   createClass: async (req, res) => {
     const newClass = new Classroom({
@@ -687,6 +688,50 @@ const classController = {
       res.status(500).json(error);
     }
   },
+  updateGrade: async (req, res) => {
+    const classroom = await Classroom.findById(req.params.classId);
+    if (!classroom) {
+      return res.status(404).json({
+        success: false,
+        message: "Classroom not found !!!",
+      });
+    }
+
+    try {
+      const { studentId, assignmentId } = req.params;
+      const { newGrade } = req.body;
+
+      const student = classroom.students.find(
+        (student) => student.studentId == studentId
+      );
+
+      if (!student) {
+        return res.status(404).json({
+          success: false,
+          message: "Student not found !!!",
+        });
+      }
+
+      const grade = student.grades.find(
+        (grade) => grade.assignmentId == assignmentId
+      );
+
+      if (!grade) {
+        student.grades.push({
+          assignmentId: assignmentId,
+          grade: newGrade,
+        });
+      } else {
+        grade.grade = newGrade;
+      }
+
+      await classroom.save();
+      res.status(200).json(classroom);
+    } catch (error) {
+      console.log(error);
+      res.status(500).json(error);
+    }
+  }
 };
 
 module.exports = classController;
