@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { Table, InputNumber, message } from "antd";
+import React, { useState, useEffect, useMemo } from "react";
+import { Table, InputNumber, message, Typography } from "antd";
 import assignmentApi from "../../../Services/assignmentApi";
 import classrommApi from "../../../Services/classroomApi";
 
@@ -77,6 +77,17 @@ const GradeBoard = ({ classroom, setClassroom }) => {
         </div>
       ),
     },
+    {
+      title: "Total Grade",
+      key: "totalGrade",
+      render: (_, record) => {
+        const totalGrade = record.grades.reduce(
+          (sum, studentGrade) => sum + (studentGrade?.grade || 0),
+          0
+        );
+        return totalGrade;
+      },
+    },
     ...assignments.map((assignment, index) => ({
       title: assignment.title,
       dataIndex: assignment._id,
@@ -86,34 +97,83 @@ const GradeBoard = ({ classroom, setClassroom }) => {
         const grade = record.grades[index]?.grade;
 
         return (
-          <div className="flex flex-col gap-1">
-            <InputNumber
-              min={0}
-              max={100}
-              defaultValue={tempGrade || grade}
-              onChange={(newGrade) => {
-                setGrade(newGrade);
-                setEditingRecord(record);
-                setEditingAssignment(assignment);
-              }}
-              onBlur={() => handleGradeChange(record.studentId, assignment._id)}
-            />
-            <span className="text-xs text-gray-400">
-              {record._id == editingRecord._id &&
-              assignment._id == editingAssignment._id &&
-              loadingGrade
-                ? "Loading..."
-                : !record.grades[index]?.isFinal && !tempGrade
-                ? ""
-                : "Draft"}
-            </span>
-          </div>
+          record.fullname !== "Total Grade" ? (
+            <div className="flex flex-col gap-1">
+              <InputNumber
+                min={0}
+                max={100}
+                defaultValue={tempGrade || grade}
+                onChange={(newGrade) => {
+                  setGrade(newGrade);
+                  setEditingRecord(record);
+                  setEditingAssignment(assignment);
+                }}
+                onBlur={() =>
+                  handleGradeChange(record.studentId, assignment._id)
+                }
+              />
+              <span className="text-xs text-gray-400">
+                {record._id == editingRecord._id &&
+                assignment._id == editingAssignment._id &&
+                loadingGrade
+                  ? "Loading..."
+                  : !record.grades[index]?.isFinal && !tempGrade
+                  ? ""
+                  : "Draft"}
+              </span>
+            </div>
+          ) : (
+            <Typography.Text>{grade}</Typography.Text>
+          )
         );
       },
     })),
   ];
 
-  return <Table bordered dataSource={classroom.students} columns={columns} />;
+  //   const totalGrade = useMemo(() => {
+  //     const totalGrade = classroom?.students?.reduce((sum, student) => {
+  //       const studentTotalGrade = student.grades.reduce(
+  //         (sum, studentGrade) => sum + (studentGrade?.grade || 0),
+  //         0
+  //       );
+  //       return sum + studentTotalGrade;
+  //     }, 0);
+  //     return totalGrade;
+  //   }, [classroom]);
+
+  const totalGradesByAssignment = useMemo(() => {
+    const totalGrades = {};
+
+    classroom?.students?.forEach((student) => {
+      student.grades.forEach((grade) => {
+        if (!totalGrades[grade.assignmentId]) {
+          totalGrades[grade.assignmentId] = 0;
+        }
+        totalGrades[grade.assignmentId] += grade.grade || 0;
+      });
+    });
+
+    return totalGrades;
+  }, [classroom]);
+
+  const studentsWithTotal = useMemo(() => {
+    const total = {
+      studentId: "",
+      fullname: "Total Grade",
+      profilePic: null,
+      grades: Object.entries(totalGradesByAssignment).map(
+        ([assignmentId, totalGrade]) => ({
+          assignmentId,
+          grade: totalGrade,
+        })
+      ),
+    };
+
+    const students = classroom?.students || [];
+    return [total, ...students];
+  }, [classroom]);
+
+  return <Table bordered dataSource={studentsWithTotal} columns={columns} />;
 };
 
 export default GradeBoard;
