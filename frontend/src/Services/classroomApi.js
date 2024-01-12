@@ -70,7 +70,10 @@ const classroomApi = {
         "Content-Type": "multipart/form-data",
       },
     });
-  }
+  },
+  markGradeFinalized: (classId, studentId, assignmentId, grade) => {
+    return axiosClient.put(`/api/classroom/${classId}/student/${studentId}/assignment/${assignmentId}/mark-finalized`, { grade: grade });
+  },
 };
 
 export default classroomApi;

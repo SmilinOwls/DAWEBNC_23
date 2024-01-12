@@ -1,28 +1,47 @@
-import React, { useState, useMemo } from "react";
-import { Table, InputNumber, message, Typography, Dropdown } from "antd";
+import React, { useState, useMemo, useRef } from "react";
+import { Table, InputNumber, message, Form, Typography, Dropdown } from "antd";
 import classrommApi from "../../../Services/classroomApi";
 import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
-
-const menuProps = () => {
-  const items = [
-    {
-      label: "Mark as final",
-      key: "0",
-      icon: <CheckOutlined />,
-      onClick: () => {},
-    },
-  ];
-
-  return {
-    items,
-  };
-};
 
 const GradeBoard = ({ classroom, assignments }) => {
   const [grade, setGrade] = useState(0);
   const [editingRecord, setEditingRecord] = useState({});
   const [editingAssignment, setEditingAssignment] = useState({});
   const [loadingGrade, setLoadingGrade] = useState(false);
+
+  const menuProps = (record, assignment, grade, isFinal) => {
+    const items = [
+      {
+        label: "Mark as finalized",
+        key: "0",
+        icon: <CheckOutlined />,
+        onClick: () => {
+          handleFinalGradeMarked(record.studentId, assignment._id, grade);
+        },
+        disabled: isFinal,
+      },
+    ];
+
+    return {
+      items,
+    };
+  };
+
+  const handleFinalGradeMarked = async (studentId, assignmentId, grade) => {
+    setLoadingGrade(true);
+    try {
+      await classrommApi.markGradeFinalized(
+        classroom._id,
+        studentId,
+        assignmentId,
+        grade
+      );
+    } catch (error) {
+      message.error(error.response.data.message);
+    } finally {
+      setLoadingGrade(false);
+    }
+  };
 
   const handleGradeChange = async (studentId, assignmentId) => {
     setLoadingGrade(true);
@@ -86,41 +105,54 @@ const GradeBoard = ({ classroom, assignments }) => {
       },
     },
     ...assignments.map((assignment, index) => ({
-      title: assignment.title,
+      title: () => (
+        <div className="flex flex-col gap-1">
+          <span>{assignment.title}</span>
+          <hr />
+          <span className="text-xs text-gray-400">
+            {assignment.gradeComposition} / {assignment.maxPoint}{" "}
+          </span>
+        </div>
+      ),
       dataIndex: assignment._id,
       key: assignment._id,
       render: (text, record) => {
-        const tempGrade = record.grades[index]?.tempGrade;
-        const grade = record.grades[index]?.grade;
+        const { tempGrade, grade, isFinal } = record.grades[index];
 
         return record.fullname !== "Total Grade" ? (
-          <div className="flex flex-col gap-1">
-            <InputNumber
-              min={0}
-              max={100}
-              defaultValue={tempGrade || grade}
-              onChange={(newGrade) => {
-                setGrade(newGrade);
-                setEditingRecord(record);
-                setEditingAssignment(assignment);
-              }}
-              onBlur={() => handleGradeChange(record.studentId, assignment._id)}
-            />
-            <span className="text-xs text-gray-400">
-              {record._id == editingRecord._id &&
-              assignment._id == editingAssignment._id &&
-              loadingGrade
-                ? "Loading..."
-                : !record.grades[index]?.isFinal && !tempGrade
-                ? ""
-                : "Draft"}
-            </span>
+          <div>
+            <div className="flex flex-col gap-1">
+              <InputNumber
+                min={0}
+                max={100}
+                key={record._id}
+                defaultValue={tempGrade || grade}
+                onChange={(newGrade) => {
+                  setGrade(newGrade);
+                  setEditingRecord(record);
+                  setEditingAssignment(assignment);
+                }}
+                onBlur={() =>
+                  handleGradeChange(record.studentId, assignment._id)
+                }
+              />
+
+              <div className="text-xs text-gray-400">
+                {record._id == editingRecord._id &&
+                assignment._id == editingAssignment._id &&
+                loadingGrade
+                  ? "Loading..."
+                  : isFinal && !tempGrade
+                  ? "Finalized"
+                  : "Draft"}
+              </div>
+            </div>
             <Dropdown.Button
-              menu={menuProps()}
+              menu={menuProps(record, assignment, tempGrade, isFinal)}
               trigger={["click"]}
               buttonsRender={([]) => [
                 <div />,
-                <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
+                <div className="rotate-90 absolute top-3 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
                   <EllipsisOutlined className="text-[24px] text-slate-600" />
                 </div>,
               ]}

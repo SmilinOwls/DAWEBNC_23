@@ -162,4 +162,10 @@ router.post(
   classController.uploadAssignmentGrade
 );
 
+router.put(
+  "/:classId/student/:studentId/assignment/:assignmentId/mark-finalized",
+  authMiddleware.verifyToken,
+  classController.markGradeFinalized
+);
+
 module.exports = router;

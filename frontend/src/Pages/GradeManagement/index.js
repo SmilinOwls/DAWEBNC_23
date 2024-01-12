@@ -107,13 +107,13 @@ const GradeManagement = ({ classId }) => {
     formData.append("assignmentGrade", fileGrade.current);
     setGradeLoading(true);
     try {
-      await classroomApi.uploadAssignmentGrade(
+       await classroomApi.uploadAssignmentGrade(
         classId,
         selectedUploadAssignmentId,
         formData
       );
-      // Refresh the classroom data after the upload
-      getClassroomById();
+      // Refresh the assignments data after the upload
+      getAssignmentByClass();
       message.success("Upload successfully");
     } catch (error) {
       console.log(error);

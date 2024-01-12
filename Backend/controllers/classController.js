@@ -721,6 +721,7 @@ const classController = {
         });
       } else {
         grade.tempGrade = newGrade;
+        grade.isFinal = false;
       }
 
       await classroom.save();
@@ -760,7 +761,7 @@ const classController = {
               { "elem.studentId": student.studentId },
               { "elem2.assignmentId": req.params.assignmentId },
             ],
-            new: true,
+            // new: true,
           },
           (err, doc) => {
             if (err) {
@@ -770,6 +771,48 @@ const classController = {
           }
         ).clone();
       }
+
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
+  markGradeFinalized: async (req, res) => {
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      await Classroom.findOneAndUpdate(
+        {
+          _id: req.params.classId,
+        },
+        {
+          $set: {
+            "students.$[elem].grades.$[elem2].isFinal": true,
+            "students.$[elem].grades.$[elem2].grade": parseInt(req.body.grade),
+            "students.$[elem].grades.$[elem2].tempGrade": null,
+          },
+        },
+        {
+          arrayFilters: [
+            { "elem.studentId": req.params.studentId },
+            { "elem2.assignmentId": req.params.assignmentId },
+          ],
+          // new: true,
+        },
+        (err, doc) => {
+          if (err) {
+            console.log(err);
+          }
+          classroom = doc;
+        }
+      ).clone();
 
       const updatedClass = await classroom.save();
       res.status(200).json(updatedClass);
