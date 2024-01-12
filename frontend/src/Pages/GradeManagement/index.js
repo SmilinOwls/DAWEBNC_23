@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import handleDownload from "../../utils/handleDownload";
 import classroomApi from "../../Services/classroomApi";
 import { DownloadOutlined } from "@ant-design/icons";
-import { Button, Input, Typography, message } from "antd";
+import { Button, Input, Select, Typography, message } from "antd";
 import GradeBoard from "./Components/GradeBoard";
 import { exportFile } from "../../utils/handleExport";
 import assignmentApi from "../../Services/assignmentApi";
@@ -12,6 +12,7 @@ const { Text } = Typography;
 const GradeManagement = ({ classId }) => {
   const [classroom, setClassroom] = useState({});
   const [assignments, setAssignments] = useState([]);
+  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
   const file = useRef(null);
   const [loading, setLoading] = useState(false);
 
@@ -46,14 +47,30 @@ const GradeManagement = ({ classId }) => {
     }
   };
 
-  const handleTemplateDownload = (fileType = ".csv") => {
+  const handleStudentTemplateDownload = (fileType = ".csv") => {
     const headers = ["studentId", "fullname"];
     const data = classroom.students.map((student) => {
       return [student.studentId, student.fullname];
     });
+
     data.unshift(headers);
 
     const fileName = `student-template${fileType}`;
+
+    handleDownload(data, fileName);
+  };
+
+  const handleGradeTemplateDownload = (fileType = ".csv") => {
+    const headers = ["StudentId", "Grade"];
+    const data = classroom.students.map((student) => {
+      const studentGrade = student.grades.find(
+        (grade) => grade.assignmentId == selectedAssignmentId
+      );
+      return [student.studentId, studentGrade.grade];
+    });
+    data.unshift(headers);
+
+    const fileName = `grade-template${fileType}`;
 
     handleDownload(data, fileName);
   };
@@ -79,20 +96,19 @@ const GradeManagement = ({ classId }) => {
     <div>
       <div className="w-full flex-col xl:flex-row flex items-center gap-4">
         <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
-          <Text className="text-xl">Download</Text>
+          <Text className="text-xl">Download Student Template</Text>
           <div className="flex items-center gap-2 md:flex-row flex-col">
             <Button
-              type="primary"
-              className="w-52 flex items-center justify-center"
-              onClick={() => handleTemplateDownload()}
+              className="flex items-center justify-center"
+              onClick={() => handleStudentTemplateDownload()}
               icon={<DownloadOutlined />}
             >
               student-template.csv
             </Button>
             <Button
               type="primary"
-              className="w-52 flex items-center justify-center"
-              onClick={() => handleTemplateDownload(".xlsx")}
+              className="flex items-center justify-center"
+              onClick={() => handleStudentTemplateDownload(".xlsx")}
               icon={<DownloadOutlined />}
             >
               student-template.xlsx
@@ -104,8 +120,7 @@ const GradeManagement = ({ classId }) => {
           <div className="flex items-center gap-2 md:flex-row flex-col">
             <Button
               onClick={() => exportFile(classroom.students, assignments)}
-              type="primary"
-              className="w-32 flex items-center justify-center"
+              className="flex items-center justify-center"
               icon={<DownloadOutlined />}
             >
               CSV
@@ -115,10 +130,41 @@ const GradeManagement = ({ classId }) => {
                 exportFile(classroom.students, assignments, ".xlsx")
               }
               type="primary"
-              className="w-32 flex items-center justify-center"
+              className="flex items-center justify-center"
               icon={<DownloadOutlined />}
             >
               XLSX
+            </Button>
+          </div>
+        </div>
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
+          <Text className="text-xl">Download Grade Template</Text>
+          <Select
+            className="w-full"
+            placeholder="Select an assignment"
+            onChange={(value) => setSelectedAssignmentId(value)}
+          >
+            {assignments.map((assignment) => (
+              <Select.Option value={assignment._id}>
+                {assignment.title}
+              </Select.Option>
+            ))}
+          </Select>
+          <div className="flex items-center gap-2 md:flex-row flex-col">
+            <Button
+              className="flex items-center justify-center"
+              onClick={() => handleGradeTemplateDownload()}
+              icon={<DownloadOutlined />}
+            >
+              grade-template.csv
+            </Button>
+            <Button
+              type="primary"
+              className="flex items-center justify-center"
+              onClick={() => handleGradeTemplateDownload(".xlsx")}
+              icon={<DownloadOutlined />}
+            >
+              grade-template.xlsx
             </Button>
           </div>
         </div>
