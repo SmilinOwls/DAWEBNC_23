@@ -4,17 +4,37 @@ import classroomApi from "../../Services/classroomApi";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Button, Input, Typography, message } from "antd";
 import GradeBoard from "./Components/GradeBoard";
+import { exportFile} from "../../utils/handleExport";
+import assignmentApi from "../../Services/assignmentApi";
 
 const { Text } = Typography;
 
 const GradeManagement = ({ classId }) => {
   const [classroom, setClassroom] = useState({});
+  const [assignments, setAssignments] = useState([]);
   const file = useRef(null);
   const [loading, setLoading] = useState(false);
 
   useEffect(() => {
     getClassroomById();
   }, []);
+
+  useEffect(() => {
+    getAssignmentByClass();
+  }, [classroom]);
+
+  const getAssignmentByClass = async () => {
+    const classroomId = classroom._id;
+    if (!classroomId) return;
+
+    try {
+      const response = await assignmentApi.getAssignmentByClass(classroomId);
+      const data = response.data;
+      setAssignments(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
 
   const getClassroomById = async () => {
     try {
@@ -57,8 +77,8 @@ const GradeManagement = ({ classId }) => {
 
   return (
     <div>
-      <div className="flex items-center">
-        <div className="flex-1 flex gap-2 flex-col">
+      <div className="w-full flex items-center justify-center gap-4">
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
           <Text className="text-xl">Download</Text>
           <Button
             type="primary"
@@ -69,7 +89,7 @@ const GradeManagement = ({ classId }) => {
             Student Template
           </Button>
         </div>
-        <div className="flex flex-1 gap-2 flex-col">
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
           <Text className="text-xl">Upload</Text>
           <div className="flex items-center gap-2">
             <Input
@@ -83,9 +103,30 @@ const GradeManagement = ({ classId }) => {
             </Button>
           </div>
         </div>
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
+          <Text className="text-xl">Export Grade Board</Text>
+          <div className="flex items-center gap-2">
+            <Button
+              onClick={() => exportFile(classroom.students, assignments)}
+              type="primary"
+              className="w-32 flex items-center justify-center"
+              icon={<DownloadOutlined />}
+            >
+              CSV
+            </Button>
+            <Button
+              onClick={() => exportFile(classroom.students, assignments, ".xlsx")}
+              type="primary"
+              className="w-32 flex items-center justify-center"
+              icon={<DownloadOutlined />}
+            >
+              XLSX
+            </Button>
+          </div>
+        </div>
       </div>
       <div className="mt-3">
-        <GradeBoard classroom={classroom} setClassroom={setClassroom} />
+        <GradeBoard classroom={classroom} assignments={assignments} />
       </div>
     </div>
   );

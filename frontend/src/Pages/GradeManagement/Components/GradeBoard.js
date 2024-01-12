@@ -1,31 +1,12 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useMemo } from "react";
 import { Table, InputNumber, message, Typography } from "antd";
-import assignmentApi from "../../../Services/assignmentApi";
 import classrommApi from "../../../Services/classroomApi";
 
-const GradeBoard = ({ classroom, setClassroom }) => {
-  const [assignments, setAssignments] = useState([]);
+const GradeBoard = ({ classroom, assignments }) => {
   const [grade, setGrade] = useState(0);
   const [editingRecord, setEditingRecord] = useState({});
   const [editingAssignment, setEditingAssignment] = useState({});
   const [loadingGrade, setLoadingGrade] = useState(false);
-
-  useEffect(() => {
-    getAssignmentByClass();
-  }, [classroom]);
-
-  const getAssignmentByClass = async () => {
-    const classroomId = classroom._id;
-    if (!classroomId) return;
-
-    try {
-      const response = await assignmentApi.getAssignmentByClass(classroomId);
-      const data = response.data;
-      setAssignments(data);
-    } catch (error) {
-      console.log(error);
-    }
-  };
 
   const handleGradeChange = async (studentId, assignmentId) => {
     setLoadingGrade(true);
@@ -96,35 +77,31 @@ const GradeBoard = ({ classroom, setClassroom }) => {
         const tempGrade = record.grades[index]?.tempGrade;
         const grade = record.grades[index]?.grade;
 
-        return (
-          record.fullname !== "Total Grade" ? (
-            <div className="flex flex-col gap-1">
-              <InputNumber
-                min={0}
-                max={100}
-                defaultValue={tempGrade || grade}
-                onChange={(newGrade) => {
-                  setGrade(newGrade);
-                  setEditingRecord(record);
-                  setEditingAssignment(assignment);
-                }}
-                onBlur={() =>
-                  handleGradeChange(record.studentId, assignment._id)
-                }
-              />
-              <span className="text-xs text-gray-400">
-                {record._id == editingRecord._id &&
-                assignment._id == editingAssignment._id &&
-                loadingGrade
-                  ? "Loading..."
-                  : !record.grades[index]?.isFinal && !tempGrade
-                  ? ""
-                  : "Draft"}
-              </span>
-            </div>
-          ) : (
-            <Typography.Text>{grade}</Typography.Text>
-          )
+        return record.fullname !== "Total Grade" ? (
+          <div className="flex flex-col gap-1">
+            <InputNumber
+              min={0}
+              max={100}
+              defaultValue={tempGrade || grade}
+              onChange={(newGrade) => {
+                setGrade(newGrade);
+                setEditingRecord(record);
+                setEditingAssignment(assignment);
+              }}
+              onBlur={() => handleGradeChange(record.studentId, assignment._id)}
+            />
+            <span className="text-xs text-gray-400">
+              {record._id == editingRecord._id &&
+              assignment._id == editingAssignment._id &&
+              loadingGrade
+                ? "Loading..."
+                : !record.grades[index]?.isFinal && !tempGrade
+                ? ""
+                : "Draft"}
+            </span>
+          </div>
+        ) : (
+          <Typography.Text>{grade}</Typography.Text>
         );
       },
     })),
