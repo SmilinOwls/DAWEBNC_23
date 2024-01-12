@@ -5,7 +5,6 @@ const jwt = require("jsonwebtoken");
 const User = require("../models/User");
 const { utils, readFile } = require("xlsx");
 
-
 const classController = {
   createClass: async (req, res) => {
     const newClass = new Classroom({
@@ -684,7 +683,6 @@ const classController = {
       await classroom.save();
       res.status(200).json(classroom);
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
   },
@@ -728,10 +726,57 @@ const classController = {
       await classroom.save();
       res.status(200).json(classroom);
     } catch (error) {
-      console.log(error);
       res.status(500).json(error);
     }
-  }
+  },
+  uploadAssignmentGrade: async (req, res) => {
+    const workbook = readFile(req.file.path);
+    const sheetNameList = workbook.SheetNames;
+    const students = utils.sheet_to_json(workbook.Sheets[sheetNameList[0]]);
+
+    try {
+      let classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      for (let student of students) {
+        await Classroom.findOneAndUpdate(
+          {
+            _id: req.params.classId,
+          },
+          {
+            $set: {
+              "students.$[elem].grades.$[elem2].tempGrade": parseInt(
+                student.grade
+              ),
+            },
+          },
+          {
+            arrayFilters: [
+              { "elem.studentId": student.studentId },
+              { "elem2.assignmentId": req.params.assignmentId },
+            ],
+            new: true,
+          },
+          (err, doc) => {
+            if (err) {
+              console.log(err);
+            }
+            classroom = doc;
+          }
+        ).clone();
+      }
+
+      const updatedClass = await classroom.save();
+      res.status(200).json(updatedClass);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  },
 };
 
 module.exports = classController;

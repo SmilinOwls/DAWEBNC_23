@@ -12,9 +12,14 @@ const { Text } = Typography;
 const GradeManagement = ({ classId }) => {
   const [classroom, setClassroom] = useState({});
   const [assignments, setAssignments] = useState([]);
-  const [selectedAssignmentId, setSelectedAssignmentId] = useState(null);
+  const [selectedDownloadAssignmentId, setSelectedDownloadAssignmentId] =
+    useState(null);
+  const [selectedUploadAssignmentId, setSelectedUploadAssignmentId] =
+    useState(null);
   const file = useRef(null);
+  const fileGrade = useRef(null);
   const [loading, setLoading] = useState(false);
+  const [gradeLoading, setGradeLoading] = useState(false);
 
   useEffect(() => {
     getClassroomById();
@@ -61,10 +66,10 @@ const GradeManagement = ({ classId }) => {
   };
 
   const handleGradeTemplateDownload = (fileType = ".csv") => {
-    const headers = ["StudentId", "Grade"];
+    const headers = ["studentId", "grade"];
     const data = classroom.students.map((student) => {
       const studentGrade = student.grades.find(
-        (grade) => grade.assignmentId == selectedAssignmentId
+        (grade) => grade.assignmentId == selectedDownloadAssignmentId
       );
       return [student.studentId, studentGrade.grade];
     });
@@ -77,6 +82,8 @@ const GradeManagement = ({ classId }) => {
 
   const handleFileUpload = async (event) => {
     event.preventDefault();
+    if(!file.current) return message.error("Please select a file");
+
     const formData = new FormData();
     formData.append("grade", file.current);
     setLoading(true);
@@ -90,6 +97,29 @@ const GradeManagement = ({ classId }) => {
       message.error("Upload failed");
     }
     setLoading(false);
+  };
+
+  const handleGradeUpload = async (event) => {
+    event.preventDefault();
+    if(!fileGrade.current) return message.error("Please select a file");
+
+    const formData = new FormData();
+    formData.append("assignmentGrade", fileGrade.current);
+    setGradeLoading(true);
+    try {
+      await classroomApi.uploadAssignmentGrade(
+        classId,
+        selectedUploadAssignmentId,
+        formData
+      );
+      // Refresh the classroom data after the upload
+      getClassroomById();
+      message.success("Upload successfully");
+    } catch (error) {
+      console.log(error);
+      message.error("Upload failed");
+    }
+    setGradeLoading(false);
   };
 
   return (
@@ -138,14 +168,35 @@ const GradeManagement = ({ classId }) => {
           </div>
         </div>
         <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
+          <Text className="text-xl">Upload Student List</Text>
+          <div className="flex items-center gap-2 md:flex-row flex-col">
+            <Input
+              type="file"
+              className="w-fit h-full"
+              accept=".xlsx, .csv"
+              onChange={(event) => (file.current = event.target.files[0])}
+            />
+            <Button
+              loading={loading}
+              onClick={handleFileUpload}
+              type="primary"
+              disabled={file.current}
+            >
+              Submit
+            </Button>
+          </div>
+        </div>
+      </div>
+      <div className="mt-4 w-full flex-col xl:flex-row flex items-center gap-4">
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
           <Text className="text-xl">Download Grade Template</Text>
           <Select
             className="w-full"
             placeholder="Select an assignment"
-            onChange={(value) => setSelectedAssignmentId(value)}
+            onChange={(value) => setSelectedDownloadAssignmentId(value)}
           >
             {assignments.map((assignment) => (
-              <Select.Option value={assignment._id}>
+              <Select.Option key={assignment._id} value={assignment._id}>
                 {assignment.title}
               </Select.Option>
             ))}
@@ -155,6 +206,7 @@ const GradeManagement = ({ classId }) => {
               className="flex items-center justify-center"
               onClick={() => handleGradeTemplateDownload()}
               icon={<DownloadOutlined />}
+              disabled={!selectedDownloadAssignmentId}
             >
               grade-template.csv
             </Button>
@@ -163,24 +215,43 @@ const GradeManagement = ({ classId }) => {
               className="flex items-center justify-center"
               onClick={() => handleGradeTemplateDownload(".xlsx")}
               icon={<DownloadOutlined />}
+              disabled={!selectedDownloadAssignmentId}
             >
               grade-template.xlsx
             </Button>
           </div>
         </div>
-      </div>
-      <div className="mt-4 flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
-        <Text className="text-xl">Upload</Text>
-        <div className="flex items-center gap-2 md:flex-row flex-col">
-          <Input
-            type="file"
-            className="w-fit h-full"
-            accept=".xlsx, .csv"
-            onChange={(event) => (file.current = event.target.files[0])}
-          />
-          <Button loading={loading} onClick={handleFileUpload} type="primary">
-            Submit
-          </Button>
+
+        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
+          <Text className="text-xl">Upload Assignment Grade</Text>
+          <Select
+            className="w-full"
+            placeholder="Select an assignment"
+            onChange={(value) => setSelectedUploadAssignmentId(value)}
+          >
+            {assignments.map((assignment) => (
+              <Select.Option key={assignment._id} value={assignment._id}>
+                {assignment.title}
+              </Select.Option>
+            ))}
+          </Select>
+          <div className="flex items-center gap-2 md:flex-row flex-col">
+            <Input
+              type="file"
+              className="w-fit h-full"
+              accept=".xlsx, .csv"
+              onChange={(event) => (fileGrade.current = event.target.files[0])}
+              disabled={!selectedUploadAssignmentId}
+            />
+            <Button
+              loading={gradeLoading}
+              onClick={handleGradeUpload}
+              type="primary"
+              disabled={!selectedUploadAssignmentId}
+            >
+              Submit
+            </Button>
+          </div>
         </div>
       </div>
       <div className="mt-3">

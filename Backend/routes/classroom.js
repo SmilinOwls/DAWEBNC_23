@@ -116,11 +116,31 @@ router.post(
 );
 
 // grade structure
-router.post('/:classId/grade-structure', authMiddleware.verifyToken, classController.createGradeStructure);
-router.get('/:classId/grade-structure', authMiddleware.verifyToken, classController.getGradeStructures);
-router.put('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.updateGradeStructureById);
-router.delete('/:classId/grade-structure/:id', authMiddleware.verifyToken, classController.deleteGradeStructure);
-router.put('/:classId/grade-structure', authMiddleware.verifyToken, classController.updateGradeStructures);
+router.post(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.createGradeStructure
+);
+router.get(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.getGradeStructures
+);
+router.put(
+  "/:classId/grade-structure/:id",
+  authMiddleware.verifyToken,
+  classController.updateGradeStructureById
+);
+router.delete(
+  "/:classId/grade-structure/:id",
+  authMiddleware.verifyToken,
+  classController.deleteGradeStructure
+);
+router.put(
+  "/:classId/grade-structure",
+  authMiddleware.verifyToken,
+  classController.updateGradeStructures
+);
 
 router.post(
   "/:classId/import-student-list",
@@ -129,5 +149,17 @@ router.post(
   classController.uploadStudent
 );
 
-router.put('/:classId/student/:studentId/assignment/:assignmentId', authMiddleware.verifyToken, classController.updateGrade);
+router.put(
+  "/:classId/student/:studentId/assignment/:assignmentId",
+  authMiddleware.verifyToken,
+  classController.updateGrade
+);
+
+router.post(
+  "/:classId/assignment/:assignmentId/import-grade",
+  authMiddleware.verifyToken,
+  classroomMiddleware.single("assignmentGrade"),
+  classController.uploadAssignmentGrade
+);
+
 module.exports = router;

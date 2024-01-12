@@ -1,6 +1,22 @@
 import React, { useState, useMemo } from "react";
-import { Table, InputNumber, message, Typography } from "antd";
+import { Table, InputNumber, message, Typography, Dropdown } from "antd";
 import classrommApi from "../../../Services/classroomApi";
+import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
+
+const menuProps = () => {
+  const items = [
+    {
+      label: "Mark as final",
+      key: "0",
+      icon: <CheckOutlined />,
+      onClick: () => {},
+    },
+  ];
+
+  return {
+    items,
+  };
+};
 
 const GradeBoard = ({ classroom, assignments }) => {
   const [grade, setGrade] = useState(0);
@@ -99,6 +115,16 @@ const GradeBoard = ({ classroom, assignments }) => {
                 ? ""
                 : "Draft"}
             </span>
+            <Dropdown.Button
+              menu={menuProps()}
+              trigger={["click"]}
+              buttonsRender={([]) => [
+                <div />,
+                <div className="rotate-90 absolute top-2 right-2 cursor-pointer p-2 rounded-3xl hover:bg-zinc-400/30">
+                  <EllipsisOutlined className="text-[24px] text-slate-600" />
+                </div>,
+              ]}
+            />
           </div>
         ) : (
           <Typography.Text>{grade}</Typography.Text>
@@ -120,7 +146,6 @@ const GradeBoard = ({ classroom, assignments }) => {
 
   const totalGradesByAssignment = useMemo(() => {
     const totalGrades = {};
-
     classroom?.students?.forEach((student) => {
       student.grades.forEach((grade) => {
         if (!totalGrades[grade.assignmentId]) {
@@ -150,7 +175,14 @@ const GradeBoard = ({ classroom, assignments }) => {
     return [total, ...students];
   }, [classroom]);
 
-  return <Table bordered dataSource={studentsWithTotal} columns={columns} />;
+  return (
+    <Table
+      bordered
+      rowKey={(record) => record.studentId}
+      dataSource={studentsWithTotal}
+      columns={columns}
+    />
+  );
 };
 
 export default GradeBoard;
