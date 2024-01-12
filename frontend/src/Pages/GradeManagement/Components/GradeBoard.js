@@ -34,7 +34,7 @@ const GradeBoard = ({ classroom, assignments }) => {
     {
       title: "Full Name",
       dataIndex: "fullname",
-      width: "20%",
+      width: "15%",
       key: "fullname",
       render: (text, record) => (
         <div className="flex items-center gap-2">

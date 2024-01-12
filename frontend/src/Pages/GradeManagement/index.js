@@ -4,7 +4,7 @@ import classroomApi from "../../Services/classroomApi";
 import { DownloadOutlined } from "@ant-design/icons";
 import { Button, Input, Typography, message } from "antd";
 import GradeBoard from "./Components/GradeBoard";
-import { exportFile} from "../../utils/handleExport";
+import { exportFile } from "../../utils/handleExport";
 import assignmentApi from "../../Services/assignmentApi";
 
 const { Text } = Typography;
@@ -46,14 +46,14 @@ const GradeManagement = ({ classId }) => {
     }
   };
 
-  const handleTempletaDownload = () => {
+  const handleTemplateDownload = (fileType = ".csv") => {
     const headers = ["studentId", "fullname"];
     const data = classroom.students.map((student) => {
       return [student.studentId, student.fullname];
     });
     data.unshift(headers);
 
-    const fileName = "template.xlsx";
+    const fileName = `student-template${fileType}`;
 
     handleDownload(data, fileName);
   };
@@ -77,35 +77,31 @@ const GradeManagement = ({ classId }) => {
 
   return (
     <div>
-      <div className="w-full flex items-center justify-center gap-4">
+      <div className="w-full flex-col xl:flex-row flex items-center gap-4">
         <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
           <Text className="text-xl">Download</Text>
-          <Button
-            type="primary"
-            className="w-52 flex items-center justify-center"
-            onClick={handleTempletaDownload}
-            icon={<DownloadOutlined />}
-          >
-            Student Template
-          </Button>
-        </div>
-        <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
-          <Text className="text-xl">Upload</Text>
-          <div className="flex items-center gap-2">
-            <Input
-              type="file"
-              className="w-fit h-full"
-              accept=".xlsx, .csv"
-              onChange={(event) => (file.current = event.target.files[0])}
-            />
-            <Button loading={loading} onClick={handleFileUpload} type="primary">
-              Submit
+          <div className="flex items-center gap-2 md:flex-row flex-col">
+            <Button
+              type="primary"
+              className="w-52 flex items-center justify-center"
+              onClick={() => handleTemplateDownload()}
+              icon={<DownloadOutlined />}
+            >
+              student-template.csv
+            </Button>
+            <Button
+              type="primary"
+              className="w-52 flex items-center justify-center"
+              onClick={() => handleTemplateDownload(".xlsx")}
+              icon={<DownloadOutlined />}
+            >
+              student-template.xlsx
             </Button>
           </div>
         </div>
         <div className="flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
           <Text className="text-xl">Export Grade Board</Text>
-          <div className="flex items-center gap-2">
+          <div className="flex items-center gap-2 md:flex-row flex-col">
             <Button
               onClick={() => exportFile(classroom.students, assignments)}
               type="primary"
@@ -115,7 +111,9 @@ const GradeManagement = ({ classId }) => {
               CSV
             </Button>
             <Button
-              onClick={() => exportFile(classroom.students, assignments, ".xlsx")}
+              onClick={() =>
+                exportFile(classroom.students, assignments, ".xlsx")
+              }
               type="primary"
               className="w-32 flex items-center justify-center"
               icon={<DownloadOutlined />}
@@ -123,6 +121,20 @@ const GradeManagement = ({ classId }) => {
               XLSX
             </Button>
           </div>
+        </div>
+      </div>
+      <div className="mt-4 flex-1 flex gap-2 items-center border rounded-md px-4 py-2 flex-col">
+        <Text className="text-xl">Upload</Text>
+        <div className="flex items-center gap-2 md:flex-row flex-col">
+          <Input
+            type="file"
+            className="w-fit h-full"
+            accept=".xlsx, .csv"
+            onChange={(event) => (file.current = event.target.files[0])}
+          />
+          <Button loading={loading} onClick={handleFileUpload} type="primary">
+            Submit
+          </Button>
         </div>
       </div>
       <div className="mt-3">
