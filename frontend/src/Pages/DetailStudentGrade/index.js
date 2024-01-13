@@ -31,9 +31,8 @@ function DetailStudentGrade() {
     if (!grades.current.length) return 0;
 
     for (let i = 0; i < grades.current.length; i++) {
-      if (grades.current[i].isFinal) {
-        sum += grades.current[i].grade;
-      }
+      sum += grades.current[i].grade;
+
       totalMaxGrade += assignments[i].maxPoint;
     }
 
@@ -89,12 +88,12 @@ function DetailStudentGrade() {
               <div className="flex flex-col gap-1">
                 <h4>{assignments[index].title}</h4>
                 <span className="text-xs text-gray-400">
-                  {assignments[index].gradeComposition}
+                  {assignments[index].gradeComposition ||
+                    "No grade composition"}
                 </span>
               </div>
               <div className="text-gray-900 font-semibold">
-                {grade.isFinal ? grade.grade : grade.tempGrade} /{" "}
-                {assignments[index].maxPoint}
+                {grade.grade} / {assignments[index].maxPoint}
               </div>
             </li>
           ))}
