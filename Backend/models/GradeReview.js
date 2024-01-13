@@ -39,6 +39,7 @@ const gradeReviewSchema = new mongoose.Schema(
         },
         date: {
           type: Date,
+          default: Date.now(),
         },
       },
     ],

@@ -14,4 +14,6 @@ router.get("/:id", gradeReviewController.getGradeReviewById);
 
 router.get("/classroom/:classroomId/student/:studentId", gradeReviewController.getGradeViewByClassRoomAndStudentId);
 
+router.post("/:id/comment", gradeReviewController.createComment);
+
 module.exports = router;
