@@ -8,8 +8,8 @@ const { utils, readFile } = require("xlsx");
 const classController = {
   createClass: async (req, res) => {
     const newClass = new Classroom({
-      createdUser: req.user.id,
       ...req.body,
+      createdUser: req.user.id,
       teachers: [
         {
           accountId: req.user.id,
