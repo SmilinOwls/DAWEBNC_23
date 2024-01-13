@@ -1,11 +1,16 @@
 import React, { useState, useEffect } from "react";
 import gradeReviewApi from "../../Services/gradeReviewApi";
 
-const GradeReview = ({ classId }) => {
+const GradeReview = ({ isTeacher, classId }) => {
   const [reviewRequests, setReviewRequests] = useState([]);
+  const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    getGradeReviewByClassRoom();
+    if(isTeacher()) {
+      getGradeReviewByClassRoom();
+    } else {
+      getGradeViewByClassRoomAndStudentId(user.studentId);
+    }
   }, []);
 
   const getGradeReviewByClassRoom = async () => {
@@ -17,6 +22,19 @@ const GradeReview = ({ classId }) => {
       console.log(error);
     }
   };
+
+  const getGradeViewByClassRoomAndStudentId = async (studentId) => {
+    try {
+      const response = await gradeReviewApi.getGradeViewByClassRoomAndStudentId(
+        classId,
+        studentId
+      );
+      const data = response.data;
+      setReviewRequests(data);
+    } catch (error) {
+      console.log(error);
+    }
+  }
 
   return (
     <div>

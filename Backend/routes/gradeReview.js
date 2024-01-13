@@ -12,4 +12,6 @@ router.get("/classroom/:classroomId", gradeReviewController.getGradeReviewByClas
 
 router.get("/:id", gradeReviewController.getGradeReviewById);
 
+router.get("/classroom/:classroomId/student/:studentId", gradeReviewController.getGradeViewByClassRoomAndStudentId);
+
 module.exports = router;

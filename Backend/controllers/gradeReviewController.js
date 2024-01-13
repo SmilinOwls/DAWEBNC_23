@@ -39,6 +39,19 @@ const gradeReviewController = {
       res.status(500).json({ message: error.message });
     }
   },
+  getGradeViewByClassRoomAndStudentId: async (req, res) => {
+    const { classroomId, studentId } = req.params;
+
+    try {
+      const gradeReviews = await GradeReview.find({
+        classroomId,
+        studentId,
+      });
+      res.status(200).json(gradeReviews);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  }
 };
 
 module.exports = gradeReviewController;

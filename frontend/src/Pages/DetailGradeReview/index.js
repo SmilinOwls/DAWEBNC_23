@@ -3,6 +3,7 @@ import { useParams } from "react-router-dom";
 import gradeReviewApi from "../../Services/gradeReviewApi";
 import classroomApi from "../../Services/classroomApi";
 import { Divider } from "antd";
+import CommentSection from "./Components/CommentSection";
 
 function DetailGradeReview() {
   const { classId, id } = useParams();
@@ -37,7 +38,7 @@ function DetailGradeReview() {
 
   return (
     <div className="w-full flex flex-col items-center justify-center">
-      <h1>Grade Review Details</h1>
+      <h3>Grade Review Details</h3>
       <div className="w-[80%]">
         <div className="flex justify-between items-center gap-24">
           <div className="flex items-center gap-3">
@@ -70,6 +71,8 @@ function DetailGradeReview() {
           <span className="text-lg font-bold">Comment:</span> {review.comment}
         </p>
       </div>
+
+      <CommentSection review={review}  setReview={setReview}/>
     </div>
   );
 }

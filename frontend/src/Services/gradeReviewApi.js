@@ -15,6 +15,14 @@ const gradeReviewApi = {
   getGradeReviewById: async (id) => {
     return await axiosClient.get(`/api/gradeReview/${id}`);
   },
+  getGradeViewByClassRoomAndStudentId: async (classId, studentId) => {
+    return await axiosClient.get(
+      `/api/gradeReview/classroom/${classId}/student/${studentId}`
+    );
+  },
+  createComment: async (id, data) => {
+    return await axiosClient.post(`/api/gradeReview/${id}/comment`, data);
+  },
 };
 
 export default gradeReviewApi;

@@ -107,10 +107,10 @@ const DetailClass = () => {
                 <Tab label="Exercises" {...a11yProps(1)} />
                 <Tab label="Grade Structure" {...a11yProps(2)} />
                 <Tab label="People" {...a11yProps(3)} />
+                <Tab label="Grade Review" {...a11yProps(4)} />
                 {isTeacher() && (
-                  <Tab label="Grade Management" {...a11yProps(4)} />
+                  <Tab label="Grade Management" {...a11yProps(5)} />
                 )}
-                {isTeacher() && <Tab label="Grade Review" {...a11yProps(5)} />}
               </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -125,15 +125,13 @@ const DetailClass = () => {
             <CustomTabPanel value={value} index={3}>
               <People classId={id} />
             </CustomTabPanel>
+            <CustomTabPanel value={value} index={4}>
+              <GradeReview isTeacher={isTeacher} classId={id} />
+            </CustomTabPanel>
             {isTeacher() && (
-              <>
-                <CustomTabPanel value={value} index={4}>
-                  <GradeManagement classId={id} />
-                </CustomTabPanel>
-                <CustomTabPanel value={value} index={5}>
-                  <GradeReview classId={id} />
-                </CustomTabPanel>
-              </>
+              <CustomTabPanel value={value} index={5}>
+                <GradeManagement classId={id} />
+              </CustomTabPanel>
             )}
           </Box>
         </div>
