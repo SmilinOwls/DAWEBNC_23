@@ -16,4 +16,6 @@ router.get("/classroom/:classroomId/student/:studentId", gradeReviewController.g
 
 router.post("/:id/comment", gradeReviewController.createComment);
 
+router.put("/:id/status", gradeReviewController.updateGradeReviewStatus);
+
 module.exports = router;

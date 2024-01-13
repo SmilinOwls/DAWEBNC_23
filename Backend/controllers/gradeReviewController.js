@@ -65,6 +65,19 @@ const gradeReviewController = {
       res.status(500).json({ message: error.message });
     }
   },
+  updateGradeReviewStatus: async (req, res) => {
+    const { id } = req.params;
+    const { status } = req.body;
+
+    try {
+      const gradeReview = await GradeReview.findById(id);
+      gradeReview.status = status;
+      await gradeReview.save();
+      res.status(200).json(gradeReview);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
+  },
 };
 
 module.exports = gradeReviewController;

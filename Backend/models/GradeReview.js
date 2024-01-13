@@ -28,6 +28,11 @@ const gradeReviewSchema = new mongoose.Schema(
     date: {
       type: Date,
     },
+    status: {
+        type: String,
+        enum: ["pending", "approved", "rejected"],
+        default: "pending",
+    },
     feedback: [
       {
         userId: {

@@ -1,12 +1,13 @@
 import React, { useState, useEffect } from "react";
 import gradeReviewApi from "../../Services/gradeReviewApi";
+import { Tag } from "antd";
 
 const GradeReview = ({ isTeacher, classId }) => {
   const [reviewRequests, setReviewRequests] = useState([]);
   const user = JSON.parse(localStorage.getItem("user"));
 
   useEffect(() => {
-    if(isTeacher()) {
+    if (isTeacher()) {
       getGradeReviewByClassRoom();
     } else {
       getGradeViewByClassRoomAndStudentId(user.studentId);
@@ -34,7 +35,13 @@ const GradeReview = ({ isTeacher, classId }) => {
     } catch (error) {
       console.log(error);
     }
-  }
+  };
+
+  const checkStatus = (status) => {
+    if (status === "rejected") return "red";
+    else if (status === "approved") return "green";
+    else return "blue";
+  };
 
   return (
     <div>
@@ -49,9 +56,14 @@ const GradeReview = ({ isTeacher, classId }) => {
               }}
             >
               <div>
-                <div className="text-gray-900 font-semibold">
-                  Student ID:{" "}
-                  <span className="font-normal">{request.studentId}</span>
+                <div className="flex flex-1 items-center">
+                  <Tag color={checkStatus(request.status)}>
+                    {request.status.toString().toUpperCase()}
+                  </Tag>
+                  <div className="text-gray-900 font-semibold">
+                    Student ID:{" "}
+                    <span className="font-normal">{request.studentId}</span>
+                  </div>
                 </div>
                 <div className="text-gray-900 font-semibold">
                   Expected: <span className="font-normal">{request.grade}</span>

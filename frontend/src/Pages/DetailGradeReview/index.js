@@ -2,8 +2,9 @@ import React, { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import gradeReviewApi from "../../Services/gradeReviewApi";
 import classroomApi from "../../Services/classroomApi";
-import { Divider } from "antd";
+import { Divider, message } from "antd";
 import CommentSection from "./Components/CommentSection";
+import { Button } from "antd";
 
 function DetailGradeReview() {
   const { classId, id } = useParams();
@@ -36,9 +37,34 @@ function DetailGradeReview() {
     }
   };
 
+  const updateStatus = async (status) => {
+    try {
+      const response = await gradeReviewApi.updateGradeReviewStatus(id, status);
+      // Mark the grade as finalized
+      if (status === "approved") {
+        try {
+          await classroomApi.markGradeFinalized(
+            classId,
+            review.studentId,
+            review.assignmentId,
+            review.grade
+          );
+
+          message.success("Grade finalized");
+        } catch (error) {
+          message.error(error.message);
+        }
+      }
+      setReview(response.data);
+    } catch (error) {
+      message.error(error.message);
+    }
+  };
+
   return (
     <div className="w-full flex flex-col items-center justify-center">
       <h3>Grade Review Details</h3>
+
       <div className="w-[80%]">
         <div className="flex justify-between items-center gap-24">
           <div className="flex items-center gap-3">
@@ -55,24 +81,65 @@ function DetailGradeReview() {
           </div>
         </div>
         <Divider className=" bg-blue-400" />
-        <p>
-          <span className="text-lg font-bold">Grade Composition:</span>{" "}
-          {review.gradeComposition || "None"}
-        </p>
-        <p>
-          <span className="text-lg font-bold">Current grade:</span>{" "}
-          {review.currentGrade}
-        </p>
-        <p>
-          <span className="text-lg font-bold">Expected grade:</span>{" "}
-          {review.grade}
-        </p>
-        <p>
-          <span className="text-lg font-bold">Comment:</span> {review.comment}
-        </p>
+        <div className="flex flex-col md:flex-row gap-4">
+          <div className="flex-[1.5]">
+            <p>
+              <span className="text-lg font-bold">Grade Composition:</span>{" "}
+              {review.gradeComposition || "None"}
+            </p>
+            <p>
+              <span className="text-lg font-bold">Current grade:</span>{" "}
+              {review.currentGrade}
+            </p>
+            <p>
+              <span className="text-lg font-bold">Expected grade:</span>{" "}
+              {review.grade}
+            </p>
+            <p>
+              <span className="text-lg font-bold">Comment:</span>{" "}
+              {review.comment}
+            </p>
+          </div>
+
+          <div className="flex-1">
+            <h3 className="">Status</h3>
+            <div className="flex flex-col gap-3">
+              <div className="flex items-center gap-2">
+                <div
+                  className={`w-4 h-4 rounded-full ${
+                    review.status === "approved"
+                      ? "bg-green-500"
+                      : review.status === "rejected"
+                      ? "bg-red-500"
+                      : "bg-blue-500"
+                  }`}
+                ></div>
+                <span className="text-lg">{review.status?.toUpperCase()}</span>
+              </div>
+
+              {review.status === "pending" && (
+                <div className="flex gap-2">
+                  <Button
+                    type="primary"
+                    onClick={() => updateStatus("approved")}
+                  >
+                    Approve
+                  </Button>
+                  <Button
+                    type="primary"
+                    danger
+                    onClick={() => updateStatus("rejected")}
+                  >
+                    Reject
+                  </Button>
+                </div>
+              )}
+            </div>
+          </div>
+        </div>
       </div>
 
-      <CommentSection review={review}  setReview={setReview}/>
+      <CommentSection review={review} setReview={setReview} />
     </div>
   );
 }

@@ -23,6 +23,9 @@ const gradeReviewApi = {
   createComment: async (id, data) => {
     return await axiosClient.post(`/api/gradeReview/${id}/comment`, data);
   },
+  updateGradeReviewStatus: async (id, status) => {
+    return await axiosClient.put(`/api/gradeReview/${id}/status`, { status });
+  }
 };
 
 export default gradeReviewApi;
