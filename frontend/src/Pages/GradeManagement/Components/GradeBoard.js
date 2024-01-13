@@ -4,7 +4,12 @@ import classrommApi from "../../../Services/classroomApi";
 import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
 import assignmentApi from "../../../Services/assignmentApi";
 
-const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) => {
+const GradeBoard = ({
+  classroom,
+  assignments,
+  setClassroom,
+  setAssignments,
+}) => {
   const [grade, setGrade] = useState(0);
   const [editingRecord, setEditingRecord] = useState({});
   const [editingAssignment, setEditingAssignment] = useState({});
@@ -59,7 +64,6 @@ const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) =>
     }
   };
 
-
   const handleGradeChange = async (studentId, assignmentId) => {
     setLoadingGrade(true);
     try {
@@ -104,7 +108,7 @@ const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) =>
           <span
             className="hover:cursor-pointer hover:underline hover:text-blue-400"
             onClick={() =>
-              (window.location.href = `/classroom/${classroom._id}/students/${record.studentId}`)
+              (window.location.href = `/classroom/${classroom._id}/student/${record.studentId}`)
             }
           >
             {record.fullname}
@@ -136,6 +140,8 @@ const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) =>
       dataIndex: assignment._id,
       key: assignment._id,
       render: (text, record) => {
+        if(!record.grades.length) return (<div></div>);
+
         const { tempGrade, grade, isFinal } = record.grades[index];
 
         const gradeCell = isFinal ? grade : tempGrade;
@@ -163,7 +169,7 @@ const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) =>
                 assignment._id == editingAssignment._id &&
                 loadingGrade
                   ? "Loading..."
-                  : isFinal 
+                  : isFinal
                   ? "Finalized"
                   : "Draft"}
               </div>

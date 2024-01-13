@@ -820,6 +820,32 @@ const classController = {
       res.status(500).json(error);
     }
   },
+  getStudentInfo: async (req, res) => {
+    try {
+      const classroom = await Classroom.findById(req.params.classId);
+      if (!classroom) {
+        return res.status(404).json({
+          success: false,
+          message: "Classroom not found !!!",
+        });
+      }
+
+      const student = classroom.students.find(
+        (student) => student.studentId == req.params.studentId
+      );
+
+      if (!student) {
+        return res.status(404).json({
+          success: false,
+          message: "Student not found !!!",
+        });
+      }
+
+      res.status(200).json(student);
+    } catch (error) {
+      res.status(500).json(error);
+    }
+  }
 };
 
 module.exports = classController;
