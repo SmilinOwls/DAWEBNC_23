@@ -28,6 +28,7 @@ import ClassEmailJoining from "./Pages/JoinClassroom/ClassEmailJoining";
 import CreateAssignment from "./Pages/CreateAssignment";
 import ClassCodeJoining from "./Pages/JoinClassroom/ClassCodeJoining";
 import DetailStudentGrade from "./Pages/DetailStudentGrade";
+import DetailGradeReview from "./Pages/DetailGradeReview";
 
 function App() {
   return (
@@ -129,6 +130,11 @@ function App() {
               <Route path="/create-assignment">
                 <AppLayout>
                   <CreateAssignment />
+                </AppLayout>
+              </Route>
+              <Route path="/classroom/:classId/grade-review/:id">
+                <AppLayout>
+                  <DetailGradeReview/>
                 </AppLayout>
               </Route>
               <Route path="/logout">

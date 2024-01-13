@@ -11,6 +11,7 @@ import People from "./Components/People";
 import Exercises from "./Components/Exercises";
 import GradeStructure from "../GradeStructure";
 import GradeManagement from "../GradeManagement";
+import GradeReview from "../GradeReview";
 
 const DEFAULT_IMAGE =
   "https://images.pexels.com/photos/1438072/pexels-photo-1438072.jpeg?auto=compress&cs=tinysrgb&w=1260&h=750&dpr=1";
@@ -52,9 +53,9 @@ const DetailClass = () => {
     const userInfo = JSON.parse(localStorage.getItem("user"));
     if (classroom.teachers) {
       const check = classroom.teachers.find(
-        (teacher) => teacher.accountId == userInfo._id 
+        (teacher) => teacher.accountId == userInfo._id
       );
-      
+
       if (check) return true;
     }
     return false;
@@ -109,6 +110,7 @@ const DetailClass = () => {
                 {isTeacher() && (
                   <Tab label="Grade Management" {...a11yProps(4)} />
                 )}
+                {isTeacher() && <Tab label="Grade Review" {...a11yProps(5)} />}
               </Tabs>
             </Box>
             <CustomTabPanel value={value} index={0}>
@@ -124,9 +126,14 @@ const DetailClass = () => {
               <People classId={id} />
             </CustomTabPanel>
             {isTeacher() && (
-              <CustomTabPanel value={value} index={4}>
-                <GradeManagement classId={id} />
-              </CustomTabPanel>
+              <>
+                <CustomTabPanel value={value} index={4}>
+                  <GradeManagement classId={id} />
+                </CustomTabPanel>
+                <CustomTabPanel value={value} index={5}>
+                  <GradeReview classId={id} />
+                </CustomTabPanel>
+              </>
             )}
           </Box>
         </div>
