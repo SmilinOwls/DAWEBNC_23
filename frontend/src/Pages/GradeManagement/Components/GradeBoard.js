@@ -2,8 +2,9 @@ import React, { useState, useMemo, useRef } from "react";
 import { Table, InputNumber, message, Form, Typography, Dropdown } from "antd";
 import classrommApi from "../../../Services/classroomApi";
 import { CheckOutlined, EllipsisOutlined } from "@ant-design/icons";
+import assignmentApi from "../../../Services/assignmentApi";
 
-const GradeBoard = ({ classroom, assignments }) => {
+const GradeBoard = ({ classroom, assignments, setClassroom, setAssignments }) => {
   const [grade, setGrade] = useState(0);
   const [editingRecord, setEditingRecord] = useState({});
   const [editingAssignment, setEditingAssignment] = useState({});
@@ -27,15 +28,30 @@ const GradeBoard = ({ classroom, assignments }) => {
     };
   };
 
+  const getAssignmentByClass = async () => {
+    const classroomId = classroom._id;
+    if (!classroomId) return;
+
+    try {
+      const response = await assignmentApi.getAssignmentByClass(classroomId);
+      const data = response.data;
+      setAssignments(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleFinalGradeMarked = async (studentId, assignmentId, grade) => {
     setLoadingGrade(true);
     try {
-      await classrommApi.markGradeFinalized(
+      const response = await classrommApi.markGradeFinalized(
         classroom._id,
         studentId,
         assignmentId,
         grade
       );
+      setClassroom(response.data);
+      getAssignmentByClass();
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -43,15 +59,18 @@ const GradeBoard = ({ classroom, assignments }) => {
     }
   };
 
+
   const handleGradeChange = async (studentId, assignmentId) => {
     setLoadingGrade(true);
     try {
-      await classrommApi.updateGrade(
+      const response = await classrommApi.updateGrade(
         classroom._id,
         studentId,
         assignmentId,
         grade
       );
+      setClassroom(response.data);
+      getAssignmentByClass();
     } catch (error) {
       message.error(error.response.data.message);
     } finally {
@@ -119,6 +138,8 @@ const GradeBoard = ({ classroom, assignments }) => {
       render: (text, record) => {
         const { tempGrade, grade, isFinal } = record.grades[index];
 
+        const gradeCell = isFinal ? grade : tempGrade;
+
         return record.fullname !== "Total Grade" ? (
           <div>
             <div className="flex flex-col gap-1">
@@ -126,7 +147,7 @@ const GradeBoard = ({ classroom, assignments }) => {
                 min={0}
                 max={100}
                 key={record._id}
-                defaultValue={tempGrade || grade}
+                value={gradeCell}
                 onChange={(newGrade) => {
                   setGrade(newGrade);
                   setEditingRecord(record);
@@ -142,7 +163,7 @@ const GradeBoard = ({ classroom, assignments }) => {
                 assignment._id == editingAssignment._id &&
                 loadingGrade
                   ? "Loading..."
-                  : isFinal && !tempGrade
+                  : isFinal 
                   ? "Finalized"
                   : "Draft"}
               </div>

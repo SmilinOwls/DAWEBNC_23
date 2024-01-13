@@ -230,7 +230,7 @@ const classController = {
           { new: true },
           (err, doc) => {
             if (err) {
-              console.log("Something wrong when updating data!");
+              console.log(err);
             }
             classroom = doc;
           }
@@ -304,7 +304,7 @@ const classController = {
           { new: true },
           (err, doc) => {
             if (err) {
-              console.log("Something wrong when updating data!");
+              console.log(err);
             }
             classroom = doc;
           }
@@ -471,7 +471,7 @@ const classController = {
               { new: true },
               (err, doc) => {
                 if (err) {
-                  console.log("Something wrong when updating data!");
+                  console.log(err);
                 }
                 classroom = doc;
               }
@@ -504,7 +504,7 @@ const classController = {
               { new: true },
               (err, doc) => {
                 if (err) {
-                  console.log("Something wrong when updating data!");
+                  console.log(err);
                 }
                 classroom = doc;
               }
@@ -754,6 +754,7 @@ const classController = {
               "students.$[elem].grades.$[elem2].tempGrade": parseInt(
                 student.grade
               ),
+              "students.$[elem].grades.$[elem2].isFinal": false,
             },
           },
           {
@@ -761,7 +762,7 @@ const classController = {
               { "elem.studentId": student.studentId },
               { "elem2.assignmentId": req.params.assignmentId },
             ],
-            // new: true,
+            new: true,
           },
           (err, doc) => {
             if (err) {
@@ -794,9 +795,8 @@ const classController = {
         },
         {
           $set: {
-            "students.$[elem].grades.$[elem2].isFinal": true,
             "students.$[elem].grades.$[elem2].grade": parseInt(req.body.grade),
-            "students.$[elem].grades.$[elem2].tempGrade": null,
+            "students.$[elem].grades.$[elem2].isFinal": true,
           },
         },
         {
@@ -804,7 +804,7 @@ const classController = {
             { "elem.studentId": req.params.studentId },
             { "elem2.assignmentId": req.params.assignmentId },
           ],
-          // new: true,
+          new: true,
         },
         (err, doc) => {
           if (err) {
